@@ -2,8 +2,7 @@ package javaFX;
 
 import java.awt.*;
 
-public class GraphicViewer {
-
+public class HomeController {
 
     public void openCsv() {
 
