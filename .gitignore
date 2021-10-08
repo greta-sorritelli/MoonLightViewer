@@ -9,3 +9,5 @@ build
 .idea/misc.xml
 .idea/App.iml
 .idea/modules.xml
+.idea/misc.xml
+.idea/gradle.xml
