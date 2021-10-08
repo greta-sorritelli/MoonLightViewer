@@ -93,7 +93,7 @@
             <Font size="18.0" />
           </font>
         </Label>
-            <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#openCsv" text="Choose a csv" />
+            <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#openExplorer" text="Choose a csv" />
             <LineChart layoutX="25.0" layoutY="62.0" prefHeight="474.0" prefWidth="818.0" title="Grafico temporale">
               <xAxis>
                 <CategoryAxis side="BOTTOM" />
