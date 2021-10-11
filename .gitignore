@@ -11,3 +11,8 @@ build
 .idea/modules.xml
 .idea/misc.xml
 .idea/gradle.xml
+src/main/java/javaFX/HomeController.java
+.idea/misc.xml
+.idea/compiler.xml
+src/main/java/javaFX/HomeController.java
+src/main/java/App/GraphicOperations/CsvToGraphic.java
