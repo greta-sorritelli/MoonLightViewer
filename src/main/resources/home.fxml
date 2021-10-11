@@ -86,7 +86,7 @@
     <AnchorPane fx:id="anchorID" maxHeight="-1.0" maxWidth="-1.0" prefHeight="422.0" prefWidth="870.0" stylesheets="@stylesheet.css" VBox.vgrow="ALWAYS">
       <children>
             <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#openExplorer" text="Choose a csv" />
-            <LineChart fx:id="lineChart" layoutX="25.0" layoutY="62.0" prefHeight="474.0" prefWidth="818.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="60.0">
+            <LineChart fx:id="lineChart" layoutX="25.0" layoutY="62.0" prefHeight="474.0" prefWidth="818.0" stylesheets="@lineChart.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="60.0">
               <xAxis>
                 <NumberAxis side="BOTTOM" fx:id="xAxis" />
               </xAxis>

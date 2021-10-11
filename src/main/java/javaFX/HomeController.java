@@ -49,7 +49,7 @@ public class HomeController {
     public void initialize() {
         lineChart.setVisible(false);
         yAxis.setLabel("Values");
-        xAxis.setLabel("time");
+        xAxis.setLabel("Time");
         lineChart.setTitle("X,Y,Z values in time");
         lineChart.setLegendSide(Side.RIGHT);
     }
