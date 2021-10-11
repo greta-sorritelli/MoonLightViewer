@@ -15,6 +15,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class HomeController {
 
     @FXML
@@ -41,9 +45,9 @@ public class HomeController {
         }
     }
 
+
     public void initialize() {
         lineChart.setVisible(false);
-        yAxis = new NumberAxis(-1, 1, 2);
         yAxis.setLabel("Values");
         xAxis.setLabel("time");
         lineChart.setTitle("X,Y,Z values in time");
@@ -76,7 +80,7 @@ public class HomeController {
         }
         lineChart.setVisible(true);
         lineChart.getData().addAll(xSeries, ySeries, zSeries);
-
+        anchorID.getScene().getStylesheets().add("lineChart.css");
     }
 }
 
