@@ -72,6 +72,7 @@ public class HomeController {
             e.printStackTrace();
         }
         lineChart.getData().addAll(xSeries, ySeries, zSeries);
+        anchorID.getScene().getStylesheets().add("lineChart.css");
     }
 
 }
