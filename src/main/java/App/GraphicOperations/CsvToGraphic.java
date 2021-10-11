@@ -1,12 +1,13 @@
 package App.GraphicOperations;
 
 import com.opencsv.CSVReader;
-
-import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
+import org.knowm.xchart.*;
+import org.knowm.xchart.CSVImporter.*;
+import org.knowm.xchart.style.Styler;
+
+import static org.knowm.xchart.CSVImporter.DataOrientation.*;
 
 public class CsvToGraphic {
 
@@ -21,7 +22,6 @@ public class CsvToGraphic {
         try {
             reader = new CSVReader(new FileReader(file));
             String [] nextLine;
-
             while ((nextLine = reader.readNext()) != null) {
                 for(String token : nextLine) {
                     System.out.print(token + " ");
@@ -32,5 +32,11 @@ public class CsvToGraphic {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public XYChart getSeriesFromCsv(String path) {
+//        SeriesData seriesData = CSVImporter.getSeriesDataFromCSVFile(path, Rows);
+        XYChart chart = CSVImporter.getChartFromCSVDir(path, Rows, 500, 200, Styler.ChartTheme.XChart);
+        return chart;
     }
 }

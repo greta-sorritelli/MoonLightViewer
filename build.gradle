@@ -32,6 +32,7 @@ dependencies {
 
     implementation "com.opencsv:opencsv:4.0"
 
+    implementation 'org.knowm.xchart:xchart:3.2.2'
 
 }
 
