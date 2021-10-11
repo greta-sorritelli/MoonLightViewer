@@ -14,6 +14,8 @@ public class JavaFxApp extends Application {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.initStyle(StageStyle.DECORATED);
+        HomeController hc = new HomeController();
+        hc.initialize();
         stage.show();
     }
 }

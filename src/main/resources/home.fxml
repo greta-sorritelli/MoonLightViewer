@@ -32,7 +32,6 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
@@ -87,9 +86,9 @@
     <AnchorPane fx:id="anchorID" maxHeight="-1.0" maxWidth="-1.0" prefHeight="422.0" prefWidth="870.0" stylesheets="@stylesheet.css" VBox.vgrow="ALWAYS">
       <children>
             <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#openExplorer" text="Choose a csv" />
-            <LineChart fx:id="lineChart" layoutX="25.0" layoutY="62.0" prefHeight="474.0" prefWidth="818.0" title="Grafico temporale" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="60.0">
+            <LineChart fx:id="lineChart" layoutX="25.0" layoutY="62.0" prefHeight="474.0" prefWidth="818.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="60.0">
               <xAxis>
-                <CategoryAxis side="BOTTOM" fx:id="xAxis" />
+                <NumberAxis side="BOTTOM" fx:id="xAxis" />
               </xAxis>
               <yAxis>
                 <NumberAxis fx:id="yAxis" prefHeight="407.0" prefWidth="21.0" side="LEFT" />

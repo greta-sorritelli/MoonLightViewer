@@ -3,13 +3,10 @@ package javaFX;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-
-import App.GraphicOperations.CsvToGraphic;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
-import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -23,11 +20,13 @@ public class HomeController {
     @FXML
     private AnchorPane anchorID;
     @FXML
-    private NumberAxis yAxis = new NumberAxis(-1, 1, 2);
+    private NumberAxis yAxis = new NumberAxis();
     @FXML
-    private CategoryAxis xAxis = new CategoryAxis();
+    private NumberAxis xAxis = new NumberAxis();
     @FXML
-    private LineChart<String, Number> lineChart = new LineChart<>(xAxis, yAxis);
+    private LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
+
+
 
     @FXML
     private void openExplorer() {
@@ -42,46 +41,43 @@ public class HomeController {
         }
     }
 
-
-
-    public void getSeriesFromCsv(String path) {
+    public void initialize() {
+        lineChart.setVisible(false);
         yAxis = new NumberAxis(-1, 1, 2);
         yAxis.setLabel("Values");
         xAxis.setLabel("time");
         lineChart.setTitle("X,Y,Z values in time");
         lineChart.setLegendSide(Side.RIGHT);
-        lineChart.setAnimated(true);
+    }
 
-        XYChart.Series xSeries = new XYChart.Series();
-        XYChart.Series ySeries = new XYChart.Series();
-        XYChart.Series zSeries = new XYChart.Series();
+
+    public void getSeriesFromCsv(String path) {
+        XYChart.Series<Number,Number> xSeries = new XYChart.Series<>();
+        XYChart.Series<Number,Number> ySeries = new XYChart.Series<>();
+        XYChart.Series<Number,Number> zSeries = new XYChart.Series<>();
 
         xSeries.setName("X");
         ySeries.setName("Y");
         zSeries.setName("Z");
-
         try (CSVReader dataReader = new CSVReader(new FileReader(path))) {
             String[] nextLine;
             while ((nextLine = dataReader.readNext()) != null) {
                 if(nextLine.length == 0 || nextLine[0].equals("")) continue;
-                String time = String.valueOf(nextLine[0]);
+                Double time = Double.parseDouble(nextLine[0]);
                 double X = Double.parseDouble(nextLine[1]);
-                xSeries.getData().add(new XYChart.Data(time, X));
+                xSeries.getData().add(new XYChart.Data<>(time, X));
                 double Y = Double.parseDouble(nextLine[2]);
-                ;
-                ySeries.getData().add(new XYChart.Data(time, Y));
+                ySeries.getData().add(new XYChart.Data<>(time, Y));
                 double Z = Double.parseDouble(nextLine[3]);
-                zSeries.getData().add(new XYChart.Data(time, Z));
+                zSeries.getData().add(new XYChart.Data<>(time, Z));
             }
         } catch (IOException | CsvValidationException e) {
             e.printStackTrace();
         }
-
+        lineChart.setVisible(true);
         lineChart.getData().addAll(xSeries, ySeries, zSeries);
-//        Scene scene = new Scene(lineChart, 500, 400);
 
     }
-
 }
 
 
