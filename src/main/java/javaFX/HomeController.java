@@ -1,13 +1,9 @@
 package javaFX;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
-import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -31,7 +27,6 @@ public class HomeController {
     private LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
 
 
-
     @FXML
     private void openExplorer() {
         FileChooser fileChooser = new FileChooser();
@@ -45,13 +40,13 @@ public class HomeController {
         }
     }
 
-
     public void initialize() {
         lineChart.setVisible(false);
         yAxis.setLabel("Values");
         xAxis.setLabel("Time");
         lineChart.setTitle("X,Y,Z values in time");
         lineChart.setLegendSide(Side.RIGHT);
+        lineChart.getYAxis().lookup(".axis-label").setStyle("-fx-label-padding: -40 0 0 0;");
     }
 
 
@@ -63,6 +58,7 @@ public class HomeController {
         xSeries.setName("X");
         ySeries.setName("Y");
         zSeries.setName("Z");
+
         try (CSVReader dataReader = new CSVReader(new FileReader(path))) {
             String[] nextLine;
             while ((nextLine = dataReader.readNext()) != null) {
