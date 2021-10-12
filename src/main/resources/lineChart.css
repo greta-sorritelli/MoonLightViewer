@@ -6,9 +6,11 @@
 .axis-label {
   -fx-text-fill: #000000;
   -fx-text-padding-right: 100px;
-/*
-  -fx-label-padding: -40 0 0 0;
- */
+  -fx-font-size: 1.3em;
+}
+
+.chart-legend-item{
+  -fx-text-fill: #000000;
 }
 
 
