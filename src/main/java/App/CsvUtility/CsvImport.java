@@ -2,12 +2,9 @@ package App.CsvUtility;
 
 import App.DialogUtility.DialogBuilder;
 import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvValidationException;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
-
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
 public class CsvImport {
@@ -40,7 +37,7 @@ public class CsvImport {
                 double Z = Double.parseDouble(nextLine[3]);
                 zSeries.getData().add(new XYChart.Data<>(time, Z));
             }
-        } catch (IOException | CsvValidationException e) {
+        } catch (Exception e) {
             DialogBuilder dialogBuilder = new DialogBuilder();
             dialogBuilder.error("Error", e.getMessage());
         }

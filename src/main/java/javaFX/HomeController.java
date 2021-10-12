@@ -38,7 +38,6 @@ public class HomeController {
         if (file != null) {
             String path = file.getAbsolutePath();
             List<XYChart.Series<Number, Number>> series = CsvImport.getSeriesFromCsv(path);
-            lineChart.setVisible(true);
             lineChart.getData().addAll(series);
             legendSelect();
             anchorID.getScene().getStylesheets().add("lineChart.css");
@@ -46,11 +45,10 @@ public class HomeController {
     }
 
     public void initialize() {
-        lineChart.setVisible(false);
         yAxis.setLabel("Values");
         xAxis.setLabel("Time");
         lineChart.setTitle("X,Y,Z values in time");
-        lineChart.setLegendSide(Side.RIGHT);
+        lineChart.setLegendSide(Side.LEFT);
         lineChart.getYAxis().lookup(".axis-label").setStyle("-fx-label-padding: -40 0 0 0;");
         zoomable();
     }
