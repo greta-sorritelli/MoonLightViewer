@@ -1,22 +1,15 @@
 package javaFX;
 
-import App.Utility.CsvImport;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import App.CsvUtility.CsvImport;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
 import javafx.geometry.Side;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.gillius.jfxutils.chart.ChartZoomManager;
 import org.gillius.jfxutils.chart.JFXChartUtil;
-
 import java.io.File;
 import java.util.List;
 
@@ -31,7 +24,6 @@ public class HomeController {
     @FXML
     private LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
 
-//    final double SCALE_DELTA = 1.1;
 
     @FXML
     private void openExplorer() {
@@ -58,13 +50,8 @@ public class HomeController {
     }
 
     private void zoomable() {
-
-//        ChartZoomManager zoomManager = new ChartZoomManager();
         JFXChartUtil.setupZooming(lineChart);
     }
-
-
-
 
 }
 

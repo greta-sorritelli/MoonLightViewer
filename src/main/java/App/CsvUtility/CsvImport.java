@@ -1,8 +1,10 @@
-package App.Utility;
+package App.CsvUtility;
 
+import App.DialogUtility.DialogBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Series;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -10,25 +12,22 @@ import java.util.*;
 
 public class CsvImport {
 
-//    private static final CsvImport csvImport = new CsvImport();
-//
-//    private CsvImport() {
-//    }
-//
-//    public static CsvImport getCvsImport() {
-//       return csvImport;
-//    }
-
-
-    public static List<XYChart.Series<Number, Number>> getSeriesFromCsv(String path) {
-        XYChart.Series<Number, Number> xSeries = new XYChart.Series<>();
-        XYChart.Series<Number, Number> ySeries = new XYChart.Series<>();
-        XYChart.Series<Number, Number> zSeries = new XYChart.Series<>();
-
+    public static List<Series<Number, Number>> getSeriesFromCsv(String path) {
+        Series<Number, Number> xSeries = new Series<>();
+        Series<Number, Number> ySeries = new Series<>();
+        Series<Number, Number> zSeries = new Series<>();
         xSeries.setName("X");
         ySeries.setName("Y");
         zSeries.setName("Z");
+        readCsv(path, xSeries, ySeries, zSeries);
+        List<Series<Number, Number>> series = new ArrayList<>();
+        series.add(xSeries);
+        series.add(ySeries);
+        series.add(zSeries);
+        return series;
+    }
 
+    private static void readCsv(String path, Series<Number, Number> xSeries, Series<Number, Number> ySeries, Series<Number, Number> zSeries) {
         try (CSVReader dataReader = new CSVReader(new FileReader(path))) {
             String[] nextLine;
             while ((nextLine = dataReader.readNext()) != null) {
@@ -42,12 +41,8 @@ public class CsvImport {
                 zSeries.getData().add(new XYChart.Data<>(time, Z));
             }
         } catch (IOException | CsvValidationException e) {
-            e.printStackTrace();
+            DialogBuilder dialogBuilder = new DialogBuilder();
+            dialogBuilder.error("Error", e.getMessage());
         }
-        List<XYChart.Series<Number, Number>> series = new ArrayList<>();
-        series.add(xSeries);
-        series.add(ySeries);
-        series.add(zSeries);
-        return series;
     }
 }
