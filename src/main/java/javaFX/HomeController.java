@@ -1,15 +1,20 @@
 package javaFX;
 
 import App.CsvUtility.CsvImport;
+import com.sun.javafx.charts.Legend;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.gillius.jfxutils.chart.JFXChartUtil;
+
 import java.io.File;
 import java.util.List;
 
@@ -35,6 +40,7 @@ public class HomeController {
             List<XYChart.Series<Number, Number>> series = CsvImport.getSeriesFromCsv(path);
             lineChart.setVisible(true);
             lineChart.getData().addAll(series);
+            legendSelect();
             anchorID.getScene().getStylesheets().add("lineChart.css");
         }
     }
@@ -53,6 +59,32 @@ public class HomeController {
         JFXChartUtil.setupZooming(lineChart);
     }
 
+    //method for selecting value on legend
+    private void legendSelect() {
+        for (Node n : this.lineChart.getChildrenUnmodifiable()) {
+            if (n instanceof Legend) {
+                Legend l = (Legend) n;
+                for (Legend.LegendItem li : l.getItems()) {
+                    for (XYChart.Series<Number, Number> s : this.lineChart.getData()) {
+                        if (s.getName().equals(li.getText())) {
+                            li.getSymbol().setCursor(Cursor.HAND);
+                            li.getSymbol().setOnMouseClicked(me -> {
+                                if (me.getButton() == MouseButton.PRIMARY) {
+                                    s.getNode().setVisible(!s.getNode().isVisible());
+                                    for (XYChart.Data<Number, Number> d : s.getData()) {
+                                        if (d.getNode() != null) {
+                                            d.getNode().setVisible(s.getNode().isVisible());
+                                        }
+                                    }
+                                }
+                            });
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 
