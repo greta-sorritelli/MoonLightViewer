@@ -11,8 +11,12 @@
 
 .chart-legend-item{
   -fx-text-fill: #000000;
-  -fx-translate-y: -200;
-  -fx-padding: 25 50 25 50;
 }
+
+.chart-legend {
+
+}
+
+
 
 

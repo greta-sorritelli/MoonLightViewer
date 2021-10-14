@@ -57,7 +57,7 @@
     </MenuBar>
     <AnchorPane fx:id="anchorID" maxHeight="-1.0" maxWidth="-1.0" prefHeight="422.0" prefWidth="870.0" stylesheets="@stylesheet.css" VBox.vgrow="ALWAYS">
       <children>
-            <LineChart fx:id="lineChart" layoutX="256.0" layoutY="58.0" legendSide="LEFT" prefHeight="458.0" prefWidth="591.0" stylesheets="@lineChart.css" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="256.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="60.0">
+            <LineChart fx:id="lineChart" layoutX="256.0" layoutY="58.0" legendSide="LEFT" prefHeight="458.0" prefWidth="591.0" stylesheets="@lineChart.css" AnchorPane.bottomAnchor="36.80000000000007" AnchorPane.leftAnchor="256.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="60.0">
               <xAxis>
                 <NumberAxis side="BOTTOM" fx:id="xAxis" />
               </xAxis>
@@ -65,21 +65,22 @@
                 <NumberAxis fx:id="yAxis" prefHeight="407.0" prefWidth="21.0" side="LEFT" />
               </yAxis>
             </LineChart>
-            <TableView layoutX="14.0" layoutY="261.0" prefHeight="274.0" prefWidth="203.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="14.0">
+            <Separator layoutX="234.0" minHeight="-Infinity" orientation="VERTICAL" prefHeight="555.0" prefWidth="5.0" valignment="BOTTOM" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <RadioButton fx:id="linear" layoutX="16.0" layoutY="256.0" mnemonicParsing="false" onAction="#linearSelected" text="Linear" />
+            <RadioButton fx:id="logarithmic" layoutX="116.0" layoutY="255.0" mnemonicParsing="false" onAction="#logarithmicSelected" prefHeight="18.0" prefWidth="101.0" text="Logarithmic" />
+            <TableView fx:id="checkList" layoutX="16.0" layoutY="22.0" prefHeight="200.0" prefWidth="200.0">
               <columns>
-                <TableColumn prefWidth="77.60000324249268">
-                     <graphic>
-                        <RadioButton mnemonicParsing="false" text="linear" />
-                     </graphic>
-                  </TableColumn>
-                  <TableColumn prefWidth="124.0000030517578">
-                     <graphic>
-                        <RadioButton mnemonicParsing="false" text="logarithmic" />
-                     </graphic>
-                  </TableColumn>
+                <TableColumn fx:id="checkColumn" prefWidth="39.199981689453125" />
+                <TableColumn fx:id="nameColumn" prefWidth="160.0000114440918" text="Variable name" />
               </columns>
             </TableView>
-            <Separator layoutX="234.0" minHeight="-Infinity" orientation="VERTICAL" prefHeight="555.0" prefWidth="5.0" valignment="BOTTOM" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <TableView layoutX="16.0" layoutY="309.0" prefHeight="226.0" prefWidth="200.0" AnchorPane.bottomAnchor="20.0">
+              <columns>
+                <TableColumn fx:id="nameVColumn" prefWidth="59.999996185302734" text="Name" />
+                <TableColumn fx:id="minColumn" prefWidth="66.39999389648438" text="Min value" />
+                  <TableColumn fx:id="maxColumn" prefWidth="72.80000305175781" text="Max value" />
+              </columns>
+            </TableView>
       </children>
     </AnchorPane>
   </children>
