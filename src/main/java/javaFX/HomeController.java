@@ -1,17 +1,17 @@
 package javaFX;
 
 import App.CsvUtility.CsvImport;
-//import com.sun.javafx.charts.Legend;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -25,12 +25,22 @@ public class HomeController {
 
     @FXML
     private AnchorPane anchorID;
+
     @FXML
     private NumberAxis yAxis = new NumberAxis();
     @FXML
     private NumberAxis xAxis = new NumberAxis();
+
+    @FXML
+    private LogarithmicAxis xLAxis = new LogarithmicAxis();
+    @FXML
+    private LogarithmicAxis yLAxis = new LogarithmicAxis();
+
     @FXML
     private LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
+    @FXML
+    private LineChart<Number, Number> lineChartLog = new LineChart<>(xLAxis, yLAxis);
+
     @FXML
     private TableView<Object> checkList;
     @FXML
@@ -45,10 +55,14 @@ public class HomeController {
     private TableColumn<String, Node> minColumn;
     @FXML
     private TableColumn<String, Node> maxColumn;
+
     @FXML
     private RadioButton linear = new RadioButton();
     @FXML
     private RadioButton logarithmic = new RadioButton();
+
+
+    private List<XYChart.Series<Number, Number>> series = new ArrayList<>();
 
     @FXML
     private void openExplorer() {
@@ -57,118 +71,53 @@ public class HomeController {
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             String path = file.getAbsolutePath();
-            List<XYChart.Series<Number, Number>> series = CsvImport.getSeriesFromCsv(path);
-            lineChart.getData().addAll(series);
-//            legendSelect();
+            series = CsvImport.getSeriesFromCsv(path);
+            linearSelected();
             anchorID.getScene().getStylesheets().add("lineChart.css");
         }
     }
 
-    public void initialize() {
+    private void initializeChart(LineChart<Number,Number> l, Axis x, Axis y) {
+        y.setLabel("Values");
+        x.setLabel("Time");
+        l.setTitle("X,Y,Z values in time");
+        l.setLegendSide(Side.RIGHT);
+        l.getYAxis().lookup(".axis-label").setStyle("-fx-label-padding: -40 0 0 0;");
+    }
+
+    public void initialize(){
         linearSelected();
-        yAxis.setLabel("Values");
-        xAxis.setLabel("Time");
-        lineChart.setTitle("X,Y,Z values in time");
-        lineChart.setLegendSide(Side.RIGHT);
-        lineChart.getYAxis().lookup(".axis-label").setStyle("-fx-label-padding: -40 0 0 0;");
-        initLists();
-        zoomable();
+//        zoomable(lineChart);
+//        zoomable(lineChartLog);
+        initializeChart(lineChart, xAxis, yAxis);
+        initializeChart(lineChartLog, xLAxis, yLAxis);
     }
 
     @FXML
     private void logarithmicSelected() {
+        lineChartLog.getData().removeAll(series);
+        lineChartLog.getData().addAll(series);
         linear.setSelected(false);
+        lineChart.setVisible(false);
+        lineChartLog.setVisible(true);
         logarithmic.requestFocus();
         logarithmic.setSelected(true);
     }
 
     @FXML
     private void linearSelected() {
+        lineChart.getData().removeAll(series);
+        lineChart.getData().addAll(series);
         linear.setSelected(true);
+        lineChartLog.setVisible(false);
+        lineChart.setVisible(true);
         linear.requestFocus();
         logarithmic.setSelected(false);
     }
 
-    private void initLists() {
-        initChechList();
-        initVariablesList();
-    }
+    private void zoomable(LineChart<Number,Number> lineChart) {
 
-    private void initVariablesList() {
-
-    }
-
-    private void initChechList() {
-        List<Node> items = new ArrayList<>();
-        lineChart.getChildrenUnmodifiable().forEach(e -> {
-            if (e != null)
-                items.add(e);
-        });
-//        checkList.getItems().addAll(FXCollections.observableArrayList(items));
-    }
-
-    private void zoomable() {
         JFXChartUtil.setupZooming(lineChart);
     }
 
-    //method for selecting value on legend
-//    private void legendSelect() {
-//        for (Node n : this.lineChart.getChildrenUnmodifiable()) {
-//            if (n instanceof Legend) {
-//                Legend l = (Legend) n;
-//                for (Legend.LegendItem li : l.getItems()) {
-//                    for (XYChart.Series<Number, Number> s : this.lineChart.getData()) {
-//                        if (s.getName().equals(li.getText())) {
-//                            li.getSymbol().setCursor(Cursor.HAND);
-//                            li.getSymbol().setOnMouseClicked(me -> {
-//                                if (me.getButton() == MouseButton.PRIMARY) {
-//                                    s.getNode().setVisible(!s.getNode().isVisible());
-//                                    for (XYChart.Data<Number, Number> d : s.getData()) {
-//                                        if (d.getNode() != null) {
-//                                            d.getNode().setVisible(s.getNode().isVisible());
-//                                        }
-//                                    }
-//                                }
-//                            });
-//                            break;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-    private void listSelect() {
-//        for (Node n : this.lineChart.getChildrenUnmodifiable()) {
-//            if (n instanceof Legend) {
-//                Legend l = (Legend) n;
-//                for (Legend.LegendItem li : l.getItems()) {
-//                    for (XYChart.Series<Number, Number> s : this.lineChart.getData()) {
-//                        if (s.getName().equals(li.getText())) {
-//                            li.getSymbol().setCursor(Cursor.HAND);
-//                            li.getSymbol().setOnMouseClicked(me -> {
-//                                if (me.getButton() == MouseButton.PRIMARY) {
-//                                    s.getNode().setVisible(!s.getNode().isVisible());
-//                                    for (XYChart.Data<Number, Number> d : s.getData()) {
-//                                        if (d.getNode() != null) {
-//                                            d.getNode().setVisible(s.getNode().isVisible());
-//                                        }
-//                                    }
-//                                }
-//                            });
-//                            break;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-    }
 }
-
-
-
-
-
-
-

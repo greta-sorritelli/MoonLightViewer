@@ -32,6 +32,7 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
+<?import javaFX.LogarithmicAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Menu?>
@@ -44,7 +45,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="577.0" prefWidth="869.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javaFX.HomeController">
+<VBox prefHeight="577.0" prefWidth="869.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -81,6 +82,14 @@
                   <TableColumn fx:id="maxColumn" prefWidth="72.80000305175781" text="Max value" />
               </columns>
             </TableView>
+            <LineChart fx:id="lineChartLog" layoutX="256.0" layoutY="58.0" legendSide="LEFT" prefHeight="460.0" prefWidth="600.0" stylesheets="@lineChart.css" AnchorPane.bottomAnchor="36.80000000000007" AnchorPane.leftAnchor="256.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="60.0">
+              <xAxis>
+                <LogarithmicAxis side="BOTTOM" fx:id="xLAxis" />
+              </xAxis>
+              <yAxis>
+                <LogarithmicAxis fx:id="yLAxis" prefHeight="407.0" prefWidth="21.0" side="LEFT" />
+              </yAxis>
+            </LineChart>
       </children>
     </AnchorPane>
   </children>
