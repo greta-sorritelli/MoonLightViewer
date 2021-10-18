@@ -59,8 +59,7 @@ public class LogarithmicAxis extends ValueAxis<Number> {
 
     @Override
     protected List<Number> calculateMinorTickMarks() {
-        List<Number> minorTickMarksPositions = new ArrayList<>();
-        return minorTickMarksPositions;
+        return new ArrayList<>();
     }
 
     @Override
@@ -77,28 +76,37 @@ public class LogarithmicAxis extends ValueAxis<Number> {
                 try {
                     lowerRangeTimeline.getKeyFrames().clear();
                     upperRangeTimeline.getKeyFrames().clear();
-
-                    lowerRangeTimeline.getKeyFrames()
-                            .addAll(new KeyFrame(Duration.ZERO, new KeyValue(lowerBoundProperty(), lowerBoundProperty()
-                                            .get())),
-                                    new KeyFrame(new Duration(ANIMATION_TIME), new KeyValue(lowerBoundProperty(),
-                                            lowerBound.doubleValue())));
-
-                    upperRangeTimeline.getKeyFrames()
-                            .addAll(new KeyFrame(Duration.ZERO, new KeyValue(upperBoundProperty(), upperBoundProperty()
-                                            .get())),
-                                    new KeyFrame(new Duration(ANIMATION_TIME), new KeyValue(upperBoundProperty(),
-                                            upperBound.doubleValue())));
+                    getKeyFramesLowerBound(lowerBound);
+                    getKeyFramesUpperBound(upperBound);
                     lowerRangeTimeline.play();
                     upperRangeTimeline.play();
                 } catch (Exception e) {
-                    lowerBoundProperty().set(lowerBound.doubleValue());
-                    upperBoundProperty().set(upperBound.doubleValue());
+                    setBoundProperty(lowerBound,upperBound);
                 }
             }
-            lowerBoundProperty().set(lowerBound.doubleValue());
-            upperBoundProperty().set(upperBound.doubleValue());
+            setBoundProperty(lowerBound,upperBound);
         }
+    }
+
+    private void setBoundProperty(Number number1, Number number2){
+        lowerBoundProperty().set(number1.doubleValue());
+        upperBoundProperty().set(number2.doubleValue());
+    }
+
+    private void getKeyFramesLowerBound(Number lowerBound){
+        lowerRangeTimeline.getKeyFrames()
+                .addAll(new KeyFrame(Duration.ZERO, new KeyValue(lowerBoundProperty(), lowerBoundProperty()
+                                .get())),
+                        new KeyFrame(new Duration(ANIMATION_TIME), new KeyValue(lowerBoundProperty(),
+                                lowerBound.doubleValue())));
+    }
+
+    private void getKeyFramesUpperBound(Number upperBound){
+        upperRangeTimeline.getKeyFrames()
+                .addAll(new KeyFrame(Duration.ZERO, new KeyValue(upperBoundProperty(), upperBoundProperty()
+                                .get())),
+                        new KeyFrame(new Duration(ANIMATION_TIME), new KeyValue(upperBoundProperty(),
+                                upperBound.doubleValue())));
     }
 
     @Override
