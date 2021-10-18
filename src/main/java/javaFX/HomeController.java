@@ -15,8 +15,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.gillius.jfxutils.chart.JFXChartUtil;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +54,6 @@ public class HomeController {
     @FXML
     RadioButton logarithmic = new RadioButton();
 
-    private List<XYChart.Series<Number, Number>> linearSeries = new ArrayList<>();
-    private List<XYChart.Series<Number, Number>> logarithmicSeries = new ArrayList<>();
-
     @FXML
     private void openExplorer() {
         FileChooser fileChooser = new FileChooser();
@@ -66,8 +61,8 @@ public class HomeController {
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             String path = file.getAbsolutePath();
-            linearSeries = CsvImport.getSeriesFromCsv(path);
-            logarithmicSeries = CsvImport.getSeriesFromCsv(path);
+            List<Series<Number, Number>> linearSeries = CsvImport.getSeriesFromCsv(path);
+            List<Series<Number, Number>> logarithmicSeries = CsvImport.getSeriesFromCsv(path);
             lineChart.getData().addAll(linearSeries);
             lineChartLog.getData().addAll(logarithmicSeries);
             linearSelected();
@@ -75,7 +70,7 @@ public class HomeController {
         }
     }
 
-    private void initializeChart(LineChart<Number, Number> l, Axis x, Axis y) {
+    private void initializeChart(LineChart<Number, Number> l, Axis<Number> x, Axis<Number> y) {
         y.setLabel("Values");
         x.setLabel("Time");
         l.setTitle("X,Y,Z values in time");
@@ -97,8 +92,6 @@ public class HomeController {
         linear.setSelected(false);
         logarithmic.requestFocus();
         logarithmic.setSelected(true);
-        zoomable(lineChartLog);
-        showList(lineChartLog);
     }
 
     @FXML
@@ -109,18 +102,11 @@ public class HomeController {
         linear.setSelected(true);
         linear.requestFocus();
         logarithmic.setSelected(false);
-//        zoomable(lineChart);
-        showList(lineChart);
     }
-
-    private void zoomable(LineChart<Number, Number> chart) {
-        JFXChartUtil.setupZooming(chart);
-    }
-
 
     private void initLists() {
-//        showList(lineChart);
         initVariablesList();
+        showList();
     }
 
     private void initVariablesList() {
@@ -136,11 +122,11 @@ public class HomeController {
         setMinMaxValueFactory();
     }
 
-    private void showList(LineChart<Number, Number> chart) {
+    private void showList() {
         if (list != null && !list.getItems().isEmpty())
             list.getItems().clear();
         final ObservableList<CheckBox> variables = FXCollections.observableArrayList();
-        for (Series<Number, Number> serie : chart.getData()) {
+        for (Series<Number, Number> serie : lineChart.getData()) {
             CheckBox ck = new CheckBox(serie.getName());
             ck.setSelected(true);
             ck.selectedProperty().addListener((observable, oldValue, newValue) -> {
