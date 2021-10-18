@@ -61,8 +61,8 @@ public class HomeController {
     @FXML
     private RadioButton logarithmic = new RadioButton();
 
-
-    private List<XYChart.Series<Number, Number>> series = new ArrayList<>();
+    private List<XYChart.Series<Number, Number>> linearSeries = new ArrayList<>();
+    private List<XYChart.Series<Number, Number>> logarithmicSeries = new ArrayList<>();
 
     @FXML
     private void openExplorer() {
@@ -71,9 +71,9 @@ public class HomeController {
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             String path = file.getAbsolutePath();
-            series = CsvImport.getSeriesFromCsv(path);
+            linearSeries = CsvImport.getSeriesFromCsv(path);
+            logarithmicSeries = CsvImport.getSeriesFromCsv(path);
             linearSelected();
-            anchorID.getScene().getStylesheets().add("lineChart.css");
         }
     }
 
@@ -86,31 +86,33 @@ public class HomeController {
     }
 
     public void initialize(){
-        linearSelected();
 //        zoomable(lineChart);
 //        zoomable(lineChartLog);
+        lineChartLog.setVisible(false);
         initializeChart(lineChart, xAxis, yAxis);
         initializeChart(lineChartLog, xLAxis, yLAxis);
     }
 
     @FXML
     private void logarithmicSelected() {
-        lineChartLog.getData().removeAll(series);
-        lineChartLog.getData().addAll(series);
-        linear.setSelected(false);
+        lineChartLog.setAnimated(false);
         lineChart.setVisible(false);
         lineChartLog.setVisible(true);
+        lineChartLog.getData().removeAll(logarithmicSeries);
+        lineChartLog.getData().addAll(logarithmicSeries);
+        linear.setSelected(false);
         logarithmic.requestFocus();
         logarithmic.setSelected(true);
     }
 
     @FXML
     private void linearSelected() {
-        lineChart.getData().removeAll(series);
-        lineChart.getData().addAll(series);
-        linear.setSelected(true);
+        lineChart.setAnimated(false);
+        lineChart.getData().removeAll(linearSeries);
+        lineChart.getData().addAll(linearSeries);
         lineChartLog.setVisible(false);
         lineChart.setVisible(true);
+        linear.setSelected(true);
         linear.requestFocus();
         logarithmic.setSelected(false);
     }
