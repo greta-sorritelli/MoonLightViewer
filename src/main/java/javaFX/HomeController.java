@@ -6,8 +6,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
-import javafx.scene.Node;
-import javafx.scene.chart.*;
+import javafx.scene.chart.Axis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -15,7 +17,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.gillius.jfxutils.chart.JFXChartUtil;
 
-import javax.sound.sampled.Line;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,8 +68,9 @@ public class HomeController {
             String path = file.getAbsolutePath();
             linearSeries = CsvImport.getSeriesFromCsv(path);
             logarithmicSeries = CsvImport.getSeriesFromCsv(path);
+            lineChart.getData().addAll(linearSeries);
+            lineChartLog.getData().addAll(logarithmicSeries);
             linearSelected();
-            initialize();
             initLists();
         }
     }
@@ -92,8 +94,6 @@ public class HomeController {
         lineChartLog.setAnimated(false);
         lineChart.setVisible(false);
         lineChartLog.setVisible(true);
-        lineChartLog.getData().removeAll(logarithmicSeries);
-        lineChartLog.getData().addAll(logarithmicSeries);
         linear.setSelected(false);
         logarithmic.requestFocus();
         logarithmic.setSelected(true);
@@ -104,14 +104,12 @@ public class HomeController {
     @FXML
     private void linearSelected() {
         lineChart.setAnimated(false);
-        lineChart.getData().removeAll(linearSeries);
-        lineChart.getData().addAll(linearSeries);
         lineChartLog.setVisible(false);
         lineChart.setVisible(true);
         linear.setSelected(true);
         linear.requestFocus();
         logarithmic.setSelected(false);
-        zoomable(lineChart);
+//        zoomable(lineChart);
         showList(lineChart);
     }
 
