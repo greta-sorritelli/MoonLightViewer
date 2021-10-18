@@ -39,9 +39,9 @@ public class HomeController {
     @FXML
     LineChart<Number, Number> lineChartLog = new LineChart<>(xLAxis, yLAxis);
 
+    @FXML LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
     @FXML
-    LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
-    @FXML
+
     TableView<Series<Number, Number>> variables;
     @FXML
     TableColumn<Series<Number, Number>, String> nameVColumn;
@@ -140,17 +140,12 @@ public class HomeController {
     }
 
     private void changeVisibility(String name) {
+        changeSingleChartVisibility(name, lineChart);
+        changeSingleChartVisibility(name, lineChartLog);
+    }
+
+    private void changeSingleChartVisibility(String name, LineChart<Number, Number> lineChart) {
         for (Series<Number, Number> s : lineChart.getData()) {
-            if (s.getName().equals(name)) {
-                s.getNode().setVisible(!s.getNode().isVisible());
-                for (XYChart.Data<Number, Number> d : s.getData()) {
-                    if (d.getNode() != null) {
-                        d.getNode().setVisible(s.getNode().isVisible());
-                    }
-                }
-            }
-        }
-        for (Series<Number, Number> s : lineChartLog.getData()) {
             if (s.getName().equals(name)) {
                 s.getNode().setVisible(!s.getNode().isVisible());
                 for (XYChart.Data<Number, Number> d : s.getData()) {
@@ -175,13 +170,4 @@ public class HomeController {
     public Number getMaxSeries(Series<Number, Number> series) {
         return series.getData().stream().mapToDouble(num -> num.getYValue().doubleValue()).max().getAsDouble();
     }
-
-
 }
-
-
-
-
-
-
-
