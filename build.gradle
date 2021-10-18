@@ -34,6 +34,8 @@ dependencies {
     implementation 'com.opencsv:opencsv:5.5.2'
 
     implementation 'org.gillius:jfxutils:1.0'
+
+    implementation 'org.controlsfx:controlsfx:11.1.0'
 }
 
 javafx {
@@ -46,3 +48,4 @@ application {
     // Define the main class for the application.
     mainClassName = 'App.App'
 }
+

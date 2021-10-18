@@ -35,6 +35,8 @@
 <?import javaFX.LogarithmicAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -43,6 +45,10 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox prefHeight="577.0" prefWidth="869.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
@@ -56,9 +62,9 @@
         </Menu>
       </menus>
     </MenuBar>
-    <AnchorPane fx:id="anchorID" maxHeight="-1.0" maxWidth="-1.0" prefHeight="422.0" prefWidth="870.0" stylesheets="@stylesheet.css" VBox.vgrow="ALWAYS">
+    <AnchorPane fx:id="anchorID" stylesheets="@stylesheet.css" VBox.vgrow="ALWAYS">
       <children>
-            <LineChart fx:id="lineChart" layoutX="256.0" layoutY="58.0" legendSide="LEFT" prefHeight="458.0" prefWidth="591.0" stylesheets="@lineChart.css" AnchorPane.bottomAnchor="36.80000000000007" AnchorPane.leftAnchor="256.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="60.0">
+            <LineChart fx:id="lineChart" layoutX="273.0" layoutY="58.0" legendSide="LEFT" prefHeight="454.0" prefWidth="577.0" stylesheets="@lineChart.css" AnchorPane.bottomAnchor="41.0" AnchorPane.leftAnchor="273.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="60.0">
               <xAxis>
                 <NumberAxis side="BOTTOM" fx:id="xAxis" />
               </xAxis>
@@ -66,23 +72,8 @@
                 <NumberAxis fx:id="yAxis" prefHeight="407.0" prefWidth="21.0" side="LEFT" />
               </yAxis>
             </LineChart>
-            <Separator layoutX="234.0" minHeight="-Infinity" orientation="VERTICAL" prefHeight="555.0" prefWidth="5.0" valignment="BOTTOM" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            <RadioButton fx:id="linear" layoutX="16.0" layoutY="256.0" mnemonicParsing="false" onAction="#linearSelected" text="Linear" />
-            <RadioButton fx:id="logarithmic" layoutX="116.0" layoutY="255.0" mnemonicParsing="false" onAction="#logarithmicSelected" prefHeight="18.0" prefWidth="101.0" text="Logarithmic" />
-            <TableView fx:id="checkList" layoutX="16.0" layoutY="22.0" prefHeight="200.0" prefWidth="200.0">
-              <columns>
-                <TableColumn fx:id="checkColumn" prefWidth="39.199981689453125" />
-                <TableColumn fx:id="nameColumn" prefWidth="160.0000114440918" text="Variable name" />
-              </columns>
-            </TableView>
-            <TableView layoutX="16.0" layoutY="309.0" prefHeight="226.0" prefWidth="200.0" AnchorPane.bottomAnchor="20.0">
-              <columns>
-                <TableColumn fx:id="nameVColumn" prefWidth="59.999996185302734" text="Name" />
-                <TableColumn fx:id="minColumn" prefWidth="66.39999389648438" text="Min value" />
-                  <TableColumn fx:id="maxColumn" prefWidth="72.80000305175781" text="Max value" />
-              </columns>
-            </TableView>
-            <LineChart fx:id="lineChartLog" layoutX="256.0" layoutY="58.0" legendSide="LEFT" prefHeight="460.0" prefWidth="600.0" stylesheets="@lineChart.css" AnchorPane.bottomAnchor="36.80000000000007" AnchorPane.leftAnchor="256.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="60.0">
+
+            <LineChart fx:id="lineChartLog" layoutX="273.0" layoutY="57.0" legendSide="LEFT" prefHeight="463.0" prefWidth="577.0" stylesheets="@lineChart.css" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="273.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="57.0">
               <xAxis>
                 <LogarithmicAxis side="BOTTOM" fx:id="xLAxis" />
               </xAxis>
@@ -90,6 +81,52 @@
                 <LogarithmicAxis fx:id="yLAxis" prefHeight="407.0" prefWidth="21.0" side="LEFT" />
               </yAxis>
             </LineChart>
+
+            <Separator layoutX="250.0" minHeight="-Infinity" orientation="VERTICAL" prefHeight="555.0" prefWidth="5.0" valignment="BOTTOM" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <GridPane alignment="BOTTOM_LEFT" gridLinesVisible="true" layoutX="7.0" layoutY="295.0" prefHeight="258.0" prefWidth="238.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints vgrow="ALWAYS" />
+              </rowConstraints>
+               <children>
+                  <TableView fx:id="variables" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                    <columns>
+                      <TableColumn fx:id="nameVColumn" prefWidth="48.000000953674316" text="Name" />
+                      <TableColumn fx:id="minColumn" prefWidth="93.60000228881836" text="Min value" />
+                        <TableColumn fx:id="maxColumn" prefWidth="96.0" text="Max value" />
+                    </columns>
+                  </TableView>
+               </children>
+            </GridPane>
+            <GridPane alignment="CENTER_LEFT" layoutX="7.0" layoutY="242.0" prefHeight="30.0" prefWidth="238.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <RadioButton fx:id="linear" mnemonicParsing="false" onAction="#linearSelected" text="Linear" GridPane.valignment="CENTER" />
+                  <RadioButton fx:id="logarithmic" mnemonicParsing="false" onAction="#logarithmicSelected" prefHeight="18.0" prefWidth="101.0" text="Logarithmic" GridPane.columnIndex="1" GridPane.valignment="CENTER" />
+               </children>
+            </GridPane>
+            <GridPane gridLinesVisible="true" layoutX="6.0" layoutY="4.0" prefHeight="231.0" prefWidth="238.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints maxHeight="110.60001220703126" minHeight="10.0" prefHeight="21.79999961853028" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="210.5999912261963" minHeight="10.0" prefHeight="209.00000038146973" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label prefHeight="18.0" prefWidth="234.0" text="Series" textAlignment="CENTER" wrapText="true" />
+                  <ListView fx:id="list" prefHeight="210.0" prefWidth="241.0" GridPane.rowIndex="1" />
+               </children>
+            </GridPane>
+            <HBox fx:id="legend" layoutX="333.0" layoutY="16.0" prefHeight="190.0" prefWidth="238.0" />
       </children>
     </AnchorPane>
   </children>

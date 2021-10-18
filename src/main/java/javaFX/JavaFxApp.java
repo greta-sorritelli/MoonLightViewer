@@ -10,7 +10,6 @@ import javafx.stage.StageStyle;
 public class JavaFxApp extends Application {
 
     public void start(Stage stage) throws Exception {
-//        Parent root = FXMLLoader.load(getClass().getResource("/home.fxml"));
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/home.fxml"));
         fxmlLoader.setController(new HomeController());
         Parent root = fxmlLoader.load();
