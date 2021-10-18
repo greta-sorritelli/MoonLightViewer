@@ -16,3 +16,5 @@ src/main/java/javaFX/HomeController.java
 .idea/compiler.xml
 src/main/java/javaFX/HomeController.java
 src/main/java/App/GraphicOperations/CsvToGraphic.java
+.idea/compiler.xml
+.idea/misc.xml
