@@ -1,22 +1,21 @@
 package javaFX;
 
 import App.CsvUtility.CsvImport;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
 import javafx.scene.Node;
-import javafx.scene.chart.Axis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.chart.*;
+import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.gillius.jfxutils.chart.JFXChartUtil;
 
+import javax.sound.sampled.Line;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,42 +23,37 @@ import java.util.List;
 public class HomeController {
 
     @FXML
-    private AnchorPane anchorID;
+    AnchorPane anchorID;
 
     @FXML
-    private NumberAxis yAxis = new NumberAxis();
+    NumberAxis yAxis = new NumberAxis();
     @FXML
-    private NumberAxis xAxis = new NumberAxis();
+    NumberAxis xAxis = new NumberAxis();
 
     @FXML
-    private LogarithmicAxis xLAxis = new LogarithmicAxis();
+    LogarithmicAxis xLAxis = new LogarithmicAxis();
     @FXML
-    private LogarithmicAxis yLAxis = new LogarithmicAxis();
+    LogarithmicAxis yLAxis = new LogarithmicAxis();
 
     @FXML
-    private LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
+    ListView<CheckBox> list;
     @FXML
-    private LineChart<Number, Number> lineChartLog = new LineChart<>(xLAxis, yLAxis);
+    LineChart<Number, Number> lineChartLog = new LineChart<>(xLAxis, yLAxis);
 
     @FXML
-    private TableView<Object> checkList;
+    LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
     @FXML
-    private TableColumn<CheckBox, Node> checkColumn;
+    TableView<Series<Number, Number>> variables;
     @FXML
-    private TableColumn<String, Node> nodeColumn;
+    TableColumn<Series<Number, Number>, String> nameVColumn;
     @FXML
-    private TableView<String> variables;
+    TableColumn<Series<Number, Number>, Number> minColumn;
     @FXML
-    private TableColumn<String, Node> nameVColumn;
+    TableColumn<Series<Number, Number>, Number> maxColumn;
     @FXML
-    private TableColumn<String, Node> minColumn;
+    RadioButton linear = new RadioButton();
     @FXML
-    private TableColumn<String, Node> maxColumn;
-
-    @FXML
-    private RadioButton linear = new RadioButton();
-    @FXML
-    private RadioButton logarithmic = new RadioButton();
+    RadioButton logarithmic = new RadioButton();
 
     private List<XYChart.Series<Number, Number>> linearSeries = new ArrayList<>();
     private List<XYChart.Series<Number, Number>> logarithmicSeries = new ArrayList<>();
@@ -74,10 +68,12 @@ public class HomeController {
             linearSeries = CsvImport.getSeriesFromCsv(path);
             logarithmicSeries = CsvImport.getSeriesFromCsv(path);
             linearSelected();
+            initialize();
+            initLists();
         }
     }
 
-    private void initializeChart(LineChart<Number,Number> l, Axis x, Axis y) {
+    private void initializeChart(LineChart<Number, Number> l, Axis x, Axis y) {
         y.setLabel("Values");
         x.setLabel("Time");
         l.setTitle("X,Y,Z values in time");
@@ -86,8 +82,6 @@ public class HomeController {
     }
 
     public void initialize(){
-//        zoomable(lineChart);
-//        zoomable(lineChartLog);
         lineChartLog.setVisible(false);
         initializeChart(lineChart, xAxis, yAxis);
         initializeChart(lineChartLog, xLAxis, yLAxis);
@@ -103,6 +97,8 @@ public class HomeController {
         linear.setSelected(false);
         logarithmic.requestFocus();
         logarithmic.setSelected(true);
+        zoomable(lineChartLog);
+        showList(lineChartLog);
     }
 
     @FXML
@@ -115,11 +111,93 @@ public class HomeController {
         linear.setSelected(true);
         linear.requestFocus();
         logarithmic.setSelected(false);
+        zoomable(lineChart);
+        showList(lineChart);
     }
 
-    private void zoomable(LineChart<Number,Number> lineChart) {
-
-        JFXChartUtil.setupZooming(lineChart);
+    private void zoomable(LineChart<Number, Number> chart) {
+        JFXChartUtil.setupZooming(chart);
     }
+
+
+    private void initLists() {
+//        showList(lineChart);
+        initVariablesList();
+    }
+
+    private void initVariablesList() {
+        List<Series<Number, Number>> items = new ArrayList<>();
+        lineChart.getData().forEach(e -> {
+            if (e != null)
+                items.add(e);
+        });
+        variables.getItems().clear();
+        for (Series<Number, Number> m : items) {
+            variables.getItems().add(m);
+        }
+        setMinMaxValueFactory();
+    }
+
+    private void showList(LineChart<Number, Number> chart) {
+        if (list != null && !list.getItems().isEmpty())
+            list.getItems().clear();
+        final ObservableList<CheckBox> variables = FXCollections.observableArrayList();
+        for (Series<Number, Number> serie : chart.getData()) {
+            CheckBox ck = new CheckBox(serie.getName());
+            ck.setSelected(true);
+            ck.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                ck.setSelected(!oldValue);
+                changeVisibility(ck.getText());
+            });
+            variables.add(ck);
+        }
+        if (!variables.isEmpty())
+            list.getItems().addAll(variables);
+    }
+
+    private void changeVisibility(String name) {
+        for (Series<Number, Number> s : lineChart.getData()) {
+            if (s.getName().equals(name)) {
+                s.getNode().setVisible(!s.getNode().isVisible());
+                for (XYChart.Data<Number, Number> d : s.getData()) {
+                    if (d.getNode() != null) {
+                        d.getNode().setVisible(s.getNode().isVisible());
+                    }
+                }
+            }
+        }
+        for (Series<Number, Number> s : lineChartLog.getData()) {
+            if (s.getName().equals(name)) {
+                s.getNode().setVisible(!s.getNode().isVisible());
+                for (XYChart.Data<Number, Number> d : s.getData()) {
+                    if (d.getNode() != null) {
+                        d.getNode().setVisible(s.getNode().isVisible());
+                    }
+                }
+            }
+        }
+    }
+
+    private void setMinMaxValueFactory() {
+        nameVColumn.setCellValueFactory(value -> new SimpleObjectProperty<>(value.getValue().getName()));
+        minColumn.setCellValueFactory(value -> new SimpleObjectProperty<>(getMinSeries(value.getValue())));
+        maxColumn.setCellValueFactory(value -> new SimpleObjectProperty<>(getMaxSeries(value.getValue())));
+    }
+
+    public Number getMinSeries(Series<Number, Number> series) {
+        return series.getData().stream().mapToDouble(num -> num.getYValue().doubleValue()).min().getAsDouble();
+    }
+
+    public Number getMaxSeries(Series<Number, Number> series) {
+        return series.getData().stream().mapToDouble(num -> num.getYValue().doubleValue()).max().getAsDouble();
+    }
+
 
 }
+
+
+
+
+
+
+
