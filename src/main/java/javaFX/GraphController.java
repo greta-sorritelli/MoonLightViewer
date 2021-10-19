@@ -7,8 +7,8 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import java.io.*;
+import org.jgrapht;
 import java.util.List;
 
 public class GraphController {
@@ -17,16 +17,21 @@ public class GraphController {
     AnchorPane anchorID;
 
     @FXML
-    public void openExplorer() throws IOException {
+    private void openExplorer() throws IOException {
         FileChooser fileChooser = new FileChooser();
         Stage stage = (Stage) anchorID.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             BufferedReader br = new BufferedReader(new FileReader(file));
             try {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    System.out.println(line);
+                String line = br.readLine();
+                if(line.contains("LOCATIONS")) {
+                    int nodes = Integer.parseInt(line.substring(10));
+//                    Graph
+                    while ((line = br.readLine()) != null) {
+                        createEdge();
+                        System.out.println(line);
+                    }
                 }
             } catch (Exception e) {
                 DialogBuilder dialogBuilder = new DialogBuilder();
@@ -36,6 +41,9 @@ public class GraphController {
             }
         }
 
+    }
+
+    private void createEdge() {
     }
 
 }
