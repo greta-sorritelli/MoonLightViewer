@@ -38,6 +38,7 @@ dependencies {
     implementation 'org.controlsfx:controlsfx:11.1.0'
 
     implementation 'org.jgrapht:jgrapht:1.5.1'
+
 }
 
 javafx {
