@@ -47,7 +47,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
@@ -126,7 +125,6 @@
                   <ListView fx:id="list" prefHeight="210.0" prefWidth="241.0" GridPane.rowIndex="1" />
                </children>
             </GridPane>
-            <HBox fx:id="legend" layoutX="333.0" layoutY="16.0" prefHeight="190.0" prefWidth="238.0" />
       </children>
     </AnchorPane>
   </children>
