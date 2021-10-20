@@ -1,0 +1,26 @@
+node {
+    fill-color: transparent;
+    size: 50px;
+    stroke-mode: none;
+    fill-color: aquamarine, #254;
+    fill-mode: gradient-diagonal1;
+    text-alignment: center;
+    text-color: white;
+    text-size: 20;
+}
+node:clicked {
+    stroke-mode: plain;
+    stroke-color: red;
+    fill-color: yellow, orange;
+    fill-mode: gradient-diagonal1;
+}
+
+edge {
+    text-alignment: above;
+    text-offset: 0px, 10px;
+    text-size: 20;
+}
+
+edge:clicked {
+    fill-color: blue;
+}

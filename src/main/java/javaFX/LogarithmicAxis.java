@@ -1,5 +1,6 @@
 package javaFX;
 
+import App.Exceptions.IllegalLogarithmicRangeException;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -8,7 +9,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.chart.ValueAxis;
 import javafx.util.Duration;
-
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;

@@ -1,4 +1,4 @@
-package javaFX;
+package App.Exceptions;
 
 public class IllegalLogarithmicRangeException extends Exception{
     public IllegalLogarithmicRangeException(String message) {
