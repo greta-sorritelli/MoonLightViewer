@@ -1,34 +1,31 @@
 package javaFX;
 
-import App.CsvUtility.CsvImport;
-import App.DialogUtility.DialogBuilder;
-import App.TraUtility.LabelEdge;
 import javafx.fxml.FXML;
-import javafx.scene.chart.XYChart;
+import javafx.scene.SubScene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.graphstream.graph.Edge;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.fx_viewer.FxViewPanel;
+import org.graphstream.ui.fx_viewer.FxViewer;
+import org.graphstream.ui.javafx.FxGraphRenderer;
 
-import java.io.*;
-
-import org.jgrapht.Graph;
-
-import org.jgrapht.ext.JGraphXAdapter;
-import org.jgrapht.graph.*;
-//import org.jgrapht.graph.DefaultEdge;
-//import org.jgrapht.graph.SimpleGraph;
-import org.jgrapht.graph.SimpleWeightedGraph;
-import org.jgrapht.graph.builder.GraphBuilder;
-
-import javax.swing.text.html.ImageView;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class GraphController {
 
     @FXML
     AnchorPane anchorID;
     @FXML
-    ImageView graphImage;
+    BorderPane borderPane = new BorderPane();
+
+   private int idGraph = 0;
 
     @FXML
     private void openExplorer() throws IOException {
@@ -37,42 +34,43 @@ public class GraphController {
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             BufferedReader br = new BufferedReader(new FileReader(file));
+            SingleGraph graph = new SingleGraph(String.valueOf(idGraph));
+            FxViewer v = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+            v.enableAutoLayout();
+            FxViewPanel panel = (FxViewPanel)v.addDefaultView(false, new FxGraphRenderer());
+            System.setProperty("org.graphstream.ui", "javafx");
+            graph.setAttribute("ui.stylesheet", "url(graphStylesheet.css)");
+
             try {
                 String line = br.readLine();
-                Graph<String, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
                 if (line.contains("LOCATIONS")) {
-//                    int nodes = Integer.parseInt(line.substring(10));
                     while ((line = br.readLine()) != null) {
                         createEdge(line, graph);
-//                        System.out.println(line);
                     }
                 }
-                visualizeGraph(graph);
-            } catch (Exception e) {
-                DialogBuilder dialogBuilder = new DialogBuilder();
-                dialogBuilder.error("Error!", e.getMessage());
+                SubScene scene = new SubScene(panel, 500, 300);
+                borderPane.setCenter(scene);
+//                graph.display();
+            } catch (IOException e) {
+                e.printStackTrace();
             } finally {
                 br.close();
             }
         }
-
     }
 
-    private void visualizeGraph(Graph<String, DefaultEdge> graph) throws IOException {
-        File imgFile = new File("src/test/resources/graph.png");
-        imgFile.createNewFile();
-
-
-    }
-
-    private void createEdge(String line, Graph<String, DefaultEdge> graph) {
+    private void createEdge(String line, Graph graph) {
         String[] elements = line.split(",");
         String vertex1 = elements[0];
         String vertex2 = elements[1];
         String edge = elements[2];
-        graph.addVertex(vertex1);
-        graph.addVertex(vertex2);
-        graph.addEdge(vertex1, vertex2, new LabelEdge(edge));
-    }
+        if(graph.getNode(vertex1) == null )
+            graph.addNode(vertex1);
+        if(graph.getNode(vertex2) == null)
+            graph.addNode(vertex2);
+        Edge e = graph.addEdge("id "+ String.valueOf(idGraph), vertex1, vertex2);
+        e.setAttribute("ui.label",edge);
+        idGraph++;
 
+    }
 }

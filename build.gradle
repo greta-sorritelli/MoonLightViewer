@@ -26,7 +26,8 @@ repositories {
 
 dependencies {
     // This dependency is used by the application.
-    implementation 'com.google.guava:guava:31.0.1-jre'
+    implementation 'jgrapht:jgrapht:0.7.3'
+    implementation 'org.javabits.jgrapht:jgrapht-core:0.9.3'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.13.2'
@@ -37,13 +38,17 @@ dependencies {
 
     implementation 'org.controlsfx:controlsfx:11.1.0'
 
-    implementation 'org.jgrapht:jgrapht:1.5.1'
+    implementation 'org.graphstream:gs-core:2.0'
+
+    implementation 'org.graphstream:gs-algo:2.0'
+
+    implementation 'org.graphstream:gs-ui-javafx:2.0'
 
 }
 
 javafx {
     version = "17"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing' ]
 
 }
 
