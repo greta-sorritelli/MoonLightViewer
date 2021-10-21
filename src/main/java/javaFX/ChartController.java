@@ -23,25 +23,21 @@ public class ChartController {
 
     @FXML
     AnchorPane anchorID;
-
     @FXML
     NumberAxis yAxis = new NumberAxis();
     @FXML
     NumberAxis xAxis = new NumberAxis();
-
     @FXML
     LogarithmicAxis xLAxis = new LogarithmicAxis();
     @FXML
     LogarithmicAxis yLAxis = new LogarithmicAxis();
-
     @FXML
     ListView<CheckBox> list;
     @FXML
     LineChart<Number, Number> lineChartLog = new LineChart<>(xLAxis, yLAxis);
-
-    @FXML LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
     @FXML
-
+    LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
+    @FXML
     TableView<Series<Number, Number>> variables;
     @FXML
     TableColumn<Series<Number, Number>, String> nameVColumn;
