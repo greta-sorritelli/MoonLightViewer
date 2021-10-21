@@ -40,10 +40,9 @@ dependencies {
 
     implementation 'org.graphstream:gs-core:2.0'
 
-    implementation 'org.graphstream:gs-algo:2.0'
-
     implementation 'org.graphstream:gs-ui-javafx:2.0'
 
+    implementation 'org.graphstream:gs-algo:2.0'
 }
 
 javafx {
@@ -51,6 +50,7 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing' ]
 
 }
+
 
 application {
     // Define the main class for the application.

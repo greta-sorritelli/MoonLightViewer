@@ -22,3 +22,4 @@ src/main/java/App/GraphicOperations/CsvToGraphic.java
 .idea/misc.xml
 .idea/compiler.xml
 .idea/misc.xml
+.idea/gradle.xml

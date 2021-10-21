@@ -1,5 +1,4 @@
 node {
-    fill-color: transparent;
     size: 50px;
     stroke-mode: none;
     fill-color: aquamarine, #254;
@@ -16,11 +15,10 @@ node:clicked {
 }
 
 edge {
-    text-alignment: above;
+    text-alignment: along;
+    text-background-color: white;
     text-offset: 0px, 10px;
     text-size: 20;
 }
 
-edge:clicked {
-    fill-color: blue;
-}
+
