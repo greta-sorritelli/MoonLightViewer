@@ -1,6 +1,7 @@
 package javaFX;
 
 import App.DialogUtility.DialogBuilder;
+import App.GraphUtility.SimpleMouseManager;
 import App.GraphUtility.TimeGraph;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +23,7 @@ import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.fx_viewer.FxViewPanel;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.javafx.FxGraphRenderer;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -129,6 +131,7 @@ public class GraphController {
         FxViewPanel panel = (FxViewPanel) v.addDefaultView(false, new FxGraphRenderer());
         SubScene scene = new SubScene(panel, borderPane.getWidth(), borderPane.getHeight());
         borderPane.setCenter(scene);
+        v.getDefaultView().setMouseManager(new SimpleMouseManager());
         graphType.setText(type);
     }
 
