@@ -2,8 +2,6 @@ package App.GraphUtility;
 
 import org.graphstream.graph.Graph;
 
-import java.util.List;
-
 public class TimeGraph {
 
     private final Graph graph;

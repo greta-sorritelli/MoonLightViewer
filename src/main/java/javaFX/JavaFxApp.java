@@ -18,6 +18,7 @@ public class JavaFxApp extends Application {
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
+//        stage.setMaximized(true);
         stage.initStyle(StageStyle.DECORATED);
         stage.setTitle("MoonLight Viewer");
         ChartController hc = new ChartController();

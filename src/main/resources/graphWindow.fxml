@@ -39,10 +39,13 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="400.0" prefWidth="593.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -53,15 +56,34 @@
         </Menu>
       </menus>
     </MenuBar>
-    <AnchorPane fx:id="anchorID" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <AnchorPane fx:id="anchorID" maxHeight="-1.0" maxWidth="-1.0" prefHeight="374.0" prefWidth="620.0" VBox.vgrow="ALWAYS">
       <children>
-            <Label layoutX="242.0" layoutY="14.0" text="Graph Viewer">
+            <Label layoutX="246.0" layoutY="13.0" text="Graph Viewer" AnchorPane.topAnchor="13.0">
                <font>
                   <Font size="25.0" />
                </font>
             </Label>
-            <BorderPane fx:id="borderPane" layoutX="230.0" layoutY="50.0" prefHeight="310.0" prefWidth="396.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="230.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0" />
-            <ListView fx:id="list" layoutX="14.0" layoutY="50.0" prefHeight="310.0" prefWidth="200.0" AnchorPane.leftAnchor="20.0" />
+            <GridPane layoutX="28.0" layoutY="53.0" prefHeight="304.0" prefWidth="551.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="50.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" maxWidth="276.20001220703125" minWidth="10.0" prefWidth="86.40003662109375" />
+                  <ColumnConstraints hgrow="ALWAYS" maxWidth="501.6" minWidth="10.0" prefWidth="424.7999633789062" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="149.79999389648438" minHeight="10.0" prefHeight="39.40000762939454" vgrow="ALWAYS" />
+                <RowConstraints maxHeight="293.7999862670898" minHeight="10.0" prefHeight="271.39999237060545" vgrow="ALWAYS" />
+              </rowConstraints>
+               <children>
+                  <ListView fx:id="list" prefHeight="261.0" prefWidth="202.0" GridPane.rowIndex="1" />
+                  <Label text="Time" />
+                  <BorderPane fx:id="borderPane" prefHeight="268.0" prefWidth="430.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label prefHeight="18.0" prefWidth="413.0" text="Graph Visualization" GridPane.columnIndex="1" />
+               </children>
+            </GridPane>
+            <Label fx:id="graphType" layoutX="20.0" layoutY="23.0" prefHeight="22.0" prefWidth="201.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+               <font>
+                  <Font name="System Bold Italic" size="15.0" />
+               </font>
+            </Label>
       </children>
     </AnchorPane>
   </children>

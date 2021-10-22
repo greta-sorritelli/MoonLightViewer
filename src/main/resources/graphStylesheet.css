@@ -1,3 +1,7 @@
+graph {
+    fill-color: #373e43;
+    /*color: ;*/
+}
 node {
     size: 50px;
     stroke-mode: none;
@@ -13,12 +17,13 @@ node:clicked {
     fill-color: yellow, orange;
     fill-mode: gradient-diagonal1;
 }
-
 edge {
-    text-alignment: along;
+    text-alignment: above;
     text-background-color: white;
-    text-offset: 0px, 10px;
+    /*text-offset: -50px, -50px;*/
     text-size: 20;
+    text-color: white;
+    fill-color: white;
 }
 
 
