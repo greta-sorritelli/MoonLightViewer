@@ -20,7 +20,6 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
-import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.fx_viewer.FxViewPanel;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.javafx.FxGraphRenderer;
@@ -32,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 public class GraphController {
 
@@ -44,6 +42,8 @@ public class GraphController {
     BorderPane borderPane = new BorderPane();
     @FXML
     ListView<RadioButton> list;
+    @FXML
+    Label title;
 
     private final ObservableList<RadioButton> variables = FXCollections.observableArrayList();
 
@@ -74,6 +74,7 @@ public class GraphController {
 
     private void createGraph(File file) {
         if (file != null) {
+            title.setVisible(false);
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 String line = br.readLine();
                 Graph graph = new MultiGraph("id" + idGraph);
