@@ -75,7 +75,7 @@
                <children>
                   <ListView fx:id="list" prefHeight="261.0" prefWidth="202.0" GridPane.rowIndex="1" />
                   <Label text="Time" />
-                  <BorderPane fx:id="borderPane" prefHeight="268.0" prefWidth="430.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <BorderPane fx:id="borderPane" prefHeight="268.0" prefWidth="430.0" style="-fx-background-color: white;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label prefHeight="18.0" prefWidth="413.0" text="Graph Visualization" GridPane.columnIndex="1" />
                </children>
             </GridPane>

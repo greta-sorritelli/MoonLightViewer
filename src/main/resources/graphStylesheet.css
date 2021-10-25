@@ -1,6 +1,6 @@
 graph {
-    fill-color: #373e43;
-    /*color: ;*/
+    /*fill-color: #373e43;*/
+
 }
 node {
     size: 50px;
@@ -19,11 +19,11 @@ node:clicked {
 }
 edge {
     text-alignment: above;
-    text-background-color: white;
+    /*text-background-color: white;*/
     /*text-offset: -50px, -50px;*/
     text-size: 20;
-    text-color: white;
-    fill-color: white;
+    /*text-color: white;*/
+    /*fill-color: white;*/
 }
 
 
