@@ -18,12 +18,15 @@ node:clicked {
     fill-mode: gradient-diagonal1;
 }
 edge {
-    text-alignment: above;
+    text-alignment: center;
     /*text-background-color: white;*/
-    /*text-offset: -50px, -50px;*/
     text-size: 20;
     /*text-color: white;*/
     /*fill-color: white;*/
+}
+
+edge.multiple {
+    text-offset: 10px, 10px;
 }
 
 

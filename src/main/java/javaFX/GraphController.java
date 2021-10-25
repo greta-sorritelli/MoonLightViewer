@@ -30,7 +30,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class GraphController {
 
@@ -74,7 +76,7 @@ public class GraphController {
         if (file != null) {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 String line = br.readLine();
-                Graph graph = new SingleGraph("id" + idGraph);
+                Graph graph = new MultiGraph("id" + idGraph);
                 idGraph++;
                 if (line.contains("LOCATIONS")) {
                     if ((line = br.readLine()) != null && line.contains(",")) {
@@ -198,9 +200,16 @@ public class GraphController {
             Node n2 = graph.addNode(vertex2);
             n2.setAttribute("ui.label", vertex2);
         }
-
-        Edge e = graph.addEdge("id" + idGraph, vertex1, vertex2);
+        boolean exist = graph.edges().anyMatch(edge1 -> (edge1.getSourceNode().equals(graph.getNode(vertex1)) || edge1.getSourceNode().equals(graph.getNode(vertex2))) && (edge1.getTargetNode().equals(graph.getNode(vertex2)) || edge1.getTargetNode().equals(graph.getNode(vertex1))));
+        Edge e = graph.addEdge("id" + idGraph, graph.getNode(vertex1), graph.getNode(vertex2));
         idGraph++;
         e.setAttribute("ui.label", edge);
+        if (exist)
+            e.setAttributes(Map.of(
+                    "ui.label", edge,
+                    "ui.class", "multiple"
+            ));
+        else
+            e.setAttribute("ui.label", edge);
     }
 }
