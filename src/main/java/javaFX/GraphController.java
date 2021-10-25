@@ -193,14 +193,7 @@ public class GraphController {
         String vertex1 = elements[0];
         String vertex2 = elements[1];
         String edge = elements[2];
-        if (graph.getNode(vertex1) == null) {
-            Node n1 = graph.addNode(vertex1);
-            n1.setAttribute("ui.label", vertex1);
-        }
-        if (graph.getNode(vertex2) == null) {
-            Node n2 = graph.addNode(vertex2);
-            n2.setAttribute("ui.label", vertex2);
-        }
+        createNodes(graph, vertex1, vertex2);
         boolean exist = graph.edges().anyMatch(edge1 -> (edge1.getSourceNode().equals(graph.getNode(vertex1)) || edge1.getSourceNode().equals(graph.getNode(vertex2))) && (edge1.getTargetNode().equals(graph.getNode(vertex2)) || edge1.getTargetNode().equals(graph.getNode(vertex1))));
         Edge e = graph.addEdge("id" + idGraph, graph.getNode(vertex1), graph.getNode(vertex2));
         idGraph++;
@@ -212,5 +205,16 @@ public class GraphController {
             ));
         else
             e.setAttribute("ui.label", edge);
+    }
+
+    private void createNodes(Graph graph, String vertex1, String vertex2) {
+        if (graph.getNode(vertex1) == null) {
+            Node n1 = graph.addNode(vertex1);
+            n1.setAttribute("ui.label", vertex1);
+        }
+        if (graph.getNode(vertex2) == null) {
+            Node n2 = graph.addNode(vertex2);
+            n2.setAttribute("ui.label", vertex2);
+        }
     }
 }
