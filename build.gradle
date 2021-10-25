@@ -54,6 +54,7 @@ javafx {
 
 application {
     // Define the main class for the application.
-    mainClassName = 'App.App'
+//    mainClassName = 'App.App'
+        mainClass.set("App")
 }
 
