@@ -2,6 +2,7 @@ package javaFX;
 
 import App.DialogUtility.DialogBuilder;
 import App.GraphUtility.SimpleMouseManager;
+import App.GraphUtility.SimpleTimeGraph;
 import App.GraphUtility.TimeGraph;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -180,7 +181,7 @@ public class GraphController {
         for (String l : linesEdges) {
             createEdge(l, graph);
         }
-        TimeGraph tg = new TimeGraph(graph, time);
+        TimeGraph tg = new SimpleTimeGraph(graph, time);
         graphList.add(tg);
     }
 

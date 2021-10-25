@@ -1,5 +1,6 @@
 package javaFX;
 
+import App.ChartUtility.LogarithmicAxis;
 import App.CsvUtility.CsvImport;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
