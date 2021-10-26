@@ -1,4 +1,4 @@
-package App.ChartUtility;
+package javaFX;
 
 import App.Exceptions.IllegalLogarithmicRangeException;
 import javafx.animation.KeyFrame;
