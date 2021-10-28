@@ -1,6 +1,7 @@
 package App.CsvUtility;
 
 import App.DialogUtility.DialogBuilder;
+import App.GraphUtility.TimeGraph;
 import com.opencsv.CSVReader;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;

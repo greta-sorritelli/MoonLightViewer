@@ -1,6 +1,8 @@
 package javaFX;
 
+import App.ChartUtility.SimpleChartBuilder;
 import App.CsvUtility.CsvImport;
+import App.GraphUtility.TimeGraph;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,11 +13,11 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalDouble;
 
 public class ChartController {
 
@@ -62,23 +64,29 @@ public class ChartController {
     }
 
 
-    public void openCsvExplorer() {
-        FileChooser fileChooser = new FileChooser();
-//        Stage stage = (Stage) anchorID.getScene().getWindow();
-        Stage stage = (Stage) mainController.getVbox().getScene().getWindow();
-        File file = fileChooser.showOpenDialog(stage);
-        if (file != null) {
-            String path = file.getAbsolutePath();
-            List<Series<Number, Number>> linearSeries = CsvImport.getSeriesFromCsv(path);
-            List<Series<Number, Number>> logarithmicSeries = CsvImport.getSeriesFromCsv(path);
-            lineChart.getData().addAll(linearSeries);
-            lineChartLog.getData().addAll(logarithmicSeries);
-            linearSelected();
-            initLists();
-        }
+//    public void readDataFromCsv() {
+//        FileChooser fileChooser = new FileChooser();
+//        Stage stage = (Stage) mainController.getVbox().getScene().getWindow();
+//        File file = fileChooser.showOpenDialog(stage);
+//        if (file != null) {
+//            String path = file.getAbsolutePath();
+//            List<Series<Number, Number>> linearSeries = CsvImport.getSeriesFromCsv(path);
+//            List<Series<Number, Number>> logarithmicSeries = CsvImport.getSeriesFromCsv(path);
+//            lineChart.getData().addAll(linearSeries);
+//            lineChartLog.getData().addAll(logarithmicSeries);
+//    }
+//}
+
+    public void createDataFromGraphs(List<TimeGraph> timeGraph) {
+        List<Series<Number, Number>> linearSeries = SimpleChartBuilder.getSeriesFromNodes(timeGraph);
+        List<Series<Number, Number>> logarithmicSeries = SimpleChartBuilder.getSeriesFromNodes(timeGraph);
+        lineChart.getData().addAll(linearSeries);
+        lineChartLog.getData().addAll(logarithmicSeries);
+        linearSelected();
+        initLists();
     }
 
-    private void initializeChart(LineChart<Number, Number> l, Axis<Number> x, Axis<Number> y) {
+    private void initializeChart(LineChart<Number, Number> l, Axis<Number> x) {
 //        y.setLabel("Values");
         x.setLabel("Time");
 //        l.setTitle("X,Y,Z values in time");
@@ -86,10 +94,10 @@ public class ChartController {
 //        l.getYAxis().lookup(".axis-label").setStyle("-fx-label-padding: -40 0 0 0;");
     }
 
-    public void initialize(){
+    public void initialize() {
         lineChartLog.setVisible(false);
-        initializeChart(lineChart, xAxis, yAxis);
-        initializeChart(lineChartLog, xLAxis, yLAxis);
+        initializeChart(lineChart, xAxis);
+        initializeChart(lineChartLog, xLAxis);
     }
 
     @FXML
@@ -134,8 +142,8 @@ public class ChartController {
         if (list != null && !list.getItems().isEmpty())
             list.getItems().clear();
         final ObservableList<CheckBox> variables = FXCollections.observableArrayList();
-        for (Series<Number, Number> serie : lineChart.getData()) {
-            CheckBox ck = new CheckBox(serie.getName());
+        for (Series<Number, Number> series : lineChart.getData()) {
+            CheckBox ck = new CheckBox(series.getName());
             ck.setSelected(true);
             ck.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 ck.setSelected(!oldValue);
@@ -179,10 +187,18 @@ public class ChartController {
     }
 
     public Number getMinSeries(Series<Number, Number> series) {
-        return series.getData().stream().mapToDouble(num -> num.getYValue().doubleValue()).min().getAsDouble();
+        OptionalDouble d = series.getData().stream().mapToDouble(num -> num.getYValue().doubleValue()).min();
+        if(d.isPresent())
+            return d.getAsDouble();
+        return 0;
+//        return series.getData().stream().mapToDouble(num -> num.getYValue().doubleValue()).min().getAsDouble();
     }
 
     public Number getMaxSeries(Series<Number, Number> series) {
-        return series.getData().stream().mapToDouble(num -> num.getYValue().doubleValue()).max().getAsDouble();
+        OptionalDouble d = series.getData().stream().mapToDouble(num -> num.getYValue().doubleValue()).max();
+        if(d.isPresent())
+            return d.getAsDouble();
+        return 0;
+//        return series.getData().stream().mapToDouble(num -> num.getYValue().doubleValue()).max().getAsDouble();
     }
 }

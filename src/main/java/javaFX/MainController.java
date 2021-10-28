@@ -43,7 +43,7 @@ public class MainController {
     @FXML
     public void initialize() {
         this.chartComponentController.injectMainController(this);
-        this.graphComponentController.injectMainController(this);
+        this.graphComponentController.injectMainController(this, chartComponentController);
     }
 
     @FXML

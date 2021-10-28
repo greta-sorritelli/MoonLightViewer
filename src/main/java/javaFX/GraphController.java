@@ -34,47 +34,26 @@ import java.util.Optional;
 
 public class GraphController {
 
-//    private final ObservableList<RadioButton> variables = FXCollections.observableArrayList();
-//    private final ToggleGroup group = new ToggleGroup();
-//    private final List<TimeGraph> graphList = new ArrayList<>();
-
     @FXML
     Label graphType;
     @FXML
     BorderPane borderPane = new BorderPane();
     @FXML
     ListView<RadioButton> list;
+
     private FxViewer v;
-//    @FXML
-//    Label title;
-//    private int idGraph = 0;
-
-
-//    Label title;
-
     private final ObservableList<RadioButton> variables = FXCollections.observableArrayList();
-
     private final ToggleGroup group = new ToggleGroup();
-
     private int idGraph = 0;
-
-
     private final List<TimeGraph> graphList = new ArrayList<>();
 
-//    private static final GraphController graphComponentController = new GraphController();
-//    private GraphController(){}
-//
-//    public static GraphController getInstance(){
-//        return graphComponentController;
-//    }
-
-
+    private ChartController chartController;
     private MainController mainController;
 
-    public void injectMainController(MainController mainController) {
+    public void injectMainController(MainController mainController, ChartController chartComponentController) {
         this.mainController = mainController;
+        this.chartController = chartComponentController;
     }
-
 
     public void openTraExplorer() {
         System.setProperty("org.graphstream.ui", "javafx");
@@ -93,6 +72,7 @@ public class GraphController {
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showOpenDialog(stage);
         readCSV(file);
+        chartController.createDataFromGraphs(graphList);
     }
 
     private void resetAll() {
@@ -134,7 +114,6 @@ public class GraphController {
             Optional<TimeGraph> t = graphList.stream().filter(graphList -> graphList.getGraphFromTime(time) != null).findFirst();
             if (t.isPresent()) {
                 t.get().getGraph().getNode(node).setAttribute("time" + time, vector);
-                System.out.println(t.get().getGraph().getNode(node).getAttribute("time" + time));
             }
             node++;
             nodes.add(vector);
@@ -158,7 +137,6 @@ public class GraphController {
 
     private void createGraph(File file) {
         if (file != null) {
-//            title.setVisible(false);
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 String line = br.readLine();
                 Graph graph = new MultiGraph("id" + idGraph);
@@ -213,8 +191,6 @@ public class GraphController {
                 r.get().setSelected(true);
                 r.get().requestFocus();
             }
-//            list.getItems().stream().filter(radioButton -> radioButton.getText().equals(time)).findFirst().get().setSelected(true);
-//            list.getItems().stream().filter(radioButton -> radioButton.getText().equals(time)).findFirst().get().requestFocus();
         }
     }
 
@@ -223,13 +199,12 @@ public class GraphController {
         v = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
         v.disableAutoLayout();
         FxViewPanel panel = (FxViewPanel) v.addDefaultView(false, new FxGraphRenderer());
-        borderPane.setPrefSize(200,200);
+        borderPane.setPrefSize(200, 200);
         SubScene scene = new SubScene(panel, borderPane.getWidth(), borderPane.getHeight());
         borderPane.setCenter(scene);
         v.getDefaultView().setMouseManager(new SimpleMouseManager());
         graphType.setText(type);
     }
-
 
     private void staticGraph(String line, BufferedReader br, Graph graph, int totNodes) {
         try {
@@ -242,7 +217,6 @@ public class GraphController {
             dialogBuilder.error("Error!", e.getMessage());
         }
     }
-
 
     private void dynamicGraph(String line, BufferedReader br, int totNodes) {
         try {
@@ -284,7 +258,6 @@ public class GraphController {
     private void createEdge(String line, Graph graph, int totNodes) {
         createNodes(graph, totNodes);
         createEdge(line, graph);
-
     }
 
     private void createEdge(String line, Graph graph) {
@@ -306,15 +279,6 @@ public class GraphController {
     }
 
     private void createNodes(Graph graph, int tot) {
-//        if (graph.getNode(vertex1) == null) {
-//            Node n1 = graph.addNode(vertex1);
-//            n1.setAttribute("ui.label", vertex1);
-//        }
-//        if (graph.getNode(vertex2) == null) {
-//            Node n2 = graph.addNode(vertex2);
-//            n2.setAttribute("ui.label", vertex2);
-//        }
-        System.out.println(tot);
         int i = 0;
         while (i < tot) {
             Node n = graph.addNode(String.valueOf(i));
@@ -323,4 +287,3 @@ public class GraphController {
         }
     }
 }
-
