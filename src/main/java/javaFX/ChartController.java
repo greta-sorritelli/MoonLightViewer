@@ -79,11 +79,11 @@ public class ChartController {
     }
 
     private void initializeChart(LineChart<Number, Number> l, Axis<Number> x, Axis<Number> y) {
-        y.setLabel("Values");
+//        y.setLabel("Values");
         x.setLabel("Time");
 //        l.setTitle("X,Y,Z values in time");
         l.setLegendSide(Side.RIGHT);
-        l.getYAxis().lookup(".axis-label").setStyle("-fx-label-padding: -40 0 0 0;");
+//        l.getYAxis().lookup(".axis-label").setStyle("-fx-label-padding: -40 0 0 0;");
     }
 
     public void initialize(){

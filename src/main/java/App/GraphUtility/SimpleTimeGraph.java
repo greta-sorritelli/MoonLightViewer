@@ -12,12 +12,21 @@ public class SimpleTimeGraph implements TimeGraph {
         this.time = time;
     }
 
+    @Override
     public Graph getGraph() {
         return graph;
     }
 
+    @Override
     public double getTime() {
         return time;
+    }
+
+    @Override
+    public Graph getGraphFromTime(double time) {
+        if (this.time == time)
+            return this.graph;
+        else return null;
     }
 
 }

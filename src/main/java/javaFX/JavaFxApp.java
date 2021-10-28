@@ -21,7 +21,7 @@ public class JavaFxApp extends Application {
 //        fxmlLoader.setController(new GraphController());
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/mainComponent.fxml"));
-        
+
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);

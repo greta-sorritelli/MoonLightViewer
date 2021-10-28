@@ -7,4 +7,7 @@ public interface TimeGraph {
     Graph getGraph();
 
     double getTime();
+
+    Graph getGraphFromTime(double time);
+
 }
