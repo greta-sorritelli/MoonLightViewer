@@ -44,6 +44,7 @@ public class GraphController {
     BorderPane borderPane = new BorderPane();
     @FXML
     ListView<RadioButton> list;
+    private FxViewer v;
 //    @FXML
 //    Label title;
 //    private int idGraph = 0;
@@ -139,14 +140,17 @@ public class GraphController {
             nodes.add(vector);
         }
         addPositions(elements, nodes);
+        v.getDefaultView().getCamera().setAutoFitView(true);
     }
 
     private void addPositions(String[] elements, ArrayList<ArrayList<String>> nodes) {
         for (TimeGraph g : graphList) {
             if (g.getTime() == Double.parseDouble(elements[0])) {
                 for (int i = 0; i < nodes.size(); i++) {
-                    if (g.getGraph().getNode(String.valueOf(i)) != null)
-                        g.getGraph().getNode(String.valueOf(i)).setAttribute("x,y", nodes.get(i).get(0), nodes.get(i).get(1));
+                    if (g.getGraph().getNode(String.valueOf(i)) != null) {
+                        g.getGraph().getNode(String.valueOf(i)).setAttribute("x", nodes.get(i).get(0));
+                        g.getGraph().getNode(String.valueOf(i)).setAttribute("y", nodes.get(i).get(1));
+                    }
                 }
             }
         }
@@ -216,9 +220,10 @@ public class GraphController {
 
     private void showGraph(Graph graph, String type) {
         graph.setAttribute("ui.stylesheet", "url('file://src/main/resources/graphStylesheet.css')");
-        FxViewer v = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+        v = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
         v.disableAutoLayout();
         FxViewPanel panel = (FxViewPanel) v.addDefaultView(false, new FxGraphRenderer());
+        borderPane.setPrefSize(200,200);
         SubScene scene = new SubScene(panel, borderPane.getWidth(), borderPane.getHeight());
         borderPane.setCenter(scene);
         v.getDefaultView().setMouseManager(new SimpleMouseManager());
