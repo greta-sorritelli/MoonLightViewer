@@ -5,8 +5,8 @@
 
 .axis-label {
   -fx-text-fill: #000000;
-  -fx-text-padding-right: 100px;
-  -fx-font-size: 1.3em;
+  /*-fx-text-padding-right: 50px;*/
+  /*-fx-font-size: 1.3em;*/
 }
 
 .chart-legend-item{

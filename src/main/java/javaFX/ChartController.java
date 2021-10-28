@@ -9,10 +9,8 @@ import javafx.geometry.Side;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
@@ -21,8 +19,7 @@ import java.util.List;
 
 public class ChartController {
 
-    @FXML
-    AnchorPane anchorID;
+
     @FXML
     NumberAxis yAxis = new NumberAxis();
     @FXML
@@ -50,10 +47,25 @@ public class ChartController {
     @FXML
     RadioButton logarithmic = new RadioButton();
 
-    @FXML
-    private void openExplorer() {
+
+//    private static ChartController chartComponentController =new ChartController();
+//    private ChartController(){}
+//
+//    public static ChartController getInstance(){
+//        return chartComponentController;
+//    }
+
+    private MainController mainController;
+
+    public void injectMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
+
+    public void openCsvExplorer() {
         FileChooser fileChooser = new FileChooser();
-        Stage stage = (Stage) anchorID.getScene().getWindow();
+//        Stage stage = (Stage) anchorID.getScene().getWindow();
+        Stage stage = (Stage) mainController.getVbox().getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             String path = file.getAbsolutePath();
@@ -69,7 +81,7 @@ public class ChartController {
     private void initializeChart(LineChart<Number, Number> l, Axis<Number> x, Axis<Number> y) {
         y.setLabel("Values");
         x.setLabel("Time");
-        l.setTitle("X,Y,Z values in time");
+//        l.setTitle("X,Y,Z values in time");
         l.setLegendSide(Side.RIGHT);
         l.getYAxis().lookup(".axis-label").setStyle("-fx-label-padding: -40 0 0 0;");
     }
@@ -141,16 +153,23 @@ public class ChartController {
     }
 
     private void changeSingleChartVisibility(String name, LineChart<Number, Number> lineChart) {
-        for (Series<Number, Number> s : lineChart.getData()) {
-            if (s.getName().equals(name)) {
-                s.getNode().setVisible(!s.getNode().isVisible());
-                for (XYChart.Data<Number, Number> d : s.getData()) {
-                    if (d.getNode() != null) {
-                        d.getNode().setVisible(s.getNode().isVisible());
-                    }
-                }
+//        for (Series<Number, Number> s : lineChart.getData()) {
+//            if (s.getName().equals(name)) {
+//                s.getNode().setVisible(!s.getNode().isVisible());
+//                for (XYChart.Data<Number, Number> d : s.getData()) {
+//                    if (d.getNode() != null) {
+//                        d.getNode().setVisible(s.getNode().isVisible());
+//                    }
+//                }
+//            }
+//        }
+        lineChart.getData().forEach(series -> {
+            if (series.getName().equals(name)) {
+                series.getNode().setVisible(!series.getNode().isVisible());
+                series.getData().forEach(data -> data.getNode().setVisible(series.getNode().isVisible()));
             }
-        }
+        });
+
     }
 
     private void setMinMaxValueFactory() {
