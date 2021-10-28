@@ -34,6 +34,9 @@ import java.util.Optional;
 
 public class GraphController {
 
+    private final ObservableList<RadioButton> variables = FXCollections.observableArrayList();
+    private final ToggleGroup group = new ToggleGroup();
+    private final List<TimeGraph> graphList = new ArrayList<>();
     @FXML
     AnchorPane anchorID;
     @FXML
@@ -44,14 +47,7 @@ public class GraphController {
     ListView<RadioButton> list;
     @FXML
     Label title;
-
-    private final ObservableList<RadioButton> variables = FXCollections.observableArrayList();
-
-    private final ToggleGroup group = new ToggleGroup();
-
     private int idGraph = 0;
-
-    private final List<TimeGraph> graphList = new ArrayList<>();
 
     @FXML
     private void openExplorer() {
@@ -63,6 +59,16 @@ public class GraphController {
         createGraph(file);
     }
 
+    @FXML
+    private void openCSV() {
+        FileChooser fileChooser = new FileChooser();
+        Stage stage = (Stage) anchorID.getScene().getWindow();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV Files", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showOpenDialog(stage);
+        readCSV(file);
+    }
+
     private void resetAll() {
         if (!group.getToggles().isEmpty())
             group.getToggles().clear();
@@ -70,6 +76,46 @@ public class GraphController {
         list.getItems().clear();
         idGraph = 0;
         graphList.clear();
+    }
+
+    private void readCSV(File file) {
+        if (file != null) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                while (((line = br.readLine()) != null))
+                    createNodesVector(line);
+            } catch (Exception e) {
+                DialogBuilder dialogBuilder = new DialogBuilder();
+                dialogBuilder.error("Error!", e.getMessage());
+            }
+        }
+
+    }
+
+    private void createNodesVector(String line) {
+        ArrayList<ArrayList<String>> nodes = new ArrayList<>();
+        String[] elements = line.split(",");
+        int index = 1;
+        while (index < elements.length) {
+            ArrayList<String> vector = new ArrayList<>();
+            for (int i = 1; i <= 5; i++) {
+                vector.add(elements[index]);
+                index++;
+            }
+            nodes.add(vector);
+        }
+        addPositions(elements, nodes);
+    }
+
+    private void addPositions(String[] elements, ArrayList<ArrayList<String>> nodes) {
+        for (TimeGraph g : graphList) {
+            if (g.getTime() == Double.parseDouble(elements[0])) {
+                for (int i = 0; i < nodes.size(); i++) {
+                    if (g.getGraph().getNode(String.valueOf(i)) != null)
+                        g.getGraph().getNode(String.valueOf(i)).setAttribute("x,y", nodes.get(i).get(0), nodes.get(i).get(1));
+                }
+            }
+        }
     }
 
     private void createGraph(File file) {
@@ -131,7 +177,7 @@ public class GraphController {
     private void showGraph(Graph graph, String type) {
         graph.setAttribute("ui.stylesheet", "url('file://src/main/resources/graphStylesheet.css')");
         FxViewer v = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
-        v.enableAutoLayout();
+        v.disableAutoLayout();
         FxViewPanel panel = (FxViewPanel) v.addDefaultView(false, new FxGraphRenderer());
         SubScene scene = new SubScene(panel, borderPane.getWidth(), borderPane.getHeight());
         borderPane.setCenter(scene);
@@ -216,5 +262,6 @@ public class GraphController {
             Node n2 = graph.addNode(vertex2);
             n2.setAttribute("ui.label", vertex2);
         }
+        }
     }
-}
+
