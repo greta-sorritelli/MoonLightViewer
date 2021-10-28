@@ -19,12 +19,9 @@ public class JavaFxApp extends Application {
 
 //        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/graphWindow.fxml"));
 //        fxmlLoader.setController(new GraphController());
-//        URL location = getClass().getResource("mainComponent.fxml");
-//        ResourceBundle resources = ResourceBundle.getBundle("javaFX.MainController");
-//        FXMLLoader fxmlLoader = new FXMLLoader(location, null);
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/mainComponent.fxml"));
-//        fxmlLoader.setController(new MainController());
+        
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
