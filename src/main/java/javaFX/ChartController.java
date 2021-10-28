@@ -1,7 +1,6 @@
 package javaFX;
 
 import App.ChartUtility.SimpleChartBuilder;
-import App.CsvUtility.CsvImport;
 import App.GraphUtility.TimeGraph;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -13,8 +12,6 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
@@ -49,14 +46,6 @@ public class ChartController {
     @FXML
     RadioButton logarithmic = new RadioButton();
 
-
-//    private static ChartController chartComponentController =new ChartController();
-//    private ChartController(){}
-//
-//    public static ChartController getInstance(){
-//        return chartComponentController;
-//    }
-
     private MainController mainController;
 
     public void injectMainController(MainController mainController) {
@@ -78,8 +67,9 @@ public class ChartController {
 //}
 
     public void createDataFromGraphs(List<TimeGraph> timeGraph) {
-        List<Series<Number, Number>> linearSeries = SimpleChartBuilder.getSeriesFromNodes(timeGraph);
-        List<Series<Number, Number>> logarithmicSeries = SimpleChartBuilder.getSeriesFromNodes(timeGraph);
+        SimpleChartBuilder cb = new SimpleChartBuilder();
+        List<Series<Number, Number>> linearSeries = cb.getSeriesFromNodes(timeGraph);
+        List<Series<Number, Number>> logarithmicSeries = cb.getSeriesFromNodes(timeGraph);
         lineChart.getData().addAll(linearSeries);
         lineChartLog.getData().addAll(logarithmicSeries);
         linearSelected();
@@ -87,11 +77,8 @@ public class ChartController {
     }
 
     private void initializeChart(LineChart<Number, Number> l, Axis<Number> x) {
-//        y.setLabel("Values");
         x.setLabel("Time");
-//        l.setTitle("X,Y,Z values in time");
         l.setLegendSide(Side.RIGHT);
-//        l.getYAxis().lookup(".axis-label").setStyle("-fx-label-padding: -40 0 0 0;");
     }
 
     public void initialize() {
@@ -161,23 +148,12 @@ public class ChartController {
     }
 
     private void changeSingleChartVisibility(String name, LineChart<Number, Number> lineChart) {
-//        for (Series<Number, Number> s : lineChart.getData()) {
-//            if (s.getName().equals(name)) {
-//                s.getNode().setVisible(!s.getNode().isVisible());
-//                for (XYChart.Data<Number, Number> d : s.getData()) {
-//                    if (d.getNode() != null) {
-//                        d.getNode().setVisible(s.getNode().isVisible());
-//                    }
-//                }
-//            }
-//        }
         lineChart.getData().forEach(series -> {
             if (series.getName().equals(name)) {
                 series.getNode().setVisible(!series.getNode().isVisible());
                 series.getData().forEach(data -> data.getNode().setVisible(series.getNode().isVisible()));
             }
         });
-
     }
 
     private void setMinMaxValueFactory() {
@@ -191,7 +167,6 @@ public class ChartController {
         if(d.isPresent())
             return d.getAsDouble();
         return 0;
-//        return series.getData().stream().mapToDouble(num -> num.getYValue().doubleValue()).min().getAsDouble();
     }
 
     public Number getMaxSeries(Series<Number, Number> series) {
@@ -199,6 +174,5 @@ public class ChartController {
         if(d.isPresent())
             return d.getAsDouble();
         return 0;
-//        return series.getData().stream().mapToDouble(num -> num.getYValue().doubleValue()).max().getAsDouble();
     }
 }
