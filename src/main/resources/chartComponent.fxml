@@ -21,7 +21,7 @@
       </Label>
       <RadioButton fx:id="linear" layoutX="201.0" layoutY="30.0" mnemonicParsing="false" onAction="#linearSelected" selected="true" text="Linear" AnchorPane.rightAnchor="110.0" AnchorPane.topAnchor="20.0" />
       <RadioButton fx:id="logarithmic" layoutX="296.0" layoutY="30.0" mnemonicParsing="false" onAction="#logarithmicSelected" text="Logarithmic" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="20.0" />
-      <SplitPane dividerPositions="0.7176470588235292" layoutY="55.0" orientation="VERTICAL" prefHeight="520.0" prefWidth="430.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
+      <SplitPane dividerPositions="0.65" layoutY="55.0" orientation="VERTICAL" prefHeight="520.0" prefWidth="430.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
          <items>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="374.0" prefWidth="401.0">
                <children>

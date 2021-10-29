@@ -39,7 +39,10 @@ public class GraphController {
     ListView<RadioButton> list;
     @FXML
     TextField v;
-
+    @FXML
+    Label infoNode;
+    @FXML
+//    Slider slider;
 
     private final ObservableList<RadioButton> variables = FXCollections.observableArrayList();
     private final ToggleGroup group = new ToggleGroup();
@@ -78,6 +81,7 @@ public class GraphController {
         if (!group.getToggles().isEmpty())
             group.getToggles().clear();
         variables.clear();
+//        slider.setMax();
         list.getItems().clear();
         idGraph = 0;
         graphList.clear();
@@ -202,7 +206,7 @@ public class GraphController {
                     int totNodes = Integer.parseInt(StringUtils.substringAfterLast(line, "LOCATIONS "));
                     if ((line = br.readLine()) != null && line.contains(",")) {
                         staticGraph(line, br, graph, totNodes);
-                        showGraph(graph, "Static Graph");
+                        showGraph(graph, "Static Graph", 0.0);
                     } else if (!line.contains(",")) {
                         dynamicGraph(line, br, totNodes);
                         createTimeButtons();
@@ -224,6 +228,7 @@ public class GraphController {
             RadioButton r = new RadioButton(String.valueOf(t.getTime()));
             r.setToggleGroup(group);
             variables.add(r);
+//            slider = new Slider();
         }
         if (!variables.isEmpty())
             list.getItems().addAll(variables);
@@ -242,7 +247,7 @@ public class GraphController {
     private void changeGraphView(String time) {
         Optional<TimeGraph> g = graphList.stream().filter(timeGraph -> timeGraph.getTime() == Double.parseDouble(time)).findFirst();
         if (g.isPresent()) {
-            showGraph(g.get().getGraph(), "Dynamic Graph");
+            showGraph(g.get().getGraph(), "Dynamic Graph", Double.parseDouble(time));
             Optional<RadioButton> r = list.getItems().stream().filter(radioButton -> radioButton.getText().equals(time)).findFirst();
             if (r.isPresent()) {
                 r.get().setSelected(true);
@@ -251,15 +256,21 @@ public class GraphController {
         }
     }
 
-    private void showGraph(Graph graph, String type) {
+    private void showGraph(Graph graph, String type, Double time) {
         graph.setAttribute("ui.stylesheet", "url('file://src/main/resources/graphStylesheet.css')");
         FxViewer v = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
         v.disableAutoLayout();
         FxViewPanel panel = (FxViewPanel) v.addDefaultView(false, new FxGraphRenderer());
-        borderPane.setPrefSize(200, 200);
+//        borderPane.setPrefSize(200, 200);
         SubScene scene = new SubScene(panel, borderPane.getWidth(), borderPane.getHeight());
         borderPane.setCenter(scene);
-        v.getDefaultView().setMouseManager(new SimpleMouseManager());
+        SimpleMouseManager sm = new SimpleMouseManager(graph, time);
+        sm.addPropertyChangeListener(evt -> {
+            if (evt.getPropertyName().equals("LabelProperty")) {
+                infoNode.setText(evt.getNewValue().toString());
+            }
+        });
+        v.getDefaultView().setMouseManager(sm);
         graphType.setText(type);
     }
 
