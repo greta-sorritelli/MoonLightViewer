@@ -49,7 +49,7 @@ public class MainController {
     @FXML
     private void openCsvExplorer() {
 //        chartComponentController.openCsvExplorer();
-        graphComponentController.openCSV();
+        graphComponentController.openCSVExplorer();
     }
 
     @FXML

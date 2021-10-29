@@ -40,6 +40,10 @@ public class GraphController {
     @FXML
     TextField v;
     @FXML
+    TextField minor;
+    @FXML
+    TextField greater;
+    @FXML
     Label infoNode;
     @FXML
 //    Slider slider;
@@ -57,22 +61,23 @@ public class GraphController {
         this.chartController = chartComponentController;
     }
 
-    public void openTraExplorer() {
-        System.setProperty("org.graphstream.ui", "javafx");
+    private File open(String description, String extensions){
         FileChooser fileChooser = new FileChooser();
         Stage stage = (Stage) mainController.getVbox().getScene().getWindow();
-        File file = fileChooser.showOpenDialog(stage);
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(description, extensions);
+        fileChooser.getExtensionFilters().add(extFilter);
+        return fileChooser.showOpenDialog(stage);
+    }
+
+    public void openTraExplorer() {
+        System.setProperty("org.graphstream.ui", "javafx");
+        File file = open("TRA Files","*.tra");
         resetAll();
         createGraph(file);
     }
 
-    @FXML
-    public void openCSV() {
-        FileChooser fileChooser = new FileChooser();
-        Stage stage = (Stage) mainController.getVbox().getScene().getWindow();
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV Files", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-        File file = fileChooser.showOpenDialog(stage);
+    public void openCSVExplorer() {
+        File file = open("CSV Files","*.csv");
         readCSV(file);
         chartController.createDataFromGraphs(graphList);
     }
@@ -137,13 +142,23 @@ public class GraphController {
         }
     }
 
-    private String getTextField() {
-        return v.getText();
+    private String getTextField(TextField t) {
+        return t.getText();
+    }
+
+    @FXML
+    private void resetTextSearch(){
+        minor.clear();
+        greater.clear();
+    }
+
+    @FXML
+    private void resetTextSave(){
+        v.clear();
     }
 
     @FXML
     private void resetFilter() {
-        v.clear();
         for (TimeGraph g : graphList) {
                 int countNodes = g.getGraph().getNodeCount();
                 int countEdges = g.getGraph().getEdgeCount();
@@ -151,48 +166,84 @@ public class GraphController {
                     g.getGraph().getNode(i).removeAttribute("ui.hide");
                 for (int i = 0; i < countEdges; i++)
                     g.getGraph().getEdge(i).removeAttribute("ui.hide");
-
         }
+    }
+
+    private ArrayList<Double> getTimes(){
+        ArrayList<Double> times = new ArrayList<>();
+        double time;
+        for (RadioButton radioButton : variables) {
+            time = Double.parseDouble(radioButton.getText());
+            times.add(time);
+        }
+        return times;
     }
 
     @FXML
     private void saveFilter() {
         try {
-            if (!getTextField().equals("")) {
-                ArrayList<Double> times = new ArrayList<>();
-                double time = 0;
-                for (RadioButton radioButton : variables) {
-                        time = Double.parseDouble(radioButton.getText());
-                        times.add(time);
-                }
-                for (TimeGraph g : graphList) {
-                        int countNodes = g.getGraph().getNodeCount();
-                        int countEdges = g.getGraph().getEdgeCount();
-                        hide(countNodes,countEdges,g,times);
-                    }
-                }
+            resetFilter();
+            for (TimeGraph g : graphList) {
+                int countNodes = g.getGraph().getNodeCount();
+                int countEdges = g.getGraph().getEdgeCount();
+                getNodesVector(countNodes, countEdges, g, getTimes());
+            }
         } catch (Exception e) {
             DialogBuilder dialogBuilder = new DialogBuilder();
             dialogBuilder.error("Error!", e.getMessage());
         }
     }
 
-    private void hide(int countNodes,int countEdges, TimeGraph g, ArrayList<Double> times){
+    private void getNodesVector(int countNodes,int countEdges, TimeGraph g, ArrayList<Double> times) {
         for (int i = 0; i < countNodes; i++) {
             Node n = g.getGraph().getNode(i);
-            for (double t:times) {
-                if(n.getAttribute("time"+t) != null ){
-                String attributes = n.getAttribute("time" + t).toString();
-                String[] vector = attributes.replaceAll("^\\s*\\[|\\]\\s*$", "").split("\\s*,\\s*");
-            if (!vector[4].equals(getTextField()))
-                n.setAttribute("ui.hide");
-            for (int j = 0; j < countEdges; j++) {
-                Edge e = g.getGraph().getEdge(j);
-                if (e.getSourceNode() == n || e.getTargetNode() == n)
-                    e.setAttribute("ui.hide");
-            }
+            for (double t : times) {
+                if (n.getAttribute("time" + t) != null) {
+                    String attributes = n.getAttribute("time" + t).toString();
+                    String[] vector = attributes.replaceAll("^\\s*\\[|\\]\\s*$", "").split("\\s*,\\s*");
+                    hide(countEdges,g,vector,n);
                 }
             }
+        }
+    }
+
+    private void hide(int countEdges, TimeGraph g, String[] vector, Node n){
+        if(!getTextField(v).equals("")){
+            if (!vector[4].equals(getTextField(v)))
+                hideNodesEdges(countEdges, g, n);
+        }
+        double value = Double.parseDouble(vector[4]);
+        double textMinor = 0 ;
+        double textGreater = 0;
+        getFilter(value,textMinor,textGreater,countEdges,g,n);
+
+    }
+
+    private void getFilter(double value, double textMinor, double textGreater, int countEdges, TimeGraph g, Node n){
+        if(!(getTextField(minor).equals("") || getTextField(greater).equals(""))) {
+            textMinor = Double.parseDouble(getTextField(minor));
+            textGreater = Double.parseDouble(getTextField(greater));
+            if (!(value < textMinor && value > textGreater))
+                hideNodesEdges(countEdges, g, n);
+        }
+        if(getTextField(minor).equals("") && !getTextField(greater).equals("")){
+            textGreater = Double.parseDouble(getTextField(greater));
+            if(!(value > textGreater))
+                hideNodesEdges(countEdges, g, n);
+        }
+        if(getTextField(greater).equals("") && !getTextField(minor).equals("")){
+            textMinor = Double.parseDouble(getTextField(minor));
+            if(!(value < textMinor))
+                hideNodesEdges(countEdges, g, n);
+        }
+    }
+
+    private void hideNodesEdges(int countEdges, TimeGraph g, Node n){
+        n.setAttribute("ui.hide");
+        for (int j = 0; j < countEdges; j++) {
+            Edge e = g.getGraph().getEdge(j);
+            if (e.getSourceNode() == n || e.getTargetNode() == n)
+                e.setAttribute("ui.hide");
         }
     }
 

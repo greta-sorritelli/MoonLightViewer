@@ -61,10 +61,17 @@
                                                       <Font size="15.0" />
                                                    </font>
                                                 </Label>
-                                                <Label layoutX="15.0" layoutY="29.0" text="Insert value" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="25.0" />
-                                                <TextField fx:id="v" layoutX="15.0" layoutY="49.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="50.0" />
-                                                <Button layoutX="15.0" layoutY="85.0" mnemonicParsing="false" onAction="#saveFilter" text="Save" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="102.0" />
-                                                <Button layoutX="257.0" layoutY="85.0" mnemonicParsing="false" onAction="#resetFilter" text="Reset" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="102.0" />
+                                                <Label layoutX="15.0" layoutY="26.0" text="Insert value" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="26.0" />
+                                                <TextField fx:id="v" layoutX="15.0" layoutY="49.0" onKeyPressed="#resetTextSearch" prefHeight="25.0" prefWidth="127.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="50.0" />
+                                                <Button layoutX="15.0" layoutY="84.0" mnemonicParsing="false" onAction="#saveFilter" text="Save" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="84.0" />
+                                                <Button layoutX="76.0" layoutY="84.0" mnemonicParsing="false" onAction="#resetFilter" onMouseClicked="#resetTextSave" text="Reset" AnchorPane.rightAnchor="194.0" AnchorPane.topAnchor="84.0" />
+                                                <TextField fx:id="minor" layoutX="228.0" layoutY="63.0" onKeyPressed="#resetTextSave" prefHeight="25.0" prefWidth="63.0" AnchorPane.leftAnchor="231.0" AnchorPane.rightAnchor="21.0" />
+                                                <Label layoutX="175.0" layoutY="7.0" text="Search node with" AnchorPane.leftAnchor="179.0" />
+                                                <Label layoutX="179.0" layoutY="62.0" text="Value &lt;" />
+                                                <TextField fx:id="greater" layoutX="227.0" layoutY="30.0" onKeyPressed="#resetTextSave" prefHeight="25.0" prefWidth="65.0" AnchorPane.leftAnchor="231.0" AnchorPane.rightAnchor="21.0" />
+                                                <Label layoutX="179.0" layoutY="34.0" text="Value &gt;" AnchorPane.leftAnchor="179.0" />
+                                                <Button layoutX="180.0" layoutY="97.0" mnemonicParsing="false" onAction="#saveFilter" text="Save" AnchorPane.topAnchor="97.0" />
+                                                <Button layoutX="240.0" layoutY="97.0" mnemonicParsing="false" onAction="#resetFilter" onMouseClicked="#resetTextSearch" text="Reset" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="97.0" />
                                              </children>
                                           </AnchorPane>
                                       </items>
