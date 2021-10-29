@@ -8,10 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.SubScene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -40,8 +37,10 @@ public class GraphController {
     BorderPane borderPane = new BorderPane();
     @FXML
     ListView<RadioButton> list;
+    @FXML
+    TextField v;
 
-    private FxViewer v;
+
     private final ObservableList<RadioButton> variables = FXCollections.observableArrayList();
     private final ToggleGroup group = new ToggleGroup();
     private int idGraph = 0;
@@ -119,7 +118,6 @@ public class GraphController {
             nodes.add(vector);
         }
         addPositions(elements, nodes);
-        v.getDefaultView().getCamera().setAutoFitView(true);
     }
 
     private void addPositions(String[] elements, ArrayList<ArrayList<String>> nodes) {
@@ -130,6 +128,65 @@ public class GraphController {
                         g.getGraph().getNode(String.valueOf(i)).setAttribute("x", nodes.get(i).get(0));
                         g.getGraph().getNode(String.valueOf(i)).setAttribute("y", nodes.get(i).get(1));
                     }
+                }
+            }
+        }
+    }
+
+    private String getTextField() {
+        return v.getText();
+    }
+
+    @FXML
+    private void resetFilter() {
+        v.clear();
+        for (TimeGraph g : graphList) {
+                int countNodes = g.getGraph().getNodeCount();
+                int countEdges = g.getGraph().getEdgeCount();
+                for (int i = 0; i < countNodes; i++)
+                    g.getGraph().getNode(i).removeAttribute("ui.hide");
+                for (int i = 0; i < countEdges; i++)
+                    g.getGraph().getEdge(i).removeAttribute("ui.hide");
+
+        }
+    }
+
+    @FXML
+    private void saveFilter() {
+        try {
+            if (!getTextField().equals("")) {
+                ArrayList<Double> times = new ArrayList<>();
+                double time = 0;
+                for (RadioButton radioButton : variables) {
+                        time = Double.parseDouble(radioButton.getText());
+                        times.add(time);
+                }
+                for (TimeGraph g : graphList) {
+                        int countNodes = g.getGraph().getNodeCount();
+                        int countEdges = g.getGraph().getEdgeCount();
+                        hide(countNodes,countEdges,g,times);
+                    }
+                }
+        } catch (Exception e) {
+            DialogBuilder dialogBuilder = new DialogBuilder();
+            dialogBuilder.error("Error!", e.getMessage());
+        }
+    }
+
+    private void hide(int countNodes,int countEdges, TimeGraph g, ArrayList<Double> times){
+        for (int i = 0; i < countNodes; i++) {
+            Node n = g.getGraph().getNode(i);
+            for (double t:times) {
+                if(n.getAttribute("time"+t) != null ){
+                String attributes = n.getAttribute("time" + t).toString();
+                String[] vector = attributes.replaceAll("^\\s*\\[|\\]\\s*$", "").split("\\s*,\\s*");
+            if (!vector[4].equals(getTextField()))
+                n.setAttribute("ui.hide");
+            for (int j = 0; j < countEdges; j++) {
+                Edge e = g.getGraph().getEdge(j);
+                if (e.getSourceNode() == n || e.getTargetNode() == n)
+                    e.setAttribute("ui.hide");
+            }
                 }
             }
         }
@@ -196,7 +253,7 @@ public class GraphController {
 
     private void showGraph(Graph graph, String type) {
         graph.setAttribute("ui.stylesheet", "url('file://src/main/resources/graphStylesheet.css')");
-        v = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+        FxViewer v = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
         v.disableAutoLayout();
         FxViewPanel panel = (FxViewPanel) v.addDefaultView(false, new FxGraphRenderer());
         borderPane.setPrefSize(200, 200);
@@ -268,14 +325,14 @@ public class GraphController {
         boolean exist = graph.edges().anyMatch(edge1 -> (edge1.getSourceNode().equals(graph.getNode(vertex1)) || edge1.getSourceNode().equals(graph.getNode(vertex2))) && (edge1.getTargetNode().equals(graph.getNode(vertex2)) || edge1.getTargetNode().equals(graph.getNode(vertex1))));
         Edge e = graph.addEdge("id" + idGraph, graph.getNode(vertex1), graph.getNode(vertex2));
         idGraph++;
-        e.setAttribute("ui.label", edge);
+//        e.setAttribute("ui.label", edge);
         if (exist)
             e.setAttributes(Map.of(
-                    "ui.label", edge,
+//                    "ui.label", edge,
                     "ui.class", "multiple"
             ));
-        else
-            e.setAttribute("ui.label", edge);
+//        else
+//            e.setAttribute("ui.label", edge);
     }
 
     private void createNodes(Graph graph, int tot) {
