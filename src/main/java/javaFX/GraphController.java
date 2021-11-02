@@ -53,6 +53,7 @@ public class GraphController {
     private int idGraph = 0;
     private int totNodes = 0;
     private final List<TimeGraph> graphList = new ArrayList<>();
+    private Graph currentGraph;
     private ChartController chartController;
     private MainController mainController;
 
@@ -259,6 +260,10 @@ public class GraphController {
         }
     }
 
+    public Graph getCurrentGraph() {
+        return currentGraph;
+    }
+
     /**
      * Shows a graph
      *
@@ -267,7 +272,8 @@ public class GraphController {
      * @param time  instant chosen if the graph is dynamic
      */
     private void showGraph(Graph graph, String type, Double time) {
-        graph.setAttribute("ui.stylesheet", "url('file://src/main/resources/graphStylesheet.css')");
+        currentGraph = graph;
+        graph.setAttribute("ui.stylesheet", "url('file://src/main/resources/graphLightTheme.css')");
         FxViewer v = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
         v.disableAutoLayout();
         FxViewPanel panel = (FxViewPanel) v.addDefaultView(false, new FxGraphRenderer());

@@ -231,11 +231,13 @@ public class SimpleMouseManager implements MouseManager {
             Optional<Node> n1 = gGraph.nodes().filter(n -> n.hasAttribute("ui.clicked")).findFirst();
             if (n1.isPresent()) {
                 Node n = graph.getNode(n1.get().getId());
-                String attribute = n.getAttribute("time" + this.time).toString();
-                String s = attribute.substring(1, attribute.length() - 1);
-                String[] list = s.split(", ");
-                String newLabel = "Node " + n.getId() + " attributes:  x: " + list[0] + ", y: " + list[1] + ", direction: " + list[2] + ", speed: " + list[3] + ", v: " + list[4];
-                setLabel(newLabel);
+                Object attribute = n.getAttribute("time" + this.time);
+                if(attribute != null) {
+                    String s = attribute.toString();
+                    String[] list = s.substring(1, s.length() - 1).split(", ");
+                    String newLabel = "Node " + n.getId() + " attributes:  x: " + list[0] + ", y: " + list[1] + ", direction: " + list[2] + ", speed: " + list[3] + ", v: " + list[4];
+                    setLabel(newLabel);
+                }
             }
             element.removeAttribute("ui.clicked");
         }
