@@ -4,7 +4,6 @@ import App.DialogUtility.DialogBuilder;
 import App.GraphUtility.SimpleMouseManager;
 import App.GraphUtility.SimpleTimeGraph;
 import App.GraphUtility.TimeGraph;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,7 +24,10 @@ import org.graphstream.ui.javafx.FxGraphRenderer;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Controller for graphs
@@ -39,32 +41,30 @@ public class GraphController {
     @FXML
     ListView<RadioButton> list;
     @FXML
-    TextField v;
-    @FXML
-    TextField minor;
-    @FXML
-    TextField greater;
-    @FXML
     Label infoNode;
-
 
     @FXML
     NodesTableController nodeTableComponentController;
+    @FXML
+    FiltersController filtersComponentController;
 
     private final ObservableList<RadioButton> variables = FXCollections.observableArrayList();
     private final ToggleGroup group = new ToggleGroup();
     private int idGraph = 0;
-
-    public int getTotNodes() {
-        return totNodes;
-    }
-
     private int totNodes = 0;
     private final List<TimeGraph> graphList = new ArrayList<>();
-
     private ChartController chartController;
     private MainController mainController;
 
+    public ObservableList<RadioButton> getVariables() {
+        return variables;
+    }
+    public int getTotNodes() {
+        return totNodes;
+    }
+    public List<TimeGraph> getGraphList() {
+        return graphList;
+    }
 
     public void injectMainController(MainController mainController, ChartController chartComponentController) {
         this.mainController = mainController;
@@ -74,6 +74,7 @@ public class GraphController {
     @FXML
     public void initialize() {
         this.nodeTableComponentController.injectGraphController(this);
+        this.filtersComponentController.injectGraphController(this);
     }
 
     /**
@@ -101,7 +102,6 @@ public class GraphController {
         createGraph(file);
         nodeTableComponentController.initTable();
     }
-
 
     /**
      * Opens explorer with only .csv files
@@ -188,133 +188,6 @@ public class GraphController {
         }
     }
 
-    private String getTextField(TextField t) {
-        return t.getText();
-    }
-
-    /**
-     * Resets textFields of minor and greater.
-     */
-    @FXML
-    private void resetTextSearch() {
-        minor.clear();
-        greater.clear();
-    }
-
-    /**
-     * Resets textField of value.
-     */
-    @FXML
-    private void resetTextSave() {
-        v.clear();
-    }
-
-    /**
-     * Resets all filters added.
-     */
-    @FXML
-    private void resetFilter() {
-        for (TimeGraph g : graphList) {
-            int countNodes = g.getGraph().getNodeCount();
-            for (int i = 0; i < countNodes; i++)
-                g.getGraph().getNode(i).removeAttribute("ui.class");
-        }
-    }
-
-    /**
-     * @return ArrayList of times, takes from the Radiobutton list.
-     */
-    private ArrayList<Double> getTimes() {
-        ArrayList<Double> times = new ArrayList<>();
-        double time;
-        for (RadioButton radioButton : variables) {
-            time = Double.parseDouble(radioButton.getText());
-            times.add(time);
-        }
-        return times;
-    }
-
-    /**
-     * Applies filters to nodes at all times on graph.
-     */
-    @FXML
-    private void saveFilter() {
-        try {
-            resetFilter();
-            for (TimeGraph g : graphList) {
-                int countNodes = g.getGraph().getNodeCount();
-                getNodesVector(countNodes, g, getTimes());
-            }
-        } catch (Exception e) {
-            DialogBuilder dialogBuilder = new DialogBuilder();
-            dialogBuilder.error("Error!", e.getMessage());
-        }
-    }
-
-    /**
-     * Takes all attributes of a node for each instant.
-     *
-     * @param countNodes number of nodes in a graph
-     * @param g          graph
-     * @param times      instants of time
-     */
-    private void getNodesVector(int countNodes, TimeGraph g, ArrayList<Double> times) {
-        for (int i = 0; i < countNodes; i++) {
-            Node n = g.getGraph().getNode(i);
-            for (double t : times) {
-                if (n.getAttribute("time" + t) != null) {
-                    String attributes = n.getAttribute("time" + t).toString();
-                    String[] vector = attributes.replaceAll("^\\s*\\[|\\]\\s*$", "").split("\\s*,\\s*");
-                    colorNode(vector, n);
-                }
-            }
-        }
-    }
-
-    /**
-     * Applies the style of node when it's filtered.
-     *
-     * @param vector attributes of node
-     * @param n      node of graph
-     */
-    private void colorNode(String[] vector, Node n) {
-        if (!getTextField(v).equals("")) {
-            if (!getTextField(v).equals("")) {
-                if (vector[4].equals(getTextField(v)))
-                    n.setAttribute("ui.class", "filtered");
-            }
-            double value = Double.parseDouble(vector[4]);
-            getFilter(value, n);
-        }
-    }
-
-    /**
-     * Checks which textFields have been entered and applies the style
-     * to the nodes based on them.
-     *
-     * @param value double value of textField value
-     * @param n     node of graph
-     */
-    private void getFilter(double value, Node n) {
-        double textMinor, textGreater;
-        if (!(getTextField(minor).equals("") || getTextField(greater).equals(""))) {
-            textMinor = Double.parseDouble(getTextField(minor));
-            textGreater = Double.parseDouble(getTextField(greater));
-            if (value < textMinor && value > textGreater)
-                n.setAttribute("ui.class", "filtered");
-        }
-        if (getTextField(minor).equals("") && !getTextField(greater).equals("")) {
-            textGreater = Double.parseDouble(getTextField(greater));
-            if (value > textGreater)
-                n.setAttribute("ui.class", "filtered");
-        }
-        if (getTextField(greater).equals("") && !getTextField(minor).equals("")) {
-            textMinor = Double.parseDouble(getTextField(minor));
-            if (value < textMinor)
-                n.setAttribute("ui.class", "filtered");
-        }
-    }
-
     /**
      * Create a graph from a file
      *
@@ -398,7 +271,6 @@ public class GraphController {
         FxViewer v = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
         v.disableAutoLayout();
         FxViewPanel panel = (FxViewPanel) v.addDefaultView(false, new FxGraphRenderer());
-//        borderPane.setPrefSize(200, 200);
         SubScene scene = new SubScene(panel, borderPane.getWidth(), borderPane.getHeight());
         borderPane.setCenter(scene);
         SimpleMouseManager sm = new SimpleMouseManager(graph, time, chartController);
@@ -525,6 +397,4 @@ public class GraphController {
             i++;
         }
     }
-
-
 }
