@@ -63,4 +63,14 @@ public class MainController {
         graphComponentController.openTraExplorer();
         menuCSV.setDisable(false);
     }
+
+    @FXML
+    private void loadDarkTheme(){
+        this.vbox.getScene().getStylesheets().add("dark-theme.css");
+    }
+
+    @FXML
+    private void loadLightTheme(){
+        this.vbox.getScene().getStylesheets().clear();
+    }
 }

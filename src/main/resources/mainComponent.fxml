@@ -51,6 +51,12 @@
                <items>
             <MenuItem mnemonicParsing="false" onAction="#openCsvExplorer" text="Open.." />
                </items></Menu>
+            <Menu mnemonicParsing="false" text="Appearance">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#loadDarkTheme" text="Dark theme" />
+                  <MenuItem mnemonicParsing="false" onAction="#loadLightTheme" text="Light theme" />
+              </items>
+            </Menu>
       </menus>
     </MenuBar>
     <SplitPane dividerPositions="0.5" focusTraversable="true" VBox.vgrow="ALWAYS">
