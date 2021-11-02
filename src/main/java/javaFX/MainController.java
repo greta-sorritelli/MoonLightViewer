@@ -1,6 +1,7 @@
 package javaFX;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Menu;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
@@ -27,6 +28,8 @@ public class MainController {
 
     @FXML
     VBox vbox;
+    @FXML
+    Menu menuCSV;
 
     public ChartController getChartComponentController() {
         return chartComponentController;
@@ -50,10 +53,12 @@ public class MainController {
     private void openCsvExplorer() {
 //        chartComponentController.openCsvExplorer();
         graphComponentController.openCSVExplorer();
+        menuCSV.setDisable(true);
     }
 
     @FXML
     private void openTraExplorer() {
         graphComponentController.openTraExplorer();
+        menuCSV.setDisable(false);
     }
 }

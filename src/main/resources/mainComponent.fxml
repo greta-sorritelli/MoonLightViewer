@@ -44,10 +44,13 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#openTraExplorer" text="Open .tra" />
-            <MenuItem mnemonicParsing="false" onAction="#openCsvExplorer" text="Open .csv" />
+            <MenuItem mnemonicParsing="false" onAction="#openTraExplorer" text="Open.." />
           </items>
         </Menu>
+            <Menu fx:id="menuCSV" disable="true" mnemonicParsing="false" text="Load attributes">
+               <items>
+            <MenuItem mnemonicParsing="false" onAction="#openCsvExplorer" text="Open.." />
+               </items></Menu>
       </menus>
     </MenuBar>
     <SplitPane dividerPositions="0.5" focusTraversable="true" VBox.vgrow="ALWAYS">
