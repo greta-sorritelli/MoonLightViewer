@@ -26,7 +26,7 @@ public class LogarithmicAxis extends ValueAxis<Number> {
     private final DoubleProperty logLowerBound = new SimpleDoubleProperty();
 
     public LogarithmicAxis() {
-        super(0.001,100);
+        super(0.0001,100);
         bindLogBoundsToDefaultBounds();
     }
 
