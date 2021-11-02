@@ -1,5 +1,6 @@
 package App.GraphUtility;
 
+import javaFX.ChartController;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -10,6 +11,7 @@ import org.graphstream.ui.graphicGraph.GraphicGraph;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.util.InteractiveElement;
 import org.graphstream.ui.view.util.MouseManager;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.EnumSet;
@@ -23,6 +25,7 @@ public class SimpleMouseManager implements MouseManager {
     private Graph graph;
     protected PropertyChangeSupport propertyChangeSupport;
     private String label = "";
+    private ChartController chartController;
 
     public SimpleMouseManager() {
         this(EnumSet.of(InteractiveElement.NODE, InteractiveElement.SPRITE));
@@ -32,23 +35,38 @@ public class SimpleMouseManager implements MouseManager {
         this.types = types;
     }
 
-    public SimpleMouseManager(Graph graph, Double time) {
+    public SimpleMouseManager(Graph graph, Double time, ChartController chartController) {
         this(EnumSet.of(InteractiveElement.NODE, InteractiveElement.SPRITE));
         propertyChangeSupport = new PropertyChangeSupport(this);
         this.time = time;
         this.graph = graph;
+        this.chartController = chartController;
     }
 
+    /**
+     * Set the value of the label about node info
+     *
+     * @param text info to display
+     */
     public void setLabel(String text) {
         String oldText = this.label;
         this.label = text;
         propertyChangeSupport.firePropertyChange("LabelProperty", oldText, text);
     }
 
+    /**
+     * Add a listener to a property that changes
+     *
+     */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
+    /**
+     * Initialize all the listeners, the view, and the graph
+     * @param graph a graphical graph
+     * @param view the view used
+     */
     public void init(GraphicGraph graph, View view) {
         this.view = view;
         this.gGraph = graph;
@@ -157,24 +175,50 @@ public class SimpleMouseManager implements MouseManager {
         return types;
     }
 
-
-    public String mouseClicked(MouseEvent me, double time) {
-        if (me.getSource().getClass().equals(Node.class)) {
-            Node n = (Node) me.getSource();
-            n.getAttribute("time" + time);
-        }
-        return null;
-    }
-
+    /**
+     * Handler for a single or double click.
+     * If it is clicked a node, it is displayed its information and/or selected the corresponding series in the chart
+     * If it is clicked outside a node, the chart series are restored
+     */
     EventHandler<MouseEvent> mouseClicked = new EventHandler<>() {
         @Override
         public void handle(MouseEvent e) {
             curElement = view.findGraphicElementAt(types, e.getX(), e.getY());
             if (curElement != null) {
-                mouseButtonClickOnElement(curElement, e);
+                if (e.getButton().equals(MouseButton.PRIMARY)) {
+                    if (e.getClickCount() == 1) {
+                        mouseButtonClickOnElement(curElement, e);
+                    }
+                    if (e.getClickCount() > 1) {
+                        mouseButtonTwoClickOnElement(curElement, e);
+                    }
+                }
+            } else {
+                selectAll();
             }
         }
     };
+
+    private void selectAll() {
+        setLabel("");
+        chartController.selectAllSeries();
+    }
+
+    private void mouseButtonTwoClickOnElement(GraphicElement curElement, MouseEvent e) {
+        if (e.getButton() == MouseButton.PRIMARY) {
+            curElement.setAttribute("ui.clicked");
+            Optional<Node> n1 = gGraph.nodes().filter(n -> n.hasAttribute("ui.clicked")).findFirst();
+            if (n1.isPresent()) {
+                Node n = graph.getNode(n1.get().getId());
+                selectOnlyNodeSeries(n);
+            }
+            curElement.removeAttribute("ui.clicked");
+        }
+    }
+
+    private void selectOnlyNodeSeries(Node n) {
+        chartController.selectOnlyOneSeries("Node " + n.getId());
+    }
 
 
     protected void mouseButtonClickOnElement(GraphicElement element,

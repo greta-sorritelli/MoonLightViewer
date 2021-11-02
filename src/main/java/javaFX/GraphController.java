@@ -29,6 +29,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Controller for graphs
+ */
 public class GraphController {
 
     @FXML
@@ -45,8 +48,6 @@ public class GraphController {
     TextField greater;
     @FXML
     Label infoNode;
-    @FXML
-//    Slider slider;
 
     private final ObservableList<RadioButton> variables = FXCollections.observableArrayList();
     private final ToggleGroup group = new ToggleGroup();
@@ -61,6 +62,11 @@ public class GraphController {
         this.chartController = chartComponentController;
     }
 
+    /**
+     * Open the explorer to choose a file
+     * @param extensions extension of a file to choose
+     * @return the file chosen
+     */
     private File open(String description, String extensions){
         FileChooser fileChooser = new FileChooser();
         Stage stage = (Stage) mainController.getVbox().getScene().getWindow();
@@ -69,6 +75,9 @@ public class GraphController {
         return fileChooser.showOpenDialog(stage);
     }
 
+    /**
+     * Opens explorer with only .tra files
+     */
     public void openTraExplorer() {
         System.setProperty("org.graphstream.ui", "javafx");
         File file = open("TRA Files","*.tra");
@@ -76,22 +85,31 @@ public class GraphController {
         createGraph(file);
     }
 
+    /**
+     * Opens explorer with only .csv files
+     */
     public void openCSVExplorer() {
         File file = open("CSV Files","*.csv");
         readCSV(file);
         chartController.createDataFromGraphs(graphList);
     }
 
+    /**
+     * Reset all lists and info
+     */
     private void resetAll() {
         if (!group.getToggles().isEmpty())
             group.getToggles().clear();
         variables.clear();
-//        slider.setMax();
         list.getItems().clear();
         idGraph = 0;
         graphList.clear();
     }
 
+    /**
+     * Read a .csv file to get info about nodes
+     * @param file .csv file
+     */
     private void readCSV(File file) {
         if (file != null) {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -107,6 +125,10 @@ public class GraphController {
 
     }
 
+    /**
+     * Creates vectors for every node in a single instant
+     * @param line a string of a time instant with all info about nodes
+     */
     private void createNodesVector(String line) {
         int node = 0;
         ArrayList<ArrayList<String>> nodes = new ArrayList<>();
@@ -279,7 +301,6 @@ public class GraphController {
             RadioButton r = new RadioButton(String.valueOf(t.getTime()));
             r.setToggleGroup(group);
             variables.add(r);
-//            slider = new Slider();
         }
         if (!variables.isEmpty())
             list.getItems().addAll(variables);
@@ -315,7 +336,7 @@ public class GraphController {
 //        borderPane.setPrefSize(200, 200);
         SubScene scene = new SubScene(panel, borderPane.getWidth(), borderPane.getHeight());
         borderPane.setCenter(scene);
-        SimpleMouseManager sm = new SimpleMouseManager(graph, time);
+        SimpleMouseManager sm = new SimpleMouseManager(graph, time, chartController);
         sm.addPropertyChangeListener(evt -> {
             if (evt.getPropertyName().equals("LabelProperty")) {
                 infoNode.setText(evt.getNewValue().toString());

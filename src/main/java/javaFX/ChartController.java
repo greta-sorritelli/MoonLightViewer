@@ -1,5 +1,6 @@
 package javaFX;
 
+import App.ChartUtility.ChartBuilder;
 import App.ChartUtility.SimpleChartBuilder;
 import App.GraphUtility.TimeGraph;
 import javafx.beans.property.SimpleObjectProperty;
@@ -12,10 +13,14 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
 
+/**
+ * Controller for a chart
+ */
 public class ChartController {
 
 
@@ -46,10 +51,7 @@ public class ChartController {
     @FXML
     RadioButton logarithmic = new RadioButton();
 
-    private MainController mainController;
-
     public void injectMainController(MainController mainController) {
-        this.mainController = mainController;
     }
 
 
@@ -66,8 +68,13 @@ public class ChartController {
 //    }
 //}
 
+
+    /**
+     * Create a chart from a {@link TimeGraph} using a {@link ChartBuilder}
+     * @param timeGraph a {@link TimeGraph}
+     */
     public void createDataFromGraphs(List<TimeGraph> timeGraph) {
-        SimpleChartBuilder cb = new SimpleChartBuilder();
+        ChartBuilder cb = new SimpleChartBuilder();
         List<Series<Number, Number>> linearSeries = cb.getSeriesFromNodes(timeGraph);
         List<Series<Number, Number>> logarithmicSeries = cb.getSeriesFromNodes(timeGraph);
         lineChart.getData().addAll(linearSeries);
@@ -81,6 +88,9 @@ public class ChartController {
         l.setLegendSide(Side.RIGHT);
     }
 
+    /**
+     * Initializes the two charts
+     */
     public void initialize() {
         lineChartLog.setVisible(false);
         initializeChart(lineChart, xAxis);
@@ -112,6 +122,9 @@ public class ChartController {
         showList();
     }
 
+    /**
+     * Initialize the table about series info, as min and max value
+     */
     private void initVariablesList() {
         List<Series<Number, Number>> items = new ArrayList<>();
         lineChart.getData().forEach(e -> {
@@ -125,6 +138,16 @@ public class ChartController {
         setMinMaxValueFactory();
     }
 
+    /**
+     * Select all series and checkbox
+     */
+    public void selectAllSeries() {
+        list.getItems().forEach(checkBox -> checkBox.setSelected(true));
+    }
+
+    /**
+     * Initialize all checkbox in a list and their listener
+     */
     private void showList() {
         if (list != null && !list.getItems().isEmpty())
             list.getItems().clear();
@@ -142,11 +165,20 @@ public class ChartController {
             list.getItems().addAll(variables);
     }
 
+    /**
+     * Change visibility of a series in all charts based on its name
+     * @param name name of the series
+     */
     private void changeVisibility(String name) {
         changeSingleChartVisibility(name, lineChart);
         changeSingleChartVisibility(name, lineChartLog);
     }
 
+    /**
+     * Change visibility of a series in a single chart based on its name
+     * @param name name of the series
+     * @param lineChart chart
+     */
     private void changeSingleChartVisibility(String name, LineChart<Number, Number> lineChart) {
         lineChart.getData().forEach(series -> {
             if (series.getName().equals(name)) {
@@ -156,22 +188,41 @@ public class ChartController {
         });
     }
 
+    /**
+     * Select only one series in all charts
+     * @param seriesName name of the series
+     */
+    public void selectOnlyOneSeries(String seriesName) {
+        list.getItems().forEach(checkBox -> checkBox.setSelected(checkBox.getText().equals(seriesName)));
+    }
+
+    /**
+     * Get min and max of the value of a series and put them in the table
+     */
     private void setMinMaxValueFactory() {
         nameVColumn.setCellValueFactory(value -> new SimpleObjectProperty<>(value.getValue().getName()));
         minColumn.setCellValueFactory(value -> new SimpleObjectProperty<>(getMinSeries(value.getValue())));
         maxColumn.setCellValueFactory(value -> new SimpleObjectProperty<>(getMaxSeries(value.getValue())));
     }
 
+    /**
+     * Return the min value of a series
+     * @return min value
+     */
     public Number getMinSeries(Series<Number, Number> series) {
         OptionalDouble d = series.getData().stream().mapToDouble(num -> num.getYValue().doubleValue()).min();
-        if(d.isPresent())
+        if (d.isPresent())
             return d.getAsDouble();
         return 0;
     }
 
+    /**
+     * Return the max value of a series
+     * @return max value
+     */
     public Number getMaxSeries(Series<Number, Number> series) {
         OptionalDouble d = series.getData().stream().mapToDouble(num -> num.getYValue().doubleValue()).max();
-        if(d.isPresent())
+        if (d.isPresent())
             return d.getAsDouble();
         return 0;
     }
