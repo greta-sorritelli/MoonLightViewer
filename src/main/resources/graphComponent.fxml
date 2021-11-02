@@ -33,7 +33,7 @@
                                           <Font name="System Italic" size="15.0" />
                                        </font>
                                     </Label>
-                                    <BorderPane fx:id="borderPane" prefHeight="290.0" prefWidth="450.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    <BorderPane fx:id="borderPane" prefHeight="290.0" prefWidth="450.0" styleClass=".borderpane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="148.0" prefWidth="445.0">

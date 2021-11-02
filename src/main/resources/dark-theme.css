@@ -12,5 +12,8 @@
             -fx-mid-text-color 60%
     );
     -fx-focused-mark-color : -fx-focused-text-base-color ;
+}
 
+.borderpane {
+    -fx-background-color: #3f474f;
 }

@@ -65,12 +65,20 @@ public class MainController {
     }
 
     @FXML
-    private void loadDarkTheme(){
+    private void loadDarkTheme() {
         this.vbox.getScene().getStylesheets().add("dark-theme.css");
+        if (this.graphComponentController.getCurrentGraph() != null && this.graphComponentController.getCurrentGraph().hasAttribute("ui.stylesheet")) {
+            this.graphComponentController.getCurrentGraph().removeAttribute("ui.stylesheet");
+            this.graphComponentController.getCurrentGraph().setAttribute("ui.stylesheet", "url('file://src/main/resources/graphDarkTheme.css')");
+        }
     }
 
     @FXML
-    private void loadLightTheme(){
+    private void loadLightTheme() {
         this.vbox.getScene().getStylesheets().clear();
+        if (this.graphComponentController.getCurrentGraph() != null && this.graphComponentController.getCurrentGraph().hasAttribute("ui.stylesheet")) {
+            this.graphComponentController.getCurrentGraph().removeAttribute("ui.stylesheet");
+            this.graphComponentController.getCurrentGraph().setAttribute("ui.stylesheet", "url('file://src/main/resources/graphLightTheme.css')");
+        }
     }
 }
