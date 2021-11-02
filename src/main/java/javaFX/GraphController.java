@@ -170,18 +170,26 @@ public class GraphController {
         return t.getText();
     }
 
+    /**
+     * Resets textFields of minor and greater.
+     */
     @FXML
     private void resetTextSearch(){
         minor.clear();
         greater.clear();
     }
 
+    /**
+     * Resets textField of value.
+     */
     @FXML
     private void resetTextSave(){
         v.clear();
     }
-
-
+    
+    /**
+     * Resets all filters added.
+     */
     @FXML
     private void resetFilter() {
         for (TimeGraph g : graphList) {
@@ -191,7 +199,9 @@ public class GraphController {
         }
     }
 
-
+    /**
+     * @return  ArrayList of times, takes from the Radiobutton list.
+     */
     private ArrayList<Double> getTimes(){
         ArrayList<Double> times = new ArrayList<>();
         double time;
@@ -202,7 +212,9 @@ public class GraphController {
         return times;
     }
 
-
+    /**
+     * Applies filters to nodes at all times on graph.
+     */
     @FXML
     private void saveFilter() {
         try {
@@ -217,6 +229,13 @@ public class GraphController {
         }
     }
 
+    /**
+     * Takes all attributes of a node for each instant.
+     *
+     * @param countNodes number of nodes in a graph
+     * @param g          graph
+     * @param times      instants of time
+     */
     private void getNodesVector(int countNodes, TimeGraph g, ArrayList<Double> times) {
         for (int i = 0; i < countNodes; i++) {
             Node n = g.getGraph().getNode(i);
@@ -230,6 +249,12 @@ public class GraphController {
         }
     }
 
+    /**
+     * Applies the style of node when it's filtered.
+     *
+     * @param vector  attributes of node
+     * @param n       node of graph
+     */
     private void colorNode(String[] vector, Node n){
         if(!getTextField(v).equals("")){
             if (vector[4].equals(getTextField(v)))
@@ -242,6 +267,15 @@ public class GraphController {
 
     }
 
+    /**
+     * Checks which textFields have been entered and applies the style
+     * to the nodes based on them.
+     *
+     * @param value       double value of textField value
+     * @param textMinor   double value of textField minor
+     * @param textGreater double value of textField greater
+     * @param n           node of graph
+     */
     private void getFilter(double value, double textMinor, double textGreater, Node n){
         if(!(getTextField(minor).equals("") || getTextField(greater).equals(""))) {
             textMinor = Double.parseDouble(getTextField(minor));
