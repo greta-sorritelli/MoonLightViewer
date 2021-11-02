@@ -150,6 +150,9 @@ public class GraphController {
         addPositions(elements, nodes);
     }
 
+    /**
+     * Gets positions from the .csv file and adds them to the node coordinates
+     */
     private void addPositions(String[] elements, ArrayList<ArrayList<String>> nodes) {
         for (TimeGraph g : graphList) {
             if (g.getTime() == Double.parseDouble(elements[0])) {
@@ -178,6 +181,7 @@ public class GraphController {
         v.clear();
     }
 
+
     @FXML
     private void resetFilter() {
         for (TimeGraph g : graphList) {
@@ -186,6 +190,7 @@ public class GraphController {
                     g.getGraph().getNode(i).removeAttribute("ui.class");
         }
     }
+
 
     private ArrayList<Double> getTimes(){
         ArrayList<Double> times = new ArrayList<>();
@@ -196,6 +201,7 @@ public class GraphController {
         }
         return times;
     }
+
 
     @FXML
     private void saveFilter() {
@@ -255,6 +261,10 @@ public class GraphController {
         }
     }
 
+    /**
+     * Create a graph from a file
+     * @param file file to read
+     */
     private void createGraph(File file) {
         if (file != null) {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -280,6 +290,9 @@ public class GraphController {
         }
     }
 
+    /**
+     * For each time instant creates a radio button to select a specific graph in time
+     */
     private void createTimeButtons() {
         if (list != null && !list.getItems().isEmpty())
             list.getItems().clear();
@@ -301,7 +314,10 @@ public class GraphController {
         });
     }
 
-
+    /**
+     * Changes visualization of a dynamic graph in time
+     * @param time instant chosen
+     */
     private void changeGraphView(String time) {
         Optional<TimeGraph> g = graphList.stream().filter(timeGraph -> timeGraph.getTime() == Double.parseDouble(time)).findFirst();
         if (g.isPresent()) {
@@ -314,6 +330,12 @@ public class GraphController {
         }
     }
 
+    /**
+     * Shows a graph
+     * @param graph graph to visualize
+     * @param type dynamic or static
+     * @param time instant chosen if the graph is dynamic
+     */
     private void showGraph(Graph graph, String type, Double time) {
         graph.setAttribute("ui.stylesheet", "url('file://src/main/resources/graphStylesheet.css')");
         FxViewer v = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
@@ -332,6 +354,13 @@ public class GraphController {
         graphType.setText(type);
     }
 
+    /**
+     * Builds a static graph from a file
+     * @param line line to read
+     * @param br a {@link BufferedReader} to read the file
+     * @param graph graph in which to add nodes and edges
+     * @param totNodes total number of nodes
+     */
     private void staticGraph(String line, BufferedReader br, Graph graph, int totNodes) {
         try {
             createEdge(line, graph, totNodes);
@@ -344,6 +373,12 @@ public class GraphController {
         }
     }
 
+    /**
+     * Builds a dynamic graph from a file
+     * @param line line to read
+     * @param br a {@link BufferedReader} to read the file
+     * @param totNodes total number of nodes
+     */
     private void dynamicGraph(String line, BufferedReader br, int totNodes) {
         try {
             double time = Double.parseDouble(line);
@@ -369,6 +404,12 @@ public class GraphController {
         }
     }
 
+    /**
+     * Creates a single {@link TimeGraph} in a time instant
+     * @param time instant
+     * @param linesEdges line of the file that contains the edge between two nodes
+     * @param totNodes total number of nodes
+     */
     private void instantGraph(double time, ArrayList<String> linesEdges, int totNodes) {
         Graph graph = new MultiGraph("id" + idGraph);
         graph.setAttribute("ui.stylesheet", "url('file://src/main/resources/graphStylesheet.css')");
@@ -381,11 +422,19 @@ public class GraphController {
         graphList.add(tg);
     }
 
+    /**
+     * Creates nodes and then an edge between two of them
+     *
+     */
     private void createEdge(String line, Graph graph, int totNodes) {
         createNodes(graph, totNodes);
         createEdge(line, graph);
     }
 
+    /**
+     * Create and edge between two nodes
+     *
+     */
     private void createEdge(String line, Graph graph) {
         String[] elements = line.split(",");
         String vertex1 = elements[0];
@@ -404,6 +453,11 @@ public class GraphController {
 //            e.setAttribute("ui.label", edge);
     }
 
+    /**
+     * Creates all the nodes of a graph
+     * @param graph graph in which to add nodes
+     * @param tot total number of nodes to create
+     */
     private void createNodes(Graph graph, int tot) {
         int i = 0;
         while (i < tot) {

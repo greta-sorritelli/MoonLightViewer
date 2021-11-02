@@ -11,6 +11,9 @@ import javafx.stage.StageStyle;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Class for fxml load
+ */
 public class JavaFxApp extends Application {
 
     public void start(Stage stage) throws Exception {
@@ -21,15 +24,12 @@ public class JavaFxApp extends Application {
 //        fxmlLoader.setController(new GraphController());
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/mainComponent.fxml"));
-
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
 //        stage.setMaximized(true);
         stage.initStyle(StageStyle.DECORATED);
         stage.setTitle("MoonLight Viewer");
-//        ChartController hc = new ChartController();
-//        hc.initialize();
         stage.show();
     }
 }

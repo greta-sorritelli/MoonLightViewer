@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Class for a chart axis of logarithmic type. Extends {@link ValueAxis}
+ */
 public class LogarithmicAxis extends ValueAxis<Number> {
 
     private static final double ANIMATION_TIME = 2000;
@@ -35,21 +38,17 @@ public class LogarithmicAxis extends ValueAxis<Number> {
     }
 
     private void bindLogBoundsToDefaultBounds() {
-        logLowerBound.bind(new DoubleBinding() {
-            {
+        logLowerBound.bind(new DoubleBinding() {{
                 super.bind(lowerBoundProperty());
             }
-
             @Override
             protected double computeValue() {
                 return Math.log10(lowerBoundProperty().get());
             }
         });
-        logUpperBound.bind(new DoubleBinding() {
-            {
+        logUpperBound.bind(new DoubleBinding() {{
                 super.bind(upperBoundProperty());
             }
-
             @Override
             protected double computeValue() {
                 return Math.log10(upperBoundProperty().get());

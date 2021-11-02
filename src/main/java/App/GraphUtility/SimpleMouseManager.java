@@ -17,6 +17,9 @@ import java.beans.PropertyChangeSupport;
 import java.util.EnumSet;
 import java.util.Optional;
 
+/**
+ * Class to manage mouse events on a graph. Implements {@link MouseManager}
+ */
 public class SimpleMouseManager implements MouseManager {
     protected View view;
     protected GraphicGraph gGraph;

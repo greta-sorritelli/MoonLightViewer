@@ -2,6 +2,9 @@ package App.GraphUtility;
 
 import org.graphstream.graph.Graph;
 
+/**
+ * A graph with a time instant. Implements {@link TimeGraph}
+ */
 public class SimpleTimeGraph implements TimeGraph {
 
     private final Graph graph;

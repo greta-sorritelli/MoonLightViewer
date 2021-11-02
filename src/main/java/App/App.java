@@ -3,6 +3,9 @@ package App;
 import javaFX.JavaFxApp;
 import javafx.application.Application;
 
+/**
+ * Main class. Launch the user interface
+ */
 public class App {
 
     public static void main(String[] args) {

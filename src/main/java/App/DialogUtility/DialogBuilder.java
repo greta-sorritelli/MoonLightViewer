@@ -2,8 +2,17 @@ package App.DialogUtility;
 
 import javafx.scene.control.Alert;
 
+/**
+ * Class that implements {@link Dialog} to show dialog window
+ */
 public class DialogBuilder implements Dialog{
 
+
+    /**
+     * Dialog for a warning message
+     * @param title title
+     * @param message message
+     */
     @Override
     public void warning(String title, String message) {
         Alert warn = new Alert(Alert.AlertType.WARNING);
@@ -12,6 +21,11 @@ public class DialogBuilder implements Dialog{
         warn.show();
     }
 
+    /**
+     * Dialog for an info message
+     * @param title title
+     * @param message message
+     */
     @Override
     public void info(String title, String message) {
         Alert info = new Alert(Alert.AlertType.INFORMATION);
@@ -20,6 +34,11 @@ public class DialogBuilder implements Dialog{
         info.show();
     }
 
+    /**
+     * Dialog for an error message
+     * @param title title
+     * @param message message
+     */
     @Override
     public void error(String title, String message) {
         Alert err = new Alert(Alert.AlertType.ERROR);

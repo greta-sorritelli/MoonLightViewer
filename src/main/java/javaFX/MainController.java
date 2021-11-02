@@ -5,17 +5,10 @@ import javafx.scene.control.Menu;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * Main controller of the application. It has other controllers nested in it.
+ */
 public class MainController {
-
-//    private static MainController mainController = new MainController();
-//
-//    private MainController() {
-//    }
-//
-//    public static MainController getInstance() {
-//        return mainController;
-//    }
-
 
     @FXML
     AnchorPane chartComponent;
@@ -43,12 +36,18 @@ public class MainController {
         return this.vbox;
     }
 
+    /**
+     * Gets all info and controllers from the others fxml files included and inject this {@link MainController} in its nested controllers
+     */
     @FXML
     public void initialize() {
         this.chartComponentController.injectMainController(this);
         this.graphComponentController.injectMainController(this, chartComponentController);
     }
 
+    /**
+     * Open the explorer to choose a .csv file
+     */
     @FXML
     private void openCsvExplorer() {
 //        chartComponentController.openCsvExplorer();
@@ -56,6 +55,9 @@ public class MainController {
         menuCSV.setDisable(true);
     }
 
+    /**
+     * Open the explorer to choose a .tra file
+     */
     @FXML
     private void openTraExplorer() {
         graphComponentController.openTraExplorer();
