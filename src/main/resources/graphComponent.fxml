@@ -7,8 +7,6 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -95,15 +93,7 @@
             </Tab>
             <Tab text="Nodes ">
                <content>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                     <children>
-                        <TableView prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <columns>
-                              <TableColumn prefWidth="75.0" text="Node" />
-                           </columns>
-                        </TableView>
-                     </children>
-                  </AnchorPane>
+                  <fx:include fx:id="nodeTableComponent" source="nodeTableComponent.fxml" />
                </content>
             </Tab>
          </tabs>

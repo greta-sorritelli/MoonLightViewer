@@ -4,6 +4,7 @@ import App.DialogUtility.DialogBuilder;
 import App.GraphUtility.SimpleMouseManager;
 import App.GraphUtility.SimpleTimeGraph;
 import App.GraphUtility.TimeGraph;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,13 +21,11 @@ import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.fx_viewer.FxViewPanel;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.javafx.FxGraphRenderer;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Controller for graphs
@@ -48,25 +47,43 @@ public class GraphController {
     @FXML
     Label infoNode;
 
+
+    @FXML
+    NodesTableController nodeTableComponentController;
+
     private final ObservableList<RadioButton> variables = FXCollections.observableArrayList();
     private final ToggleGroup group = new ToggleGroup();
     private int idGraph = 0;
+
+    public int getTotNodes() {
+        return totNodes;
+    }
+
+    private int totNodes = 0;
     private final List<TimeGraph> graphList = new ArrayList<>();
 
     private ChartController chartController;
     private MainController mainController;
+
 
     public void injectMainController(MainController mainController, ChartController chartComponentController) {
         this.mainController = mainController;
         this.chartController = chartComponentController;
     }
 
+    @FXML
+    public void initialize() {
+        this.nodeTableComponentController.injectGraphController(this);
+    }
+
     /**
      * Open the explorer to choose a file
+     *
      * @param extensions extension of a file to choose
+     *
      * @return the file chosen
      */
-    private File open(String description, String extensions){
+    private File open(String description, String extensions) {
         FileChooser fileChooser = new FileChooser();
         Stage stage = (Stage) mainController.getVbox().getScene().getWindow();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(description, extensions);
@@ -79,16 +96,18 @@ public class GraphController {
      */
     public void openTraExplorer() {
         System.setProperty("org.graphstream.ui", "javafx");
-        File file = open("TRA Files","*.tra");
+        File file = open("TRA Files", "*.tra");
         resetAll();
         createGraph(file);
+        nodeTableComponentController.initTable();
     }
+
 
     /**
      * Opens explorer with only .csv files
      */
     public void openCSVExplorer() {
-        File file = open("CSV Files","*.csv");
+        File file = open("CSV Files", "*.csv");
         readCSV(file);
         chartController.createDataFromGraphs(graphList);
     }
@@ -103,10 +122,12 @@ public class GraphController {
         list.getItems().clear();
         idGraph = 0;
         graphList.clear();
+        nodeTableComponentController.resetTable();
     }
 
     /**
      * Read a .csv file to get info about nodes
+     *
      * @param file .csv file
      */
     private void readCSV(File file) {
@@ -126,6 +147,7 @@ public class GraphController {
 
     /**
      * Creates vectors for every node in a single instant
+     *
      * @param line a string of a time instant with all info about nodes
      */
     private void createNodesVector(String line) {
@@ -174,7 +196,7 @@ public class GraphController {
      * Resets textFields of minor and greater.
      */
     @FXML
-    private void resetTextSearch(){
+    private void resetTextSearch() {
         minor.clear();
         greater.clear();
     }
@@ -183,26 +205,26 @@ public class GraphController {
      * Resets textField of value.
      */
     @FXML
-    private void resetTextSave(){
+    private void resetTextSave() {
         v.clear();
     }
-    
+
     /**
      * Resets all filters added.
      */
     @FXML
     private void resetFilter() {
         for (TimeGraph g : graphList) {
-                int countNodes = g.getGraph().getNodeCount();
-                for (int i = 0; i < countNodes; i++)
-                    g.getGraph().getNode(i).removeAttribute("ui.class");
+            int countNodes = g.getGraph().getNodeCount();
+            for (int i = 0; i < countNodes; i++)
+                g.getGraph().getNode(i).removeAttribute("ui.class");
         }
     }
 
     /**
-     * @return  ArrayList of times, takes from the Radiobutton list.
+     * @return ArrayList of times, takes from the Radiobutton list.
      */
-    private ArrayList<Double> getTimes(){
+    private ArrayList<Double> getTimes() {
         ArrayList<Double> times = new ArrayList<>();
         double time;
         for (RadioButton radioButton : variables) {
@@ -243,7 +265,7 @@ public class GraphController {
                 if (n.getAttribute("time" + t) != null) {
                     String attributes = n.getAttribute("time" + t).toString();
                     String[] vector = attributes.replaceAll("^\\s*\\[|\\]\\s*$", "").split("\\s*,\\s*");
-                    colorNode(vector,n);
+                    colorNode(vector, n);
                 }
             }
         }
@@ -252,51 +274,50 @@ public class GraphController {
     /**
      * Applies the style of node when it's filtered.
      *
-     * @param vector  attributes of node
-     * @param n       node of graph
+     * @param vector attributes of node
+     * @param n      node of graph
      */
-    private void colorNode(String[] vector, Node n){
-        if(!getTextField(v).equals("")){
-            if (vector[4].equals(getTextField(v)))
-                n.setAttribute("ui.class", "filtered");
+    private void colorNode(String[] vector, Node n) {
+        if (!getTextField(v).equals("")) {
+            if (!getTextField(v).equals("")) {
+                if (vector[4].equals(getTextField(v)))
+                    n.setAttribute("ui.class", "filtered");
+            }
+            double value = Double.parseDouble(vector[4]);
+            getFilter(value, n);
         }
-        double value = Double.parseDouble(vector[4]);
-        double textMinor = 0 ;
-        double textGreater = 0;
-        getFilter(value,textMinor,textGreater,n);
-
     }
 
     /**
      * Checks which textFields have been entered and applies the style
      * to the nodes based on them.
      *
-     * @param value       double value of textField value
-     * @param textMinor   double value of textField minor
-     * @param textGreater double value of textField greater
-     * @param n           node of graph
+     * @param value double value of textField value
+     * @param n     node of graph
      */
-    private void getFilter(double value, double textMinor, double textGreater, Node n){
-        if(!(getTextField(minor).equals("") || getTextField(greater).equals(""))) {
+    private void getFilter(double value, Node n) {
+        double textMinor, textGreater;
+        if (!(getTextField(minor).equals("") || getTextField(greater).equals(""))) {
             textMinor = Double.parseDouble(getTextField(minor));
             textGreater = Double.parseDouble(getTextField(greater));
             if (value < textMinor && value > textGreater)
                 n.setAttribute("ui.class", "filtered");
         }
-        if(getTextField(minor).equals("") && !getTextField(greater).equals("")){
+        if (getTextField(minor).equals("") && !getTextField(greater).equals("")) {
             textGreater = Double.parseDouble(getTextField(greater));
-            if(value > textGreater)
+            if (value > textGreater)
                 n.setAttribute("ui.class", "filtered");
         }
-        if(getTextField(greater).equals("") && !getTextField(minor).equals("")){
+        if (getTextField(greater).equals("") && !getTextField(minor).equals("")) {
             textMinor = Double.parseDouble(getTextField(minor));
-            if(value < textMinor)
+            if (value < textMinor)
                 n.setAttribute("ui.class", "filtered");
         }
     }
 
     /**
      * Create a graph from a file
+     *
      * @param file file to read
      */
     private void createGraph(File file) {
@@ -306,7 +327,7 @@ public class GraphController {
                 Graph graph = new MultiGraph("id" + idGraph);
                 idGraph++;
                 if (line.contains("LOCATIONS")) {
-                    int totNodes = Integer.parseInt(StringUtils.substringAfterLast(line, "LOCATIONS "));
+                    totNodes = Integer.parseInt(StringUtils.substringAfterLast(line, "LOCATIONS "));
                     if ((line = br.readLine()) != null && line.contains(",")) {
                         staticGraph(line, br, graph, totNodes);
                         showGraph(graph, "Static Graph", 0.0);
@@ -350,6 +371,7 @@ public class GraphController {
 
     /**
      * Changes visualization of a dynamic graph in time
+     *
      * @param time instant chosen
      */
     private void changeGraphView(String time) {
@@ -366,9 +388,10 @@ public class GraphController {
 
     /**
      * Shows a graph
+     *
      * @param graph graph to visualize
-     * @param type dynamic or static
-     * @param time instant chosen if the graph is dynamic
+     * @param type  dynamic or static
+     * @param time  instant chosen if the graph is dynamic
      */
     private void showGraph(Graph graph, String type, Double time) {
         graph.setAttribute("ui.stylesheet", "url('file://src/main/resources/graphStylesheet.css')");
@@ -390,9 +413,10 @@ public class GraphController {
 
     /**
      * Builds a static graph from a file
-     * @param line line to read
-     * @param br a {@link BufferedReader} to read the file
-     * @param graph graph in which to add nodes and edges
+     *
+     * @param line     line to read
+     * @param br       a {@link BufferedReader} to read the file
+     * @param graph    graph in which to add nodes and edges
      * @param totNodes total number of nodes
      */
     private void staticGraph(String line, BufferedReader br, Graph graph, int totNodes) {
@@ -409,8 +433,9 @@ public class GraphController {
 
     /**
      * Builds a dynamic graph from a file
-     * @param line line to read
-     * @param br a {@link BufferedReader} to read the file
+     *
+     * @param line     line to read
+     * @param br       a {@link BufferedReader} to read the file
      * @param totNodes total number of nodes
      */
     private void dynamicGraph(String line, BufferedReader br, int totNodes) {
@@ -440,9 +465,10 @@ public class GraphController {
 
     /**
      * Creates a single {@link TimeGraph} in a time instant
-     * @param time instant
+     *
+     * @param time       instant
      * @param linesEdges line of the file that contains the edge between two nodes
-     * @param totNodes total number of nodes
+     * @param totNodes   total number of nodes
      */
     private void instantGraph(double time, ArrayList<String> linesEdges, int totNodes) {
         Graph graph = new MultiGraph("id" + idGraph);
@@ -458,7 +484,6 @@ public class GraphController {
 
     /**
      * Creates nodes and then an edge between two of them
-     *
      */
     private void createEdge(String line, Graph graph, int totNodes) {
         createNodes(graph, totNodes);
@@ -467,7 +492,6 @@ public class GraphController {
 
     /**
      * Create and edge between two nodes
-     *
      */
     private void createEdge(String line, Graph graph) {
         String[] elements = line.split(",");
@@ -489,8 +513,9 @@ public class GraphController {
 
     /**
      * Creates all the nodes of a graph
+     *
      * @param graph graph in which to add nodes
-     * @param tot total number of nodes to create
+     * @param tot   total number of nodes to create
      */
     private void createNodes(Graph graph, int tot) {
         int i = 0;
@@ -500,4 +525,6 @@ public class GraphController {
             i++;
         }
     }
+
+
 }
