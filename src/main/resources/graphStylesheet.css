@@ -30,4 +30,10 @@ edge.multiple {
     text-offset: 10px, 10px;
 }
 
+node.filtered{
+    fill-color: blue;
+    stroke-mode: plain;
+    stroke-color: #009dff;
+}
+
 
