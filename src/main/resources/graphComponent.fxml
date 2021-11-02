@@ -38,9 +38,9 @@
                               </AnchorPane>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="148.0" prefWidth="445.0">
                                  <children>
-                                    <SplitPane dividerPositions="0.2621145374449339" prefHeight="146.0" prefWidth="457.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <SplitPane dividerPositions="0.3" prefHeight="146.0" prefWidth="457.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <items>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0">
                                              <children>
                                                 <ListView fx:id="list" layoutY="30.0" prefHeight="146.4" prefWidth="133.6" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
                                                 <Label layoutX="4.800000190734863" layoutY="4.0" text="Temporal instants">
