@@ -1,9 +1,10 @@
-package javaFX;
+package javaFX.GraphControllers;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+
 import java.util.ArrayList;
 import java.util.List;
 

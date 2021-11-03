@@ -1,4 +1,4 @@
-package javaFX;
+package javaFX.GraphControllers;
 
 import App.DialogUtility.DialogBuilder;
 import App.GraphUtility.TimeGraph;

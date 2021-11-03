@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javaFX.FiltersController">
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javaFX.GraphControllers.FiltersController">
    <children>
       <Label layoutX="12.0" layoutY="11.0" text="Filters" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="10.0">
          <font>

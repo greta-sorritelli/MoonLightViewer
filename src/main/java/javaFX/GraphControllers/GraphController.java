@@ -1,14 +1,19 @@
-package javaFX;
+package javaFX.GraphControllers;
 
 import App.DialogUtility.DialogBuilder;
 import App.GraphUtility.SimpleMouseManager;
 import App.GraphUtility.SimpleTimeGraph;
 import App.GraphUtility.TimeGraph;
+import javaFX.ChartController;
+import javaFX.MainController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.SubScene;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -56,6 +61,7 @@ public class GraphController {
     private String theme = "url('file://src/main/resources/graphLightTheme.css')";
     private ChartController chartController;
     private MainController mainController;
+    private FxViewer v;
 
     public ObservableList<RadioButton> getVariables() {
         return variables;
@@ -280,8 +286,7 @@ public class GraphController {
     private void showGraph(Graph graph, String type, Double time) {
         currentGraph = graph;
         graph.setAttribute("ui.stylesheet", theme);
-        FxViewer v = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
-        v.disableAutoLayout();
+        v = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
         FxViewPanel panel = (FxViewPanel) v.addDefaultView(false, new FxGraphRenderer());
         SubScene scene = new SubScene(panel, borderPane.getWidth(), borderPane.getHeight());
         borderPane.setCenter(scene);

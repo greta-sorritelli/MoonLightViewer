@@ -1,5 +1,6 @@
 package javaFX;
 
+import javaFX.GraphControllers.GraphController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.layout.AnchorPane;
