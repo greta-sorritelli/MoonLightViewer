@@ -42,7 +42,6 @@ public class GraphController {
     ListView<RadioButton> list;
     @FXML
     Label infoNode;
-
     @FXML
     NodesTableController nodeTableComponentController;
     @FXML
@@ -54,6 +53,7 @@ public class GraphController {
     private int totNodes = 0;
     private final List<TimeGraph> graphList = new ArrayList<>();
     private Graph currentGraph;
+    private String theme = "url('file://src/main/resources/graphLightTheme.css')";
     private ChartController chartController;
     private MainController mainController;
 
@@ -65,6 +65,12 @@ public class GraphController {
     }
     public List<TimeGraph> getGraphList() {
         return graphList;
+    }
+    public String getTheme() {
+        return theme;
+    }
+    public void setTheme(String theme) {
+        this.theme = theme;
     }
 
     public void injectMainController(MainController mainController, ChartController chartComponentController) {
@@ -273,7 +279,7 @@ public class GraphController {
      */
     private void showGraph(Graph graph, String type, Double time) {
         currentGraph = graph;
-        graph.setAttribute("ui.stylesheet", "url('file://src/main/resources/graphLightTheme.css')");
+        graph.setAttribute("ui.stylesheet", theme);
         FxViewer v = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
         v.disableAutoLayout();
         FxViewPanel panel = (FxViewPanel) v.addDefaultView(false, new FxGraphRenderer());

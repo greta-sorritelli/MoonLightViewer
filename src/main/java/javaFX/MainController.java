@@ -70,7 +70,8 @@ public class MainController {
         if (this.graphComponentController.getCurrentGraph() != null && this.graphComponentController.getCurrentGraph().hasAttribute("ui.stylesheet")) {
             this.graphComponentController.getCurrentGraph().removeAttribute("ui.stylesheet");
             this.graphComponentController.getCurrentGraph().setAttribute("ui.stylesheet", "url('file://src/main/resources/graphDarkTheme.css')");
-        }
+        } else
+            graphComponentController.setTheme("url('file://src/main/resources/graphDarkTheme.css')");
     }
 
     @FXML
@@ -79,6 +80,7 @@ public class MainController {
         if (this.graphComponentController.getCurrentGraph() != null && this.graphComponentController.getCurrentGraph().hasAttribute("ui.stylesheet")) {
             this.graphComponentController.getCurrentGraph().removeAttribute("ui.stylesheet");
             this.graphComponentController.getCurrentGraph().setAttribute("ui.stylesheet", "url('file://src/main/resources/graphLightTheme.css')");
-        }
+        } else
+            graphComponentController.setTheme("url('file://src/main/resources/graphLightTheme.css')");
     }
 }
