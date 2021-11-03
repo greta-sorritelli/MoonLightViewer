@@ -26,8 +26,8 @@ public class FiltersController {
         this.graphController = graphController;
     }
 
-    private String getTextField(TextField t) {
-        return t.getText();
+    private Double getTextField(TextField t) {
+        return Double.parseDouble(t.getText());
     }
 
     /**
@@ -116,13 +116,11 @@ public class FiltersController {
      * @param n      node of graph
      */
     private void colorNode(String[] vector, Node n) {
-        if (!getTextField(v).equals("")) {
-            if (!getTextField(v).equals("")) {
-                if (vector[4].equals(getTextField(v)))
+        double value = Double.parseDouble(vector[4]);
+            if (!v.getText().equals("")) {
+                if (value == getTextField(v))
                     n.setAttribute("ui.class", "filtered");
             }
-        }
-        double value = Double.parseDouble(vector[4]);
         getFilter(value, n);
     }
 
@@ -135,19 +133,19 @@ public class FiltersController {
      */
     private void getFilter(double value, Node n) {
         double textMinor, textGreater;
-        if (!(getTextField(minor).equals("") || getTextField(greater).equals(""))) {
-            textMinor = Double.parseDouble(getTextField(minor));
-            textGreater = Double.parseDouble(getTextField(greater));
+        if (!(minor.getText().equals("") || greater.getText().equals(""))) {
+            textMinor = getTextField(minor);
+            textGreater = getTextField(greater);
             if (value < textMinor && value > textGreater)
                 n.setAttribute("ui.class", "filtered");
         }
-        if (getTextField(minor).equals("") && !getTextField(greater).equals("")) {
-            textGreater = Double.parseDouble(getTextField(greater));
+        if (minor.getText().equals("") && !greater.getText().equals("")) {
+            textGreater = getTextField(greater);
             if (value > textGreater)
                 n.setAttribute("ui.class", "filtered");
         }
-        if (getTextField(greater).equals("") && !getTextField(minor).equals("")) {
-            textMinor = Double.parseDouble(getTextField(minor));
+        if (greater.getText().equals("") && !minor.getText().equals("")) {
+            textMinor = getTextField(minor);
             if (value < textMinor)
                 n.setAttribute("ui.class", "filtered");
         }
