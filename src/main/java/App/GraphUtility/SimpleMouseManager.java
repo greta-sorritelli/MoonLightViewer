@@ -203,7 +203,7 @@ public class SimpleMouseManager implements MouseManager {
     };
 
     private void selectAll() {
-        setLabel("");
+        setLabel(" ");
         chartController.selectAllSeries();
     }
 

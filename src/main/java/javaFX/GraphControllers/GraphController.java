@@ -62,19 +62,20 @@ public class GraphController {
     private ChartController chartController;
     private MainController mainController;
     private FxViewer v;
+    private boolean csvRead = false;
 
     public ObservableList<RadioButton> getVariables() {
         return variables;
     }
+
     public int getTotNodes() {
         return totNodes;
     }
+
     public List<TimeGraph> getGraphList() {
         return graphList;
     }
-    public String getTheme() {
-        return theme;
-    }
+
     public void setTheme(String theme) {
         this.theme = theme;
     }
@@ -123,6 +124,7 @@ public class GraphController {
         File file = open("CSV Files", "*.csv");
         readCSV(file);
         chartController.createDataFromGraphs(graphList);
+
     }
 
     /**
@@ -150,6 +152,7 @@ public class GraphController {
                 while (((line = br.readLine()) != null)) {
                     createNodesVector(line);
                 }
+                this.csvRead = true;
             } catch (Exception e) {
                 DialogBuilder dialogBuilder = new DialogBuilder();
                 dialogBuilder.error("Error!", e.getMessage());
@@ -298,7 +301,12 @@ public class GraphController {
         });
         v.getDefaultView().setMouseManager(sm);
         graphType.setText(type);
+        if (this.csvRead)
+            this.v.disableAutoLayout();
+        else this.v.enableAutoLayout();
     }
+
+
 
     /**
      * Builds a static graph from a file
