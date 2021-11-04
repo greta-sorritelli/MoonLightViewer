@@ -64,10 +64,8 @@ public class FiltersController {
      */
     private ArrayList<Double> getTimes() {
         ArrayList<Double> times = new ArrayList<>();
-        double time;
-        for (RadioButton radioButton : graphController.getVariables()) {
-            time = Double.parseDouble(radioButton.getText());
-            times.add(time);
+        for (TimeGraph t : graphController.getGraphList()) {
+            times.add(t.getTime());
         }
         return times;
     }

@@ -4,7 +4,7 @@ node {
     fill-color: aquamarine, #254;
     fill-mode: gradient-diagonal1;
     text-alignment: center;
-    text-color: white;
+    text-color: black;
     text-size: 10;
 }
 node:clicked {
@@ -27,9 +27,9 @@ edge.multiple {
 }
 
 node.filtered{
-    fill-color: blue;
+    fill-color: #00d9ff;
     stroke-mode: plain;
-    stroke-color: #009dff;
+    stroke-color: #0004ff;
 }
 
 

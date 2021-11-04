@@ -6,17 +6,16 @@ import App.GraphUtility.SimpleTimeGraph;
 import App.GraphUtility.TimeGraph;
 import javaFX.ChartController;
 import javaFX.MainController;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.SubScene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import org.apache.commons.lang3.StringUtils;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -42,18 +41,18 @@ public class GraphController {
     @FXML
     Label graphType;
     @FXML
-    BorderPane borderPane = new BorderPane();
-    @FXML
-    ListView<RadioButton> list;
+    BorderPane borderPane;
     @FXML
     Label infoNode;
     @FXML
     NodesTableController nodeTableComponentController;
     @FXML
     FiltersController filtersComponentController;
+    @FXML
+    Slider slider;
+    @FXML
+    SubScene scene;
 
-    private final ObservableList<RadioButton> variables = FXCollections.observableArrayList();
-    private final ToggleGroup group = new ToggleGroup();
     private int idGraph = 0;
     private int totNodes = 0;
     private final List<TimeGraph> graphList = new ArrayList<>();
@@ -61,12 +60,8 @@ public class GraphController {
     private String theme = "url('file://src/main/resources/graphLightTheme.css')";
     private ChartController chartController;
     private MainController mainController;
-    private FxViewer v;
     private boolean csvRead = false;
-
-    public ObservableList<RadioButton> getVariables() {
-        return variables;
-    }
+    private final ArrayList<FxViewer> viewers = new ArrayList<>();
 
     public int getTotNodes() {
         return totNodes;
@@ -131,13 +126,10 @@ public class GraphController {
      * Reset all lists and info
      */
     private void resetAll() {
-        if (!group.getToggles().isEmpty())
-            group.getToggles().clear();
-        variables.clear();
-        list.getItems().clear();
         idGraph = 0;
         graphList.clear();
         nodeTableComponentController.resetTable();
+        slider.setMax(50);
     }
 
     /**
@@ -158,7 +150,6 @@ public class GraphController {
                 dialogBuilder.error("Error!", e.getMessage());
             }
         }
-
     }
 
     /**
@@ -219,11 +210,11 @@ public class GraphController {
                     totNodes = Integer.parseInt(StringUtils.substringAfterLast(line, "LOCATIONS "));
                     if ((line = br.readLine()) != null && line.contains(",")) {
                         staticGraph(line, br, graph, totNodes);
-                        showGraph(graph, "Static Graph", 0.0);
+                        changeView(graph, 0.0);
                     } else if (!line.contains(",")) {
                         dynamicGraph(line, br, totNodes);
-                        createTimeButtons();
-                        group.getToggles().get(0).setSelected(true);
+                        createViews();
+                        createTimeSlider();
                         changeGraphView(String.valueOf(graphList.get(0).getTime()));
                     }
                 }
@@ -234,29 +225,40 @@ public class GraphController {
         }
     }
 
-    /**
-     * For each time instant creates a radio button to select a specific graph in time
-     */
-    private void createTimeButtons() {
-        if (list != null && !list.getItems().isEmpty())
-            list.getItems().clear();
+    private void createTimeSlider() {
+        ArrayList<Double> time = new ArrayList<>();
         for (TimeGraph t : graphList) {
-            RadioButton r = new RadioButton(String.valueOf(t.getTime()));
-            r.setToggleGroup(group);
-            variables.add(r);
+            time.add(t.getTime());
         }
-        if (!variables.isEmpty())
-            list.getItems().addAll(variables);
-        list.setEditable(true);
-        group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (oldValue != null)
-                oldValue.setSelected(false);
-            if (newValue != null) {
-                newValue.setSelected(true);
-                changeGraphView(((RadioButton) newValue).getText());
+        slider.setMax(time.size() - 1);
+        slider.setLabelFormatter(new StringConverter<>() {
+            @Override
+            public String toString(Double object) {
+                int index = object.intValue();
+                return String.valueOf(time.get(index));
+            }
+
+            @Override
+            public Double fromString(String string) {
+                return Double.parseDouble(string);
             }
         });
+        addListenersToSlider();
     }
+
+    private void addListenersToSlider() {
+        slider.applyCss();
+        slider.layout();
+        Pane thumb = (Pane) slider.lookup(".thumb");
+        Label label = new Label();
+        label.textProperty().bind(slider.valueProperty().asString("%.1f"));
+        thumb.getChildren().add(label);
+        thumb.setPrefHeight(20);
+        slider.valueProperty().addListener((obs, oldValue, newValue) -> changeGraphView(String.valueOf(Math.round(slider.valueProperty().doubleValue()))));
+        slider.setOnMousePressed(event -> borderPane.getScene().setCursor(Cursor.CLOSED_HAND));
+        slider.setOnMouseReleased(event -> borderPane.getScene().setCursor(Cursor.DEFAULT));
+    }
+
 
     /**
      * Changes visualization of a dynamic graph in time
@@ -265,48 +267,67 @@ public class GraphController {
      */
     private void changeGraphView(String time) {
         Optional<TimeGraph> g = graphList.stream().filter(timeGraph -> timeGraph.getTime() == Double.parseDouble(time)).findFirst();
-        if (g.isPresent()) {
-            showGraph(g.get().getGraph(), "Dynamic Graph", Double.parseDouble(time));
-            Optional<RadioButton> r = list.getItems().stream().filter(radioButton -> radioButton.getText().equals(time)).findFirst();
-            if (r.isPresent()) {
-                r.get().setSelected(true);
-                r.get().requestFocus();
-            }
-        }
+        g.ifPresent(timeGraph -> changeView(timeGraph.getGraph(), Double.parseDouble(time)));
     }
 
+    /**
+     *
+     * @return current graph displayed
+     */
     public Graph getCurrentGraph() {
         return currentGraph;
     }
 
     /**
-     * Shows a graph
-     *
-     * @param graph graph to visualize
-     * @param type  dynamic or static
-     * @param time  instant chosen if the graph is dynamic
+     * Creates a viewer for each graph
      */
-    private void showGraph(Graph graph, String type, Double time) {
-        currentGraph = graph;
-        graph.setAttribute("ui.stylesheet", theme);
-        v = new FxViewer(graph, FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
-        FxViewPanel panel = (FxViewPanel) v.addDefaultView(false, new FxGraphRenderer());
-        SubScene scene = new SubScene(panel, borderPane.getWidth(), borderPane.getHeight());
-        borderPane.setCenter(scene);
-        SimpleMouseManager sm = new SimpleMouseManager(graph, time, chartController);
-        sm.addPropertyChangeListener(evt -> {
-            if (evt.getPropertyName().equals("LabelProperty")) {
-                infoNode.setText(evt.getNewValue().toString());
-            }
-        });
-        v.getDefaultView().setMouseManager(sm);
-        graphType.setText(type);
-        if (this.csvRead)
-            this.v.disableAutoLayout();
-        else this.v.enableAutoLayout();
+    private void createViews() {
+        for (TimeGraph t : graphList) {
+            FxViewer viewer = new FxViewer(t.getGraph(), FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+            viewer.addView(String.valueOf(t.getTime()), new FxGraphRenderer());
+            viewers.add(viewer);
+        }
     }
 
+    /**
+     * Change viewer in order to display a different graph
+     * @param graph graph to show
+     * @param time instant related to the graph
+     */
+    private void changeView(Graph graph, Double time) {
+        setGraphAttribute(graph, time);
+        Optional<FxViewer> fv = viewers.stream().filter(fxViewer -> fxViewer.getView(String.valueOf(time)) != null).findFirst();
+        if(fv.isPresent()) {
+            FxViewer v = fv.get();
+            FxViewPanel panel = (FxViewPanel) v.getView(String.valueOf(time));
+            scene.setRoot(panel);
+            borderPane.setCenter(scene);
+            scene.heightProperty().bind(borderPane.heightProperty());
+            scene.widthProperty().bind(borderPane.widthProperty());
+            SimpleMouseManager sm = new SimpleMouseManager(graph, time, chartController);
+            sm.addPropertyChangeListener(evt -> {
+                if (evt.getPropertyName().equals("LabelProperty")) {
+                    infoNode.setText(evt.getNewValue().toString());
+                }
+            });
+            v.getView(String.valueOf(time)).setMouseManager(sm);
+            if (this.csvRead)
+                v.disableAutoLayout();
+            else v.enableAutoLayout();
+        }
+    }
 
+    /**
+     * Sets attributes to the graph displayed
+     *
+     */
+    private void setGraphAttribute(Graph graph, Double time) {
+        Optional<TimeGraph> g = graphList.stream().filter(timeGraph -> timeGraph.getTime() == time).findFirst();
+        g.ifPresent(timeGraph -> currentGraph = g.get().getGraph());
+        if (graph.hasAttribute("ui.stylesheet"))
+            graph.removeAttribute("ui.stylesheet");
+        graph.setAttribute("ui.stylesheet", this.theme);
+    }
 
     /**
      * Builds a static graph from a file
@@ -369,7 +390,7 @@ public class GraphController {
      */
     private void instantGraph(double time, ArrayList<String> linesEdges, int totNodes) {
         Graph graph = new MultiGraph("id" + idGraph);
-        graph.setAttribute("ui.stylesheet", "url('file://src/main/resources/graphStylesheet.css')");
+        graph.setAttribute("ui.stylesheet", this.theme);
         idGraph++;
         createNodes(graph, totNodes);
         for (String l : linesEdges) {
@@ -422,4 +443,16 @@ public class GraphController {
             i++;
         }
     }
+
+//    @FXML
+//    Slider zoomSlider;
+//
+//    @FXML
+//    private void zoomGraph() {
+//        View view = this.v.getDefaultView();
+//        view.getCamera().setViewCenter(2, 3, 4);
+//        view.getCamera().setViewPercent(0.5);
+//    }
+
+
 }

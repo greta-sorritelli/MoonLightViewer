@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.SubScene?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="graphComponent" prefHeight="551.0" prefWidth="458.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javaFX.GraphControllers.GraphController">
@@ -24,7 +24,7 @@
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <SplitPane dividerPositions="0.65" layoutY="-4.0" orientation="VERTICAL" prefHeight="482.0" prefWidth="458.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <SplitPane dividerPositions="0.5529411764705882" layoutY="-4.0" orientation="VERTICAL" prefHeight="482.0" prefWidth="458.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <items>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                  <children>
@@ -33,35 +33,31 @@
                                           <Font name="System Italic" size="15.0" />
                                        </font>
                                     </Label>
-                                    <BorderPane fx:id="borderPane" prefHeight="290.0" prefWidth="450.0" styleClass=".borderpane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    <BorderPane fx:id="borderPane" minHeight="0.0" minWidth="0.0" styleClass=".borderpane" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <center>
+                                          <SubScene fx:id="scene" height="266.0" width="457.0" BorderPane.alignment="CENTER">
+                                            <root>
+                                              <Region />
+                                            </root>
+                                          </SubScene>
+                                       </center></BorderPane>
+                                    <Slider fx:id="slider" blockIncrement="0.1" layoutY="264.0" majorTickUnit="1.0" max="50.0" maxHeight="40.0" minHeight="40.0" minorTickCount="0" prefHeight="40.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="148.0" prefWidth="445.0">
                                  <children>
-                                    <SplitPane dividerPositions="0.3" prefHeight="146.0" prefWidth="457.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                      <items>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0">
+                                    <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <center>
+                                          <fx:include fx:id="filtersComponent" source="filtersComponent.fxml" />
+                                       </center>
+                                       <bottom>
+                                          <AnchorPane maxHeight="20.0" minHeight="0.0" prefHeight="20.0" style="-fx-border-color: lightgrey;">
                                              <children>
-                                                <ListView fx:id="list" layoutY="30.0" prefHeight="146.4" prefWidth="133.6" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
-                                                <Label layoutX="4.800000190734863" layoutY="4.0" text="Temporal instants">
-                                                   <font>
-                                                      <Font size="15.0" />
-                                                   </font>
-                                                </Label>
+                                                <Label fx:id="infoNode" maxHeight="20.0" minHeight="0.0" prefHeight="20.0" />
                                              </children>
                                           </AnchorPane>
-                                          <fx:include fx:id="filtersComponent" source="filtersComponent.fxml" />
-                                      </items>
-                                    </SplitPane>
-                                    <HBox prefHeight="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-                                       <children>
-                                          <Label fx:id="infoNode">
-                                             <HBox.margin>
-                                                <Insets left="5.0" />
-                                             </HBox.margin>
-                                          </Label>
-                                       </children>
-                                    </HBox>
+                                       </bottom>
+                                    </BorderPane>
                                  </children>
                               </AnchorPane>
                            </items>

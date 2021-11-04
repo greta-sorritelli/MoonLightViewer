@@ -30,10 +30,6 @@ public class SimpleMouseManager implements MouseManager {
     private String label = "";
     private ChartController chartController;
 
-    public SimpleMouseManager() {
-        this(EnumSet.of(InteractiveElement.NODE, InteractiveElement.SPRITE));
-    }
-
     public SimpleMouseManager(EnumSet<InteractiveElement> types) {
         this.types = types;
     }
@@ -87,8 +83,7 @@ public class SimpleMouseManager implements MouseManager {
         }
     }
 
-    protected void mouseButtonRelease(MouseEvent event,
-                                      Iterable<GraphicElement> elementsInArea) {
+    protected void mouseButtonRelease(Iterable<GraphicElement> elementsInArea) {
         for (GraphicElement element : elementsInArea) {
             if (!element.hasAttribute("ui.selected"))
                 element.setAttribute("ui.selected");
@@ -105,9 +100,9 @@ public class SimpleMouseManager implements MouseManager {
         }
     }
 
-    protected void elementMoving(GraphicElement element, MouseEvent event) {
-        view.moveElementAtPx(element, event.getX(), event.getY());
-    }
+//    protected void elementMoving(GraphicElement element, MouseEvent event) {
+//        view.moveElementAtPx(element, event.getX(), event.getY());
+//    }
 
     protected void mouseButtonReleaseOffElement(GraphicElement element,
                                                 MouseEvent event) {
@@ -121,7 +116,7 @@ public class SimpleMouseManager implements MouseManager {
 
     protected double x1, y1;
 
-    EventHandler<MouseEvent> mousePressed = new EventHandler<MouseEvent>() {
+    EventHandler<MouseEvent> mousePressed = new EventHandler<>() {
         @Override
         public void handle(MouseEvent e) {
             curElement = view.findGraphicElementAt(types, e.getX(), e.getY());
@@ -136,10 +131,10 @@ public class SimpleMouseManager implements MouseManager {
         }
     };
 
-    EventHandler<MouseEvent> mouseDragged = event -> {
-    };
+//    EventHandler<MouseEvent> mouseDragged = event -> {
+//    };
 
-    EventHandler<MouseEvent> mouseRelease = new EventHandler<MouseEvent>() {
+    EventHandler<MouseEvent> mouseRelease = new EventHandler<>() {
         @Override
         public void handle(MouseEvent event) {
             if (curElement != null) {
@@ -161,7 +156,7 @@ public class SimpleMouseManager implements MouseManager {
                     y2 = t;
                 }
 
-                mouseButtonRelease(event, view.allGraphicElementsIn(types, x1, y1, x2, y2));
+                mouseButtonRelease(view.allGraphicElementsIn(types, x1, y1, x2, y2));
                 view.endSelectionAt(x2, y2);
             }
         }

@@ -22,7 +22,7 @@ edge {
     text-background-color: white;
     text-size: 10;
     /*text-color: white;*/
-    /*fill-color: white;*/
+    fill-color: white;
 }
 
 edge.multiple {
