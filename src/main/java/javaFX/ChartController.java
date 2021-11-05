@@ -2,7 +2,9 @@ package javaFX;
 
 import App.ChartUtility.ChartBuilder;
 import App.ChartUtility.SimpleChartBuilder;
+import App.DialogUtility.DialogBuilder;
 import App.GraphUtility.TimeGraph;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,7 +31,7 @@ public class ChartController {
     @FXML
     NumberAxis xAxis = new NumberAxis();
     @FXML
-    LogarithmicAxis xLAxis = new LogarithmicAxis();
+    NumberAxis xLAxis = new NumberAxis();
     @FXML
     LogarithmicAxis yLAxis = new LogarithmicAxis();
     @FXML
@@ -180,12 +182,21 @@ public class ChartController {
      * @param lineChart chart
      */
     private void changeSingleChartVisibility(String name, LineChart<Number, Number> lineChart) {
-        lineChart.getData().forEach(series -> {
-            if (series.getName().equals(name)) {
-                series.getNode().setVisible(!series.getNode().isVisible());
-                series.getData().forEach(data -> data.getNode().setVisible(series.getNode().isVisible()));
+        new Thread(() -> {
+            try {
+                Thread.sleep(50);
+                lineChart.getData().forEach(series -> Platform.runLater(() -> {
+                    if (series.getName().equals(name)) {
+                        series.getNode().setVisible(!series.getNode().isVisible());
+                        series.getData().forEach(data -> data.getNode().setVisible(series.getNode().isVisible()));
+                    }
+                }));
+                    Thread.sleep(200);
+            } catch (InterruptedException e) {
+                DialogBuilder d = new DialogBuilder();
+                d.error("Error!", e.getMessage());
             }
-        });
+        }).start();
     }
 
     /**

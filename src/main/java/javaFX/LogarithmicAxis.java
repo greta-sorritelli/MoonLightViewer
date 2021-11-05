@@ -1,44 +1,48 @@
 package javaFX;
 
-import App.Exceptions.IllegalLogarithmicRangeException;
+import com.sun.javafx.charts.ChartLayoutAnimator;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.chart.ValueAxis;
 import javafx.util.Duration;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
-/**
- * Class for a chart axis of logarithmic type. Extends {@link ValueAxis}
- */
 public class LogarithmicAxis extends ValueAxis<Number> {
 
-    private static final double ANIMATION_TIME = 2000;
-    private final Timeline lowerRangeTimeline = new Timeline();
-    private final Timeline upperRangeTimeline = new Timeline();
+    private Object currentAnimationID;
+    private final ChartLayoutAnimator animator = new ChartLayoutAnimator(this);
     private final DoubleProperty logUpperBound = new SimpleDoubleProperty();
     private final DoubleProperty logLowerBound = new SimpleDoubleProperty();
 
     public LogarithmicAxis() {
-        super(0.0001,100);
+        super(0.0001, 1000);
         bindLogBoundsToDefaultBounds();
     }
 
-    private void validateBounds(double lowerBound, double upperBound) throws IllegalLogarithmicRangeException {
-        if (lowerBound < 0 || upperBound < 0 || lowerBound > upperBound) {
-            throw new IllegalLogarithmicRangeException(
-                    "The logarithmic range should be in [0,Double.MAX_VALUE] and the lowerBound should be less than the upperBound");
-        }
+    public LogarithmicAxis(double lowerBound, double upperBound) {
+        super(lowerBound, upperBound);
+        validateBounds(lowerBound, upperBound);
+        bindLogBoundsToDefaultBounds();
     }
 
+    public void setLogarithmicUpperBound(double d) {
+        double nd = Math.pow(10, Math.ceil(Math.log10(d)));
+        setUpperBound(nd == d ? nd * 10 : nd);
+    }
+
+    /**
+     * Binds logarithmic bounds with the super class bounds, consider the
+     * base 10 logarithmic scale.
+     */
     private void bindLogBoundsToDefaultBounds() {
-        logLowerBound.bind(new DoubleBinding() {{
+        logLowerBound.bind(new DoubleBinding() {
+            {
                 super.bind(lowerBoundProperty());
             }
             @Override
@@ -46,7 +50,8 @@ public class LogarithmicAxis extends ValueAxis<Number> {
                 return Math.log10(lowerBoundProperty().get());
             }
         });
-        logUpperBound.bind(new DoubleBinding() {{
+        logUpperBound.bind(new DoubleBinding() {
+            {
                 super.bind(upperBoundProperty());
             }
             @Override
@@ -56,66 +61,36 @@ public class LogarithmicAxis extends ValueAxis<Number> {
         });
     }
 
-    @Override
-    protected List<Number> calculateMinorTickMarks() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    protected void setRange(Object range, boolean animate) {
-        if (range != null) {
-            Number lowerBound = ((Number[]) range)[0];
-            Number upperBound = ((Number[]) range)[1];
-            try {
-                validateBounds(lowerBound.doubleValue(), upperBound.doubleValue());
-            } catch (IllegalLogarithmicRangeException e) {
-                e.printStackTrace();
-            }
-            if (animate) {
-                try {
-                    lowerRangeTimeline.getKeyFrames().clear();
-                    upperRangeTimeline.getKeyFrames().clear();
-                    getKeyFramesLowerBound(lowerBound);
-                    getKeyFramesUpperBound(upperBound);
-                    lowerRangeTimeline.play();
-                    upperRangeTimeline.play();
-                } catch (Exception e) {
-                    setBoundProperty(lowerBound,upperBound);
-                }
-            }
-            setBoundProperty(lowerBound,upperBound);
+    /**
+     * Validates the bounds by throwing an exception if the values are not
+     * conform to the mathematics log interval: [0,Double.MAX_VALUE]
+     *
+     */
+    private void validateBounds(double lowerBound, double upperBound) throws IllegalLogarithmicRangeException {
+        if (lowerBound < 0 || upperBound < 0 || lowerBound > upperBound) {
+            throw new IllegalLogarithmicRangeException(
+                    "The logarithmic range should be in [0,Double.MAX_VALUE] and the lowerBound should be less than the upperBound");
         }
     }
 
-    private void setBoundProperty(Number number1, Number number2){
-        lowerBoundProperty().set(number1.doubleValue());
-        upperBoundProperty().set(number2.doubleValue());
-    }
-
-    private void getKeyFramesLowerBound(Number lowerBound){
-        lowerRangeTimeline.getKeyFrames()
-                .addAll(new KeyFrame(Duration.ZERO, new KeyValue(lowerBoundProperty(), lowerBoundProperty()
-                                .get())),
-                        new KeyFrame(new Duration(ANIMATION_TIME), new KeyValue(lowerBoundProperty(),
-                                lowerBound.doubleValue())));
-    }
-
-    private void getKeyFramesUpperBound(Number upperBound){
-        upperRangeTimeline.getKeyFrames()
-                .addAll(new KeyFrame(Duration.ZERO, new KeyValue(upperBoundProperty(), upperBoundProperty()
-                                .get())),
-                        new KeyFrame(new Duration(ANIMATION_TIME), new KeyValue(upperBoundProperty(),
-                                upperBound.doubleValue())));
-    }
-
+    /**
+     * It is used to get the list of minor tick marks position to display on the axis.
+     * It's based on the number of minor tick and the logarithmic formula.
+     *
+     */
     @Override
-    protected double[] getRange() {
-        return new double[]{
-                getLowerBound(),
-                getUpperBound()
-        };
+    protected List<Number> calculateMinorTickMarks() {
+        List<Number> minorTickMarksPositions = new ArrayList<>();
+        return minorTickMarksPositions;
     }
 
+    //Then, the calculateTickValues method
+
+    /**
+     * It is used to calculate a list of all the data values for each tick mark in range,
+     * represented by the second parameter. Displays one tick each power of 10.
+     *
+     */
     @Override
     protected List<Number> calculateTickValues(double length, Object range) {
         LinkedList<Number> tickPositions = new LinkedList<>();
@@ -137,12 +112,63 @@ public class LogarithmicAxis extends ValueAxis<Number> {
         return tickPositions;
     }
 
+    /**
+     * The getRange provides the current range of the axis. A basic
+     * implementation is to return an array of the lowerBound and upperBound
+     * properties defined into the ValueAxis class.
+     *
+     */
+    @Override
+    protected double[] getRange() {
+        return new double[]{
+                getLowerBound(),
+                getUpperBound()
+        };
+    }
+
+    /**
+     * The getTickMarkLabel is only used to convert the number value to a string
+     * that will be displayed under the tickMark.
+     *
+     */
     @Override
     protected String getTickMarkLabel(Number value) {
         NumberFormat formatter = NumberFormat.getInstance();
         formatter.setMaximumIntegerDigits(10);
         formatter.setMinimumIntegerDigits(1);
         return formatter.format(value);
+    }
+
+    /**
+     * Updates the range when data are added into the chart.
+     * There is two possibilities, the axis is animated or not. The
+     * simplest case is to set the lower and upper bound properties directly
+     * with the new values.
+     *
+     */
+    @Override
+    protected void setRange(Object range, boolean animate) {
+        if (range != null) {
+            final double[] rangeProps = (double[]) range;
+            final double lowerBound = rangeProps[0];
+            final double upperBound = rangeProps[1];
+            final double oldLowerBound = getLowerBound();
+            setLowerBound(lowerBound);
+            setUpperBound(upperBound);
+            if (animate) {
+                animator.stop(currentAnimationID);
+                currentAnimationID = animator.animate(
+                        new KeyFrame(Duration.ZERO,
+                                new KeyValue(currentLowerBound, oldLowerBound)
+                        ),
+                        new KeyFrame(Duration.millis(700),
+                                new KeyValue(currentLowerBound, lowerBound)
+                        )
+                );
+            } else {
+                currentLowerBound.set(lowerBound);
+            }
+        }
     }
 
     @Override
@@ -163,6 +189,18 @@ public class LogarithmicAxis extends ValueAxis<Number> {
             return (1. - ((deltaV) / delta)) * getHeight();
         } else {
             return ((deltaV) / delta) * getWidth();
+        }
+    }
+
+    /**
+     * Exception to be thrown when a bound value isn't supported by the
+     * logarithmic axis<br>
+     *
+     */
+    public static class IllegalLogarithmicRangeException extends RuntimeException {
+
+        public IllegalLogarithmicRangeException(String message) {
+            super(message);
         }
     }
 }
