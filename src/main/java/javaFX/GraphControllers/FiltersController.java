@@ -1,10 +1,16 @@
 package javaFX.GraphControllers;
 
 import App.DialogUtility.DialogBuilder;
+import App.GraphUtility.Filter;
+import App.GraphUtility.SimpleFilter;
 import App.GraphUtility.TimeGraph;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.util.Callback;
 import org.graphstream.graph.Node;
 import java.util.ArrayList;
 
@@ -13,54 +19,124 @@ import java.util.ArrayList;
  */
 public class FiltersController {
 
+    private final ArrayList<Node> nodes = new ArrayList<>();
     @FXML
-    TextField v;
+    TextField text;
     @FXML
-    TextField minor;
+    MenuButton attribute;
     @FXML
-    TextField greater;
-
+    MenuButton operator;
+    @FXML
+    TableView<Filter> tableFilters;
+    @FXML
+    TableColumn<Filter, String> attributeColumn;
+    @FXML
+    TableColumn<Filter, String> operatorColumn;
+    @FXML
+    TableColumn<Filter, Double> valueColumn;
+    @FXML
+    TableColumn<Filter, Void> resetColumn;
     private GraphController graphController;
 
     public void injectGraphController(GraphController graphController) {
         this.graphController = graphController;
     }
 
-    private Double getTextField(TextField t) {
-        return Double.parseDouble(t.getText());
+    /**
+     * Assigns the text of the clicked menuItem to the menuButton.
+     */
+    @FXML
+    public void initialize(){
+        for (MenuItem m: attribute.getItems())
+            m.setOnAction(event -> attribute.setText(m.getText()));
+        for(MenuItem m: operator.getItems())
+            m.setOnAction(event -> operator.setText(m.getText()));
     }
 
     /**
-     * Resets textFields of minor and greater.
+     * Resets texFields and buttons.
      */
     @FXML
-    private void resetTextSearch() {
-        minor.clear();
-        greater.clear();
+    private void reset() {
+        attribute.setText("Attribute");
+        operator.setText("Operator");
+        text.clear();
     }
 
     /**
-     * Resets textField of value.
+     * Matches the {@link Filter} fields with the columns of the table.
+     */
+    private void setCellValueFactory() {
+        attributeColumn.setCellValueFactory(filter -> new SimpleObjectProperty<>(filter.getValue().getAttribute()));
+        operatorColumn.setCellValueFactory(filter -> new SimpleObjectProperty<>(filter.getValue().getOperator()));
+        valueColumn.setCellValueFactory(filter -> new SimpleObjectProperty<>(filter.getValue().getValue()));
+        addButtonToTable();
+
+    }
+
+    /**
+     * Adds a delete button for each row of table.
+     */
+    private void addButtonToTable() {
+        Callback<TableColumn<Filter, Void>, TableCell<Filter, Void>> cellFactory = new Callback<>() {
+            @Override
+            public TableCell<Filter, Void> call(TableColumn<Filter, Void> param) {
+                return new TableCell<>() {
+                    private final Button btn = new Button();
+                    {btn.setOnAction((ActionEvent event) -> {
+                            Filter filter = getTableView().getItems().get(getIndex());
+                            deleteFilter(filter);
+                        });}
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty)
+                            setGraphic(null);
+                        else {
+                            setGraphic(btn);
+                            btn.setGraphic(new ImageView("remove.png"));
+                        }
+                    }
+                };
+            }
+        };
+        resetColumn.setCellFactory(cellFactory);
+    }
+
+    /**
+     * Deletes a {@link Filter} from graph and filtersTable.
+     * @param filter filter to delete
      */
     @FXML
-    private void resetTextSave() {
-        v.clear();
+    private void deleteFilter(Filter filter) {
+        ObservableList<Filter> filters = tableFilters.getItems();
+        if (filters.size() == 1)
+            resetFilters();
+        else {
+            filters.remove(filter);
+            nodes.clear();
+            for (Filter f : filters)
+                checkFilter(f);
+        }
     }
 
     /**
      * Resets all filters added.
      */
     @FXML
-    private void resetFilter() {
+    private void resetFilters() {
         for (TimeGraph g : graphController.getGraphList()) {
             int countNodes = g.getGraph().getNodeCount();
             for (int i = 0; i < countNodes; i++)
                 g.getGraph().getNode(i).removeAttribute("ui.class");
+
         }
+        tableFilters.getItems().clear();
+        nodes.clear();
     }
 
     /**
-     * @return ArrayList of times, takes from the Radiobutton list.
+     * @return ArrayList of times, takes from all {@link TimeGraph}.
      */
     private ArrayList<Double> getTimes() {
         ArrayList<Double> times = new ArrayList<>();
@@ -71,81 +147,152 @@ public class FiltersController {
     }
 
     /**
-     * Applies filters to nodes at all times on graph.
+     * Applies filter to nodes at all times on graph and adds this to table.
      */
     @FXML
     private void saveFilter() {
         try {
-            resetFilter();
-            for (TimeGraph g : graphController.getGraphList()) {
-                int countNodes = g.getGraph().getNodeCount();
-                getNodesVector(countNodes, g, getTimes());
+            if(!graphController.getGraphList().isEmpty()){
+            if (!(text.getText().equals("") || attribute.getText().equals("") || operator.getText().equals(""))) {
+                double value = Double.parseDouble(text.getText());
+                Filter filter = new SimpleFilter(attribute.getText(), operator.getText(), value);
+                if (!tableFilters.getItems().contains(filter)) {
+                    validationFilter(filter);
+                    tableFilters.getItems().add(filter);
+                    checkFilter(filter);
+                    reset();
+                    setCellValueFactory();
+                }
+                else throw new IllegalArgumentException("Filter already present.");
+            }
             }
         } catch (Exception e) {
+            reset();
             DialogBuilder dialogBuilder = new DialogBuilder();
             dialogBuilder.error("Error!", e.getMessage());
         }
     }
 
     /**
-     * Takes all attributes of a node for each instant.
+     * Checks if the attribute and the operator of filter are already used.
      *
-     * @param countNodes number of nodes in a graph
-     * @param g          graph
-     * @param times      instants of time
+     * @param filter {@link Filter} to validate
      */
-    private void getNodesVector(int countNodes, TimeGraph g, ArrayList<Double> times) {
-        for (int i = 0; i < countNodes; i++) {
-            Node n = g.getGraph().getNode(i);
-            for (double t : times) {
-                if (n.getAttribute("time" + t) != null) {
-                    String attributes = n.getAttribute("time" + t).toString();
-                    String[] vector = attributes.replaceAll("^\\s*\\[|\\]\\s*$", "").split("\\s*,\\s*");
-                    colorNode(vector, n);
+    private void validationFilter(Filter filter) {
+        ObservableList<Filter> filters = tableFilters.getItems();
+            for (Filter f : filters) {
+                if (f.getOperator().equals(filter.getOperator()) && f.getAttribute().equals(filter.getAttribute()))
+                    throw new IllegalArgumentException("Operator already used.");
+            }
+        }
+
+    /**
+     * Based on the filter entered by the user, checks if there are nodes
+     * in the graph that correspond to it.
+     *
+     * @param f {@link Filter} entered
+     */
+    private void checkFilter(Filter f){
+        boolean check;
+        for (TimeGraph g: graphController.getGraphList()) {
+                int countNodes = g.getGraph().getNodeCount();
+                for (int i = 0; i < countNodes; i++) {
+                    Node n = g.getGraph().getNode(i);
+                    for (double t : getTimes()) {
+                        if (n.getAttribute("time" + t) != null) {
+                           check = getVector(n,t,f);
+                           changeStyleNodes(check,n,f);
+                        }
+                    }
+                }
+            }
+        }
+
+    /**
+     * Takes attributes of node which will be compared with the filter.
+     *
+     * @param n   node from which take the attributes
+     * @param t   time of graph of node
+     * @param f   {@link Filter} to compare
+     * @return    true, if there are any mismatches or false
+     */
+    private boolean getVector(Node n, Double t, Filter f){
+        String attributes = n.getAttribute("time" + t).toString();
+        String[] vector = attributes.replaceAll("^\\s*\\[|\\]\\s*$", "").split("\\s*,\\s*");
+        return checkAttribute(f.getAttribute(),f.getOperator(),f.getValue(),vector);
+    }
+
+    /**
+     * Adds or removes style on nodes when the user adds a filter.
+     *
+     * @param check   boolean to know if there are any mismatches
+     * @param n       node to change style to
+     * @param f       {@link Filter} added
+     */
+    private void changeStyleNodes(boolean check, Node n, Filter f){
+        if(check) {
+            if(tableFilters.getItems().indexOf(f) == 0) {
+                nodes.add(n);
+                n.setAttribute("ui.class","filtered");
+            }
+            else if (!nodes.contains(n))
+                n.removeAttribute("ui.class");
+        } else {
+            if(tableFilters.getItems().size() != 1) {
+                if(nodes.contains(n)) {
+                    nodes.remove(n);
+                    n.removeAttribute("ui.class");
                 }
             }
         }
     }
 
     /**
-     * Applies the style of node when it's filtered.
+     * Check which attribute is selected.
      *
      * @param vector attributes of node
-     * @param n      node of graph
      */
-    private void colorNode(String[] vector, Node n) {
-        double value = Double.parseDouble(vector[4]);
-            if (!v.getText().equals("")) {
-                if (value == getTextField(v))
-                    n.setAttribute("ui.class", "filtered");
-            }
-        getFilter(value, n);
+    private boolean checkAttribute(String attribute, String operator, double value,String[] vector) {
+        double v;
+        boolean added = false;
+        if(attribute.equals("Speed")) {
+            v = Double.parseDouble(vector[2]);
+            added = checkOperator(operator,v,value);
+        }
+        if(attribute.equals("Direction")) {
+            v = Double.parseDouble(vector[3]);
+            added = checkOperator(operator,v,value);
+        }
+        if(attribute.equals("Value")) {
+            v = Double.parseDouble(vector[4]);
+            added = checkOperator(operator,v,value);
+        }
+        return added;
     }
 
     /**
-     * Checks which textFields have been entered and applies the style
-     * to the nodes based on them.
+     * Checks which operator is selected and if .
      *
-     * @param value double value of textField value
-     * @param n     node of graph
+     * @param operator operator selected
+     * @param v        value of node
+     * @param value    value of textField
+     * @return         true or false
      */
-    private void getFilter(double value, Node n) {
-        double textMinor, textGreater;
-        if (!(minor.getText().equals("") || greater.getText().equals(""))) {
-            textMinor = getTextField(minor);
-            textGreater = getTextField(greater);
-            if (value < textMinor && value > textGreater)
-                n.setAttribute("ui.class", "filtered");
+    private boolean checkOperator(String operator, double v,double value) {
+        boolean b = false;
+        switch(operator){
+            case "=" : if (v == value) b = true;
+                break;
+            case ">" : if (v > value) b = true;
+                break;
+            case "<" : if(v < value) b = true;
+                break;
+            case ">=" : if(v >= value) b = true;
+                break;
+            case "<=" : if(v <= value) b = true;
+                break;
+            default: return false;
         }
-        if (minor.getText().equals("") && !greater.getText().equals("")) {
-            textGreater = getTextField(greater);
-            if (value > textGreater)
-                n.setAttribute("ui.class", "filtered");
-        }
-        if (greater.getText().equals("") && !minor.getText().equals("")) {
-            textMinor = getTextField(minor);
-            if (value < textMinor)
-                n.setAttribute("ui.class", "filtered");
-        }
+        return b;
     }
 }

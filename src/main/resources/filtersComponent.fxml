@@ -2,25 +2,71 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javaFX.GraphControllers.FiltersController">
-   <children>
-      <Label layoutX="12.0" layoutY="11.0" text="Filters" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="10.0">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label layoutX="11.0" layoutY="35.0" text="Insert value" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="35.0" />
-      <TextField fx:id="v" layoutX="7.0" layoutY="56.0" onKeyPressed="#resetTextSearch" prefHeight="26.0" prefWidth="125.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="55.0" />
-      <TextField fx:id="minor" layoutX="222.0" layoutY="63.0" onKeyPressed="#resetTextSave" prefHeight="26.0" prefWidth="86.0" AnchorPane.leftAnchor="205.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="60.0" />
-      <Label layoutX="179.0" layoutY="13.0" text="Search node with" AnchorPane.leftAnchor="160.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10.0" />
-      <Label layoutX="174.0" layoutY="67.0" text="Value &lt;" AnchorPane.leftAnchor="160.0" AnchorPane.topAnchor="67.0" />
-      <TextField fx:id="greater" layoutX="221.0" layoutY="31.0" onKeyPressed="#resetTextSave" prefHeight="26.0" prefWidth="85.0" AnchorPane.leftAnchor="205.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0" />
-      <Label layoutX="174.0" layoutY="35.0" text="Value &gt;" AnchorPane.leftAnchor="160.0" AnchorPane.topAnchor="35.0" />
-      <Button layoutX="14.0" layoutY="96.0" mnemonicParsing="false" onAction="#saveFilter" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="14.0" />
-      <Button layoutX="223.0" layoutY="83.0" mnemonicParsing="false" onAction="#resetFilter" onMouseClicked="#resetTextSearch" text="Reset" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-   </children>
+<AnchorPane minHeight="200.0" minWidth="200.0" prefHeight="340.0" prefWidth="644.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javaFX.GraphControllers.FiltersController">
+    <children>
+      <GridPane layoutX="-1.0" layoutY="-2.0" prefHeight="350.0" prefWidth="644.0" AnchorPane.bottomAnchor="-8.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="-2.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="644.0" minWidth="10.0" prefWidth="581.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="165.0" minHeight="10.0" prefHeight="94.0" />
+          <RowConstraints maxHeight="256.0" minHeight="10.0" prefHeight="256.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Pane minHeight="-Infinity" minWidth="-Infinity" prefHeight="95.0" prefWidth="644.0">
+               <children>
+                    <TextField fx:id="text" layoutX="230.0" layoutY="47.0" prefHeight="26.0" prefWidth="262.0" promptText="Insert value.." />
+                    <MenuButton fx:id="attribute" layoutX="23.0" layoutY="47.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Attribute">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="Speed" />
+                            <MenuItem mnemonicParsing="false" text="Direction" />
+                            <MenuItem mnemonicParsing="false" text="Value" />
+                        </items>
+                    </MenuButton>
+                    <MenuButton fx:id="operator" layoutX="127.0" layoutY="47.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Operator">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="=" />
+                            <MenuItem mnemonicParsing="false" text="&gt;" />
+                            <MenuItem mnemonicParsing="false" text="&lt;" />
+                            <MenuItem mnemonicParsing="false" text="&gt;=" />
+                            <MenuItem mnemonicParsing="false" text="&lt;=" />
+                        </items>
+                    </MenuButton>
+                    <Button layoutX="574.0" layoutY="47.0" mnemonicParsing="false" onAction="#reset" text="Reset" />
+                    <Button layoutX="527.0" layoutY="47.0" mnemonicParsing="false" onAction="#saveFilter" text="Save" />
+                    <Label layoutX="23.0" layoutY="14.0" text="Filters">
+                        <font>
+                            <Font size="15.0" />
+                        </font>
+                    </Label>
+               </children>
+            </Pane>
+            <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+               <children>
+                    <Button layoutX="521.0" layoutY="209.0" mnemonicParsing="false" onAction="#resetFilters" text="Delete all filters" />
+                    <TableView fx:id="tableFilters" layoutX="26.0" layoutY="7.0" prefHeight="193.0" prefWidth="593.0">
+                        <columns>
+                            <TableColumn fx:id="attributeColumn" prefWidth="94.0" text="Attribute" />
+                            <TableColumn fx:id="operatorColumn" prefWidth="129.0" text="Operator" />
+                            <TableColumn fx:id="valueColumn" prefWidth="322.0" text="Value" />
+                            <TableColumn fx:id="resetColumn" prefWidth="47.0" />
+                        </columns>
+                    </TableView>
+               </children>
+            </Pane>
+         </children>
+      </GridPane>
+    </children>
 </AnchorPane>
