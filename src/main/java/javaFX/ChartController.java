@@ -76,13 +76,18 @@ public class ChartController {
      * @param timeGraph a {@link TimeGraph}
      */
     public void createDataFromGraphs(List<TimeGraph> timeGraph) {
-        ChartBuilder cb = new SimpleChartBuilder();
-        List<Series<Number, Number>> linearSeries = cb.getSeriesFromNodes(timeGraph);
-        List<Series<Number, Number>> logarithmicSeries = cb.getSeriesFromNodes(timeGraph);
-        lineChart.getData().addAll(linearSeries);
-        lineChartLog.getData().addAll(logarithmicSeries);
-        linearSelected();
-        initLists();
+        try {
+            ChartBuilder cb = new SimpleChartBuilder();
+            List<Series<Number, Number>> linearSeries = cb.getSeriesFromNodes(timeGraph);
+            List<Series<Number, Number>> logarithmicSeries = cb.getSeriesFromNodes(timeGraph);
+            lineChart.getData().addAll(linearSeries);
+            lineChartLog.getData().addAll(logarithmicSeries);
+            linearSelected();
+            initLists();
+        } catch(Exception e) {
+            DialogBuilder d = new DialogBuilder();
+            d.error("Error!", e.getMessage());
+        }
     }
 
     private void initializeChart(LineChart<Number, Number> l, Axis<Number> x) {
@@ -138,6 +143,16 @@ public class ChartController {
             variables.getItems().add(m);
         }
         setMinMaxValueFactory();
+    }
+
+    public void reset() {
+        linearSelected();
+        if(!lineChart.getData().isEmpty() && !lineChartLog.getData().isEmpty() && !list.getItems().isEmpty() && !variables.getItems().isEmpty()) {
+            this.lineChartLog.getData().clear();
+            this.lineChart.getData().clear();
+            this.list.getItems().clear();
+            this.variables.getItems().clear();
+        }
     }
 
     /**

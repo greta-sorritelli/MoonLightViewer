@@ -6,6 +6,7 @@ import App.GraphUtility.SimpleTimeGraph;
 import App.GraphUtility.TimeGraph;
 import javaFX.ChartController;
 import javaFX.MainController;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.SubScene;
@@ -13,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -62,6 +64,8 @@ public class GraphController {
     private MainController mainController;
     private boolean csvRead = false;
     private final ArrayList<FxViewer> viewers = new ArrayList<>();
+    private final Label label = new Label();
+    private final ArrayList<Double> time = new ArrayList<>();
 
     public int getTotNodes() {
         return totNodes;
@@ -110,16 +114,17 @@ public class GraphController {
         resetAll();
         createGraph(file);
         nodeTableComponentController.initTable();
+        chartController.reset();
     }
 
     /**
      * Opens explorer with only .csv files
      */
     public void openCSVExplorer() {
+        chartController.reset();
         File file = open("CSV Files", "*.csv");
         readCSV(file);
         chartController.createDataFromGraphs(graphList);
-
     }
 
     /**
@@ -226,18 +231,21 @@ public class GraphController {
     }
 
     private void createTimeSlider() {
-        ArrayList<Double> time = new ArrayList<>();
+        time.clear();
         for (TimeGraph t : graphList) {
             time.add(t.getTime());
         }
+        slider.setMin(time.get(0));
         slider.setMax(time.size() - 1);
+        slider.setValue(time.get(0));
+        slider.setMajorTickUnit(1);
+        slider.setMinorTickCount(0);
         slider.setLabelFormatter(new StringConverter<>() {
             @Override
             public String toString(Double object) {
                 int index = object.intValue();
                 return String.valueOf(time.get(index));
             }
-
             @Override
             public Double fromString(String string) {
                 return Double.parseDouble(string);
@@ -250,11 +258,15 @@ public class GraphController {
         slider.applyCss();
         slider.layout();
         Pane thumb = (Pane) slider.lookup(".thumb");
-        Label label = new Label();
-        label.textProperty().bind(slider.valueProperty().asString("%.1f"));
-        thumb.getChildren().add(label);
-        thumb.setPrefHeight(20);
-        slider.valueProperty().addListener((obs, oldValue, newValue) -> changeGraphView(String.valueOf(Math.round(slider.valueProperty().doubleValue()))));
+        if (!thumb.getChildren().contains(label)) {
+            thumb.getChildren().add(label);
+            label.setTextAlignment(TextAlignment.CENTER);
+            thumb.setPrefHeight(20);
+        }
+        slider.valueProperty().addListener((obs, oldValue, newValue) -> {
+            label.setText(String.valueOf(this.time.get(newValue.intValue())));
+            changeGraphView(String.valueOf(this.time.get(newValue.intValue())));
+        });
         slider.setOnMousePressed(event -> borderPane.getScene().setCursor(Cursor.CLOSED_HAND));
         slider.setOnMouseReleased(event -> borderPane.getScene().setCursor(Cursor.DEFAULT));
     }
@@ -271,7 +283,6 @@ public class GraphController {
     }
 
     /**
-     *
      * @return current graph displayed
      */
     public Graph getCurrentGraph() {
@@ -291,14 +302,18 @@ public class GraphController {
 
     /**
      * Change viewer in order to display a different graph
+     *
      * @param graph graph to show
-     * @param time instant related to the graph
+     * @param time  instant related to the graph
      */
     private void changeView(Graph graph, Double time) {
         setGraphAttribute(graph, time);
         Optional<FxViewer> fv = viewers.stream().filter(fxViewer -> fxViewer.getView(String.valueOf(time)) != null).findFirst();
-        if(fv.isPresent()) {
+        if (fv.isPresent()) {
             FxViewer v = fv.get();
+            if (this.csvRead)
+                v.disableAutoLayout();
+            else v.enableAutoLayout();
             FxViewPanel panel = (FxViewPanel) v.getView(String.valueOf(time));
             scene.setRoot(panel);
             borderPane.setCenter(scene);
@@ -311,15 +326,11 @@ public class GraphController {
                 }
             });
             v.getView(String.valueOf(time)).setMouseManager(sm);
-            if (this.csvRead)
-                v.disableAutoLayout();
-            else v.enableAutoLayout();
         }
     }
 
     /**
      * Sets attributes to the graph displayed
-     *
      */
     private void setGraphAttribute(Graph graph, Double time) {
         Optional<TimeGraph> g = graphList.stream().filter(timeGraph -> timeGraph.getTime() == time).findFirst();
