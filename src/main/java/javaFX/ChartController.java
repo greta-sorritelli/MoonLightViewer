@@ -73,18 +73,17 @@ public class ChartController {
 
     /**
      * Create a chart from a {@link TimeGraph} using a {@link ChartBuilder}
+     *
      * @param timeGraph a {@link TimeGraph}
      */
     public void createDataFromGraphs(List<TimeGraph> timeGraph) {
         try {
             ChartBuilder cb = new SimpleChartBuilder();
-            List<Series<Number, Number>> linearSeries = cb.getSeriesFromNodes(timeGraph);
-            List<Series<Number, Number>> logarithmicSeries = cb.getSeriesFromNodes(timeGraph);
-            lineChart.getData().addAll(linearSeries);
-            lineChartLog.getData().addAll(logarithmicSeries);
+            lineChart.getData().addAll(cb.getSeriesFromNodes(timeGraph));
+            lineChartLog.getData().addAll(cb.getSeriesFromNodes(timeGraph));
             linearSelected();
             initLists();
-        } catch(Exception e) {
+        } catch (Exception e) {
             DialogBuilder d = new DialogBuilder();
             d.error("Error!", e.getMessage());
         }
@@ -98,6 +97,7 @@ public class ChartController {
     /**
      * Initializes the two charts
      */
+    @FXML
     public void initialize() {
         lineChartLog.setVisible(false);
         initializeChart(lineChart, xAxis);
@@ -147,7 +147,7 @@ public class ChartController {
 
     public void reset() {
         linearSelected();
-        if(!lineChart.getData().isEmpty() && !lineChartLog.getData().isEmpty() && !list.getItems().isEmpty() && !variables.getItems().isEmpty()) {
+        if (!lineChart.getData().isEmpty() && !lineChartLog.getData().isEmpty() && !list.getItems().isEmpty() && !variables.getItems().isEmpty()) {
             this.lineChartLog.getData().clear();
             this.lineChart.getData().clear();
             this.list.getItems().clear();
@@ -184,6 +184,7 @@ public class ChartController {
 
     /**
      * Change visibility of a series in all charts based on its name
+     *
      * @param name name of the series
      */
     private void changeVisibility(String name) {
@@ -193,29 +194,47 @@ public class ChartController {
 
     /**
      * Change visibility of a series in a single chart based on its name
-     * @param name name of the series
+     *
+     * @param name      name of the series
      * @param lineChart chart
      */
     private void changeSingleChartVisibility(String name, LineChart<Number, Number> lineChart) {
         new Thread(() -> {
-            try {
-                Thread.sleep(50);
+//            try {
+//                Thread.sleep(500);
                 lineChart.getData().forEach(series -> Platform.runLater(() -> {
                     if (series.getName().equals(name)) {
                         series.getNode().setVisible(!series.getNode().isVisible());
-                        series.getData().forEach(data -> data.getNode().setVisible(series.getNode().isVisible()));
+                        series.getNode().setManaged(false);
+                        series.getData().forEach(data -> {
+                            data.getNode().setVisible(!data.getNode().isVisible());
+                            data.getNode().setManaged(false);
+                        });
                     }
                 }));
-                    Thread.sleep(200);
-            } catch (InterruptedException e) {
-                DialogBuilder d = new DialogBuilder();
-                d.error("Error!", e.getMessage());
-            }
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//                DialogBuilder d = new DialogBuilder();
+//                d.error("Error!", e.getMessage());
+//            }
         }).start();
+
+
+//        new Thread(() -> {
+//                for (Series<Number, Number> series : lineChart.getData()) {
+//                    Platform.runLater(() -> {
+//                        if (series.getName().equals(name)) {
+//                            series.getNode().setVisible(!series.getNode().isVisible());
+//                            series.getData().forEach(data -> data.getNode().setVisible(series.getNode().isVisible()));
+//                        }
+//                    });
+//                }
+//        }).start();
     }
 
     /**
      * Select only one series in all charts
+     *
      * @param seriesName name of the series
      */
     public void selectOnlyOneSeries(String seriesName) {
@@ -233,6 +252,7 @@ public class ChartController {
 
     /**
      * Return the min value of a series
+     *
      * @return min value
      */
     public Number getMinSeries(Series<Number, Number> series) {
@@ -244,6 +264,7 @@ public class ChartController {
 
     /**
      * Return the max value of a series
+     *
      * @return max value
      */
     public Number getMaxSeries(Series<Number, Number> series) {
