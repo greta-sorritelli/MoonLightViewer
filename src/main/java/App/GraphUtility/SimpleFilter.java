@@ -2,6 +2,9 @@ package App.GraphUtility;
 
 import java.util.Objects;
 
+/**
+ * This class implements the {@link Filter} interface and is responsible to define a filter.
+ */
 public class SimpleFilter implements Filter {
 
     private final String attribute;

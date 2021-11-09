@@ -65,6 +65,9 @@ public class MainController {
         menuCSV.setDisable(false);
     }
 
+    /**
+     * Load dark theme to the window.
+     */
     @FXML
     private void loadDarkTheme() {
         this.vbox.getScene().getStylesheets().add("dark-theme.css");
@@ -75,6 +78,9 @@ public class MainController {
         graphComponentController.setTheme("url('file://src/main/resources/graphDarkTheme.css')");
     }
 
+    /**
+     * Load light theme to the window.
+     */
     @FXML
     private void loadLightTheme() {
         this.vbox.getScene().getStylesheets().clear();

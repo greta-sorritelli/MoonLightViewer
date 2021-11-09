@@ -19,7 +19,6 @@ import java.util.ArrayList;
  */
 public class FiltersController {
 
-    private final ArrayList<Node> nodes = new ArrayList<>();
     @FXML
     TextField text;
     @FXML
@@ -36,7 +35,9 @@ public class FiltersController {
     TableColumn<Filter, Double> valueColumn;
     @FXML
     TableColumn<Filter, Void> resetColumn;
+
     private GraphController graphController;
+    private final ArrayList<Node> nodes = new ArrayList<>();
 
     public void injectGraphController(GraphController graphController) {
         this.graphController = graphController;
@@ -153,7 +154,7 @@ public class FiltersController {
     private void saveFilter() {
         try {
             if(!graphController.getGraphList().isEmpty()){
-            if (!(text.getText().equals("") || attribute.getText().equals("") || operator.getText().equals(""))) {
+            if (!(text.getText().equals("") || attribute.getText().equals("Attribute") || operator.getText().equals("Operator"))) {
                 double value = Double.parseDouble(text.getText());
                 Filter filter = new SimpleFilter(attribute.getText(), operator.getText(), value);
                 if (!tableFilters.getItems().contains(filter)) {
@@ -196,10 +197,10 @@ public class FiltersController {
         boolean check;
         for (TimeGraph g: graphController.getGraphList()) {
                 int countNodes = g.getGraph().getNodeCount();
+                for (double t : getTimes()) {
                 for (int i = 0; i < countNodes; i++) {
                     Node n = g.getGraph().getNode(i);
-                    for (double t : getTimes()) {
-                        if (n.getAttribute("time" + t) != null) {
+                    if (n.getAttribute("time" + t) != null) {
                            check = getVector(n,t,f);
                            changeStyleNodes(check,n,f);
                         }
@@ -250,28 +251,32 @@ public class FiltersController {
     /**
      * Check which attribute is selected.
      *
-     * @param vector attributes of node
+     * @param attribute  attribute selected
+     * @param operator   operator selected
+     * @param value      value entered
+     * @param vector     attributes of node
+     * @return true, if the node is to be showed, or false
      */
-    private boolean checkAttribute(String attribute, String operator, double value,String[] vector) {
+    private boolean checkAttribute(String attribute, String operator, double value, String[] vector) {
         double v;
-        boolean added = false;
-        if(attribute.equals("Speed")) {
-            v = Double.parseDouble(vector[2]);
-            added = checkOperator(operator,v,value);
-        }
+        boolean toShow = false;
         if(attribute.equals("Direction")) {
+            v = Double.parseDouble(vector[2]);
+            toShow = checkOperator(operator,v,value);
+        }
+        if(attribute.equals("Speed")) {
             v = Double.parseDouble(vector[3]);
-            added = checkOperator(operator,v,value);
+            toShow = checkOperator(operator,v,value);
         }
         if(attribute.equals("Value")) {
             v = Double.parseDouble(vector[4]);
-            added = checkOperator(operator,v,value);
+            toShow = checkOperator(operator,v,value);
         }
-        return added;
+        return toShow;
     }
 
     /**
-     * Checks which operator is selected and if .
+     * Checks which operator is selected and if there are any mismatches.
      *
      * @param operator operator selected
      * @param v        value of node
