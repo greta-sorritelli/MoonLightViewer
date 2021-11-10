@@ -82,12 +82,12 @@ public class GraphController {
     public void injectMainController(MainController mainController, ChartController chartComponentController) {
         this.mainController = mainController;
         this.chartController = chartComponentController;
+        initialize();
     }
 
-    @FXML
-    public void initialize() {
+    private void initialize() {
         this.nodeTableComponentController.injectGraphController(this);
-        this.filtersComponentController.injectGraphController(this);
+        this.filtersComponentController.injectGraphController(this, chartController);
     }
 
     /**
@@ -135,6 +135,7 @@ public class GraphController {
         graphList.clear();
         nodeTableComponentController.resetTable();
         slider.setMax(50);
+        csvRead = false;
     }
 
     /**

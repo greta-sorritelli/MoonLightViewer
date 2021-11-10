@@ -9,8 +9,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Side;
-import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart.Series;
@@ -53,23 +51,9 @@ public class ChartController {
     @FXML
     RadioButton logarithmic = new RadioButton();
 
+
     public void injectMainController(MainController mainController) {
     }
-
-
-//    public void readDataFromCsv() {
-//        FileChooser fileChooser = new FileChooser();
-//        Stage stage = (Stage) mainController.getVbox().getScene().getWindow();
-//        File file = fileChooser.showOpenDialog(stage);
-//        if (file != null) {
-//            String path = file.getAbsolutePath();
-//            List<Series<Number, Number>> linearSeries = CsvImport.getSeriesFromCsv(path);
-//            List<Series<Number, Number>> logarithmicSeries = CsvImport.getSeriesFromCsv(path);
-//            lineChart.getData().addAll(linearSeries);
-//            lineChartLog.getData().addAll(logarithmicSeries);
-//    }
-//}
-
 
     /**
      * Create a chart from a {@link TimeGraph} using a {@link ChartBuilder}
@@ -89,24 +73,18 @@ public class ChartController {
         }
     }
 
-    private void initializeChart(LineChart<Number, Number> l, Axis<Number> x) {
-        x.setLabel("Time");
-        l.setLegendSide(Side.RIGHT);
-    }
-
     /**
      * Initializes the two charts
      */
     @FXML
     public void initialize() {
         lineChartLog.setVisible(false);
-        initializeChart(lineChart, xAxis);
-        initializeChart(lineChartLog, xLAxis);
+        lineChartLog.setAnimated(false);
+        lineChart.setAnimated(false);
     }
 
     @FXML
     private void logarithmicSelected() {
-        lineChartLog.setAnimated(false);
         lineChart.setVisible(false);
         lineChartLog.setVisible(true);
         linear.setSelected(false);
@@ -116,7 +94,6 @@ public class ChartController {
 
     @FXML
     private void linearSelected() {
-        lineChart.setAnimated(false);
         lineChartLog.setVisible(false);
         lineChart.setVisible(true);
         linear.setSelected(true);
@@ -158,6 +135,7 @@ public class ChartController {
     /**
      * Select all series and checkbox
      */
+    @FXML
     public void selectAllSeries() {
         list.getItems().forEach(checkBox -> checkBox.setSelected(true));
     }
@@ -200,23 +178,19 @@ public class ChartController {
      */
     private void changeSingleChartVisibility(String name, LineChart<Number, Number> lineChart) {
         new Thread(() -> {
-//            try {
-//                Thread.sleep(500);
+            try {
+                Thread.sleep(500);
                 lineChart.getData().forEach(series -> Platform.runLater(() -> {
                     if (series.getName().equals(name)) {
                         series.getNode().setVisible(!series.getNode().isVisible());
-                        series.getNode().setManaged(false);
-                        series.getData().forEach(data -> {
-                            data.getNode().setVisible(!data.getNode().isVisible());
-                            data.getNode().setManaged(false);
-                        });
+                        series.getData().forEach(data -> data.getNode().setVisible(!data.getNode().isVisible()));
                     }
                 }));
 //                Thread.sleep(500);
-//            } catch (InterruptedException e) {
-//                DialogBuilder d = new DialogBuilder();
-//                d.error("Error!", e.getMessage());
-//            }
+            } catch (InterruptedException e) {
+                DialogBuilder d = new DialogBuilder();
+                d.error("Error!", e.getMessage());
+            }
         }).start();
 
 
@@ -233,12 +207,31 @@ public class ChartController {
     }
 
     /**
-     * Select only one series in all charts
+     * Select only one series in all charts. The series to be displayed must be only one.
      *
      * @param seriesName name of the series
      */
     public void selectOnlyOneSeries(String seriesName) {
         list.getItems().forEach(checkBox -> checkBox.setSelected(checkBox.getText().equals(seriesName)));
+    }
+
+    /**
+     * Select one series in all charts
+     * @param seriesName name of the series
+     */
+    public void selectOneSeries(String seriesName) {
+        list.getItems().forEach(checkBox -> {
+            if (checkBox.getText().equals("Node " + seriesName))
+                checkBox.setSelected(true);
+        });
+    }
+
+    /**
+     * Deselect all series in all charts
+     */
+    @FXML
+    public void deselectAllSeries() {
+        list.getItems().forEach(checkBox -> checkBox.setSelected(false));
     }
 
     /**
