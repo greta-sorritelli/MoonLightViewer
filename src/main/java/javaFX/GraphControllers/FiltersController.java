@@ -123,11 +123,11 @@ public class FiltersController {
      */
     @FXML
     private void resetFilters() {
-        for (TimeGraph g : graphController.getGraphList()) {
-            int countNodes = g.getGraph().getNodeCount();
+        graphController.getGraphList().forEach(timeGraph -> {
+            int countNodes = timeGraph.getGraph().getNodeCount();
             for (int i = 0; i < countNodes; i++)
-                g.getGraph().getNode(i).removeAttribute("ui.class");
-        }
+                timeGraph.getGraph().getNode(i).removeAttribute("ui.class");
+        });
         tableFilters.getItems().clear();
         nodes.clear();
     }
@@ -142,7 +142,7 @@ public class FiltersController {
     }
 
     /**
-     * Applies filter to nodes at all times on graph and adds this to table.
+     * Applies filter entered from user.
      */
     @FXML
     private void saveFilter() {
@@ -151,21 +151,31 @@ public class FiltersController {
             if (!(text.getText().equals("") || attribute.getText().equals("Attribute") || operator.getText().equals("Operator"))) {
                 double value = Double.parseDouble(text.getText());
                 Filter filter = new SimpleFilter(attribute.getText(), operator.getText(), value);
-                if (!tableFilters.getItems().contains(filter)) {
-                    validationFilter(filter);
-                    tableFilters.getItems().add(filter);
-                    checkFilter(filter);
-                    reset();
-                    setCellValueFactory();
-                }
-                else throw new IllegalArgumentException("Filter already present.");
+                addFilter(filter);
             }
-            }
+          }
         } catch (Exception e) {
             reset();
             DialogBuilder dialogBuilder = new DialogBuilder();
             dialogBuilder.error("Error!", e.getMessage());
         }
+    }
+
+    /**
+     * Adds filter to graph and table.
+     *
+     * @param filter {@link Filter} to add
+     */
+    private void addFilter(Filter filter){
+        if (!tableFilters.getItems().contains(filter)) {
+            validationFilter(filter);
+            tableFilters.getItems().add(filter);
+            checkFilter(filter);
+            reset();
+            setCellValueFactory();
+        }
+        else
+            throw new IllegalArgumentException("Filter already present.");
     }
 
     /**
@@ -175,11 +185,10 @@ public class FiltersController {
      */
     private void validationFilter(Filter filter) {
         ObservableList<Filter> filters = tableFilters.getItems();
-            for (Filter f : filters) {
-                if (f.getOperator().equals(filter.getOperator()) && f.getAttribute().equals(filter.getAttribute()))
-                    throw new IllegalArgumentException("Operator already used.");
-            }
-        }
+        filters.forEach(f -> {
+            if (f.getOperator().equals(filter.getOperator()) && f.getAttribute().equals(filter.getAttribute()))
+                throw new IllegalArgumentException("Operator already used.");
+        });}
 
     /**
      * Based on the filter entered by the user, checks if there are nodes
