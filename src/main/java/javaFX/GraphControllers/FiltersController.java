@@ -48,10 +48,8 @@ public class FiltersController {
      */
     @FXML
     public void initialize(){
-        for (MenuItem m: attribute.getItems())
-            m.setOnAction(event -> attribute.setText(m.getText()));
-        for(MenuItem m: operator.getItems())
-            m.setOnAction(event -> operator.setText(m.getText()));
+        attribute.getItems().forEach(menuItem -> menuItem.setOnAction(event -> attribute.setText(menuItem.getText())));
+        operator.getItems().forEach(menuItem -> menuItem.setOnAction(event -> operator.setText(menuItem.getText())));
     }
 
     /**
@@ -116,8 +114,7 @@ public class FiltersController {
         else {
             filters.remove(filter);
             nodes.clear();
-            for (Filter f : filters)
-                checkFilter(f);
+            filters.forEach(this::checkFilter);
         }
     }
 
@@ -130,7 +127,6 @@ public class FiltersController {
             int countNodes = g.getGraph().getNodeCount();
             for (int i = 0; i < countNodes; i++)
                 g.getGraph().getNode(i).removeAttribute("ui.class");
-
         }
         tableFilters.getItems().clear();
         nodes.clear();
@@ -141,9 +137,7 @@ public class FiltersController {
      */
     private ArrayList<Double> getTimes() {
         ArrayList<Double> times = new ArrayList<>();
-        for (TimeGraph t : graphController.getGraphList()) {
-            times.add(t.getTime());
-        }
+        graphController.getGraphList().forEach(timeGraph -> times.add(timeGraph.getTime()));
         return times;
     }
 
