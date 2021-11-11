@@ -51,9 +51,7 @@ public class MainController {
      */
     @FXML
     private void openCsvExplorer() {
-//        chartComponentController.openCsvExplorer();
         graphComponentController.openCSVExplorer();
-        menuCSV.setDisable(true);
     }
 
     /**

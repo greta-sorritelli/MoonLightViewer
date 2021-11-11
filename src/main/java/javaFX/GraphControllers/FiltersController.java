@@ -147,6 +147,11 @@ public class FiltersController {
         chartController.selectAllSeries();
     }
 
+    public void resetFiltersNewFile() {
+        tableFilters.getItems().clear();
+        nodes.clear();
+    }
+
     /**
      * @return ArrayList of times, takes from all {@link TimeGraph}.
      */

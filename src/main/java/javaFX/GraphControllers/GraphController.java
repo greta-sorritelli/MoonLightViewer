@@ -26,9 +26,7 @@ import org.graphstream.ui.fx_viewer.FxViewPanel;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.javafx.FxGraphRenderer;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -110,10 +108,15 @@ public class GraphController {
     public void openTraExplorer() {
         System.setProperty("org.graphstream.ui", "javafx");
         File file = open("TRA Files", "*.tra");
-        resetAll();
-        createGraph(file);
-        nodeTableComponentController.initTable();
-        chartController.reset();
+        if (file != null) {
+            resetAll();
+            createGraph(file);
+            nodeTableComponentController.initTable();
+        } else {
+            DialogBuilder d = new DialogBuilder();
+            d.info("Info", "No file chosen.");
+        }
+
     }
 
     /**
@@ -122,8 +125,18 @@ public class GraphController {
     public void openCSVExplorer() {
         chartController.reset();
         File file = open("CSV Files", "*.csv");
-        readCSV(file);
-        chartController.createDataFromGraphs(graphList);
+        if (file != null) {
+            try {
+                readCSV(file);
+                chartController.createDataFromGraphs(graphList);
+            } catch (Exception e) {
+                DialogBuilder d = new DialogBuilder();
+                d.error("Error!", "Failed to load chart data.");
+            }
+        } else {
+            DialogBuilder d = new DialogBuilder();
+            d.info("Info", "No file chosen.");
+        }
     }
 
     /**
@@ -131,10 +144,15 @@ public class GraphController {
      */
     private void resetAll() {
         idGraph = 0;
+        viewers.clear();
         graphList.clear();
+        time.clear();
         nodeTableComponentController.resetTable();
+        filtersComponentController.resetFiltersNewFile();
+        chartController.reset();
         slider.setMax(50);
         csvRead = false;
+        infoNode.setText(" ");
     }
 
     /**
@@ -142,19 +160,13 @@ public class GraphController {
      *
      * @param file .csv file
      */
-    private void readCSV(File file) {
-        if (file != null) {
-            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String line;
-                while (((line = br.readLine()) != null)) {
-                    createNodesVector(line);
-                }
-                this.csvRead = true;
-            } catch (Exception e) {
-                DialogBuilder dialogBuilder = new DialogBuilder();
-                dialogBuilder.error("Error!", e.getMessage());
+    private void readCSV(File file) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            while (((line = br.readLine()) != null)) {
+                createNodesVector(line);
             }
-        }
+            this.csvRead = true;
     }
 
     /**
@@ -206,27 +218,25 @@ public class GraphController {
      * @param file file to read
      */
     private void createGraph(File file) {
-        if (file != null) {
-            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String line = br.readLine();
-                Graph graph = new MultiGraph("id" + idGraph);
-                idGraph++;
-                if (line.contains("LOCATIONS")) {
-                    totNodes = Integer.parseInt(StringUtils.substringAfterLast(line, "LOCATIONS "));
-                    if ((line = br.readLine()) != null && line.contains(",")) {
-                        staticGraph(line, br, graph, totNodes);
-                        changeView(graph, 0.0);
-                    } else if (!line.contains(",")) {
-                        dynamicGraph(line, br, totNodes);
-                        createViews();
-                        createTimeSlider();
-                        changeGraphView(String.valueOf(graphList.get(0).getTime()));
-                    }
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line = br.readLine();
+            Graph graph = new MultiGraph("id" + idGraph);
+            idGraph++;
+            if (line.contains("LOCATIONS")) {
+                totNodes = Integer.parseInt(StringUtils.substringAfterLast(line, "LOCATIONS "));
+                if ((line = br.readLine()) != null && line.contains(",")) {
+                    staticGraph(line, br, graph, totNodes);
+                    changeView(graph, 0.0);
+                } else if (!line.contains(",")) {
+                    dynamicGraph(line, br, totNodes);
+                    createViews();
+                    createTimeSlider();
+                    changeGraphView(String.valueOf(graphList.get(0).getTime()));
                 }
-            } catch (Exception e) {
-                DialogBuilder dialogBuilder = new DialogBuilder();
-                dialogBuilder.error("Error!", e.getMessage());
             }
+        } catch (Exception e) {
+            DialogBuilder dialogBuilder = new DialogBuilder();
+            dialogBuilder.error("Error!","Failed to generate graph.");
         }
     }
 
@@ -246,6 +256,7 @@ public class GraphController {
                 int index = object.intValue();
                 return String.valueOf(time.get(index));
             }
+
             @Override
             public Double fromString(String string) {
                 return Double.parseDouble(string);

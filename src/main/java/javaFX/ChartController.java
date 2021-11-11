@@ -61,16 +61,11 @@ public class ChartController {
      * @param timeGraph a {@link TimeGraph}
      */
     public void createDataFromGraphs(List<TimeGraph> timeGraph) {
-        try {
             ChartBuilder cb = new SimpleChartBuilder();
             lineChart.getData().addAll(cb.getSeriesFromNodes(timeGraph));
             lineChartLog.getData().addAll(cb.getSeriesFromNodes(timeGraph));
             linearSelected();
             initLists();
-        } catch (Exception e) {
-            DialogBuilder d = new DialogBuilder();
-            d.error("Error!", e.getMessage());
-        }
     }
 
     /**
