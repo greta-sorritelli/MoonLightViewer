@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 /**
@@ -178,6 +179,17 @@ public class FiltersController {
         }
     }
 
+    @FXML
+    private void saveToJson() throws IOException {
+        ObservableList<Filter> filters = tableFilters.getItems();
+        if(!filters.isEmpty()){
+            Gson gson = new Gson();
+            Writer writer = Files.newBufferedWriter(Paths.get("src/main/resources/file.json"), StandardOpenOption.APPEND);
+            gson.toJson("Group 1: "+ filters + "\n",writer);
+            writer.close();
+        }
+    }
+
     /**
      * Adds filter to graph and table.
      *
@@ -188,10 +200,6 @@ public class FiltersController {
             validationFilter(filter);
             tableFilters.getItems().add(filter);
             checkFilter(filter);
-            Gson gson = new Gson();
-            Writer writer = Files.newBufferedWriter(Paths.get("src/main/resources/file.json"));
-            gson.toJson(filter,writer);
-            writer.close();
             reset();
             setCellValueFactory();
         } else

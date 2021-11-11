@@ -92,6 +92,7 @@
                         <Font size="11.0" />
                      </font>
                   </Button>
+                  <Button mnemonicParsing="false" onAction="#saveToJson" text="Add" GridPane.columnIndex="4" />
                </children>
             </GridPane>
          </top>

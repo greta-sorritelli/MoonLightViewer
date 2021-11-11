@@ -38,6 +38,14 @@ public class SimpleFilter implements Filter {
     }
 
     @Override
+    public String toString() {
+        return "{" + "attribute='" + attribute + '\'' +
+                ", operator='" + operator + '\'' +
+                ", value=" + value +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(attribute, operator, value);
     }
