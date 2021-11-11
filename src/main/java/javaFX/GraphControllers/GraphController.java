@@ -6,7 +6,6 @@ import App.GraphUtility.SimpleTimeGraph;
 import App.GraphUtility.TimeGraph;
 import javaFX.ChartController;
 import javaFX.MainController;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.SubScene;
@@ -57,7 +56,7 @@ public class GraphController {
     private int totNodes = 0;
     private final List<TimeGraph> graphList = new ArrayList<>();
     private Graph currentGraph;
-    private String theme = "url('file://src/main/resources/graphLightTheme.css')";
+    private String theme = "url('file://src/main/resources/css/graphLightTheme.css')";
     private ChartController chartController;
     private MainController mainController;
     private boolean csvRead = false;
