@@ -4,6 +4,7 @@ import App.DialogUtility.DialogBuilder;
 import App.GraphUtility.Filter;
 import App.GraphUtility.SimpleFilter;
 import App.GraphUtility.TimeGraph;
+import com.google.gson.Gson;
 import javaFX.ChartController;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -14,6 +15,10 @@ import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 import org.graphstream.graph.Node;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
@@ -100,7 +105,7 @@ public class FiltersController {
                             setGraphic(null);
                         else {
                             setGraphic(btn);
-                            btn.setGraphic(new ImageView("remove.png"));
+                            btn.setGraphic(new ImageView("images/remove.png"));
                         }
                     }
                 };
@@ -178,11 +183,15 @@ public class FiltersController {
      *
      * @param filter {@link Filter} to add
      */
-    private void addFilter(Filter filter) {
+    private void addFilter(Filter filter) throws IOException {
         if (!tableFilters.getItems().contains(filter)) {
             validationFilter(filter);
             tableFilters.getItems().add(filter);
             checkFilter(filter);
+            Gson gson = new Gson();
+            Writer writer = Files.newBufferedWriter(Paths.get("src/main/resources/file.json"));
+            gson.toJson(filter,writer);
+            writer.close();
             reset();
             setCellValueFactory();
         } else
