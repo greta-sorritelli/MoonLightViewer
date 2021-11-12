@@ -1,10 +1,10 @@
 package javaFX.GraphControllers;
 
 import App.DialogUtility.DialogBuilder;
-import App.GraphUtility.Filter;
-import App.GraphUtility.SimpleFilter;
-import App.GraphUtility.TimeGraph;
+import App.GraphUtility.*;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import javaFX.ChartController;
 import javaFX.MainController;
 import javafx.beans.property.SimpleObjectProperty;
@@ -16,12 +16,17 @@ import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 import org.graphstream.graph.Node;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Optional;
+
+import static App.JsonUtility.Serializer.interfaceSerializer;
 
 /**
  * Class controller of filters
@@ -49,6 +54,8 @@ public class FiltersController {
     private GraphController graphController;
     private ChartController chartController;
     private final ArrayList<Node> nodes = new ArrayList<>();
+    private int filterAdded = 0;
+    private final ArrayList<FilterGroup> filterGroups = new ArrayList<>();
 
     public void injectGraphController(MainController mainController, GraphController graphController, ChartController chartController) {
         this.mainController = mainController;
@@ -187,15 +194,66 @@ public class FiltersController {
         }
     }
 
+    /**
+     * Saves filters in a Json file.
+     *
+     * @throws IOException
+     */
     @FXML
     private void saveToJson() throws IOException {
-        ObservableList<Filter> filters = tableFilters.getItems();
-        if(!filters.isEmpty()){
-            Gson gson = new Gson();
-            Writer writer = Files.newBufferedWriter(Paths.get("src/main/resources/file.json"), StandardOpenOption.APPEND);
-            gson.toJson("Group 1: "+ filters + "\n",writer);
-            writer.close();
+        ArrayList<Filter> filters = new ArrayList<>(tableFilters.getItems());
+        if (!filters.isEmpty()) {
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Filter.class, interfaceSerializer(SimpleFilter.class))
+                    .registerTypeAdapter(FilterGroup.class, interfaceSerializer(SimpleFilterGroup.class))
+                    .create();
+            File file = new File("src/main/resources/file.json");
+            if (file.length() != 0)
+                    readJsonFile(gson);
+            else
+                filterAdded++;
+            writeJsonFile(gson,filters);
         }
+    }
+
+    /**
+     * Reads an arrayList of filters in the Json File.
+     *
+     * @param gson gson instance
+     * @throws IOException
+     */
+    private void readJsonFile(Gson gson) throws IOException {
+        Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/file.json"));
+        Type filterListType = new TypeToken<ArrayList<FilterGroup>>() {}.getType();
+        ArrayList<FilterGroup> fromJson = gson.fromJson(reader,filterListType);
+        if(!filterGroups.toString().equals(fromJson.toString())) {
+            filterGroups.addAll(fromJson);
+            filterAdded += fromJson.size() + 1;
+        }
+        reader.close();
+    }
+
+    /**
+     * Writes filters in a Json file.
+     *
+     * @param gson  gson instance
+     * @param filters filters to write
+     * @throws IOException
+     */
+    private void writeJsonFile(Gson gson, ArrayList<Filter> filters) throws IOException {
+        DialogBuilder d = new DialogBuilder(mainController.getTheme());
+        Writer writer = Files.newBufferedWriter(Paths.get("src/main/resources/file.json"));
+        FilterGroup filterGroup = new SimpleFilterGroup("Filter" + filterAdded, filters);
+        Optional<FilterGroup> l = filterGroups.stream().filter(f -> f.getFilters().equals(filterGroup.getFilters())).findFirst();
+        if(l.isEmpty()) {
+            filterGroups.add(filterGroup);
+            filterAdded++;
+            d.info("Filters saved with success!");
+        }
+        else
+            d.warning("Filters already present!");
+        gson.toJson(filterGroups, writer);
+        writer.close();
     }
 
     /**
