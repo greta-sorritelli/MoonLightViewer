@@ -92,7 +92,10 @@
                         <Font size="11.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#saveToJson" text="Add" GridPane.columnIndex="4" />
+                  <Button mnemonicParsing="false" onAction="#saveToJson" text="Add" GridPane.columnIndex="4">
+                     <GridPane.margin>
+                        <Insets top="5.0" />
+                     </GridPane.margin></Button>
                </children>
             </GridPane>
          </top>

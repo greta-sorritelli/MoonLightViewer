@@ -84,7 +84,7 @@ public class GraphController {
 
     private void initialize() {
         this.nodeTableComponentController.injectGraphController(this);
-        this.filtersComponentController.injectGraphController(this, chartController);
+        this.filtersComponentController.injectGraphController(mainController,this, chartController);
     }
 
     /**
@@ -113,8 +113,8 @@ public class GraphController {
             createGraph(file);
             nodeTableComponentController.initTable();
         } else {
-            DialogBuilder d = new DialogBuilder();
-            d.info("Info", "No file chosen.");
+            DialogBuilder d = new DialogBuilder(mainController.getTheme());
+            d.info("No file chosen.");
         }
 
     }
@@ -130,12 +130,12 @@ public class GraphController {
                 readCSV(file);
                 chartController.createDataFromGraphs(graphList);
             } catch (Exception e) {
-                DialogBuilder d = new DialogBuilder();
-                d.error("Error!", "Failed to load chart data.");
+                DialogBuilder d = new DialogBuilder(mainController.getTheme());
+                d.error("Failed to load chart data.");
             }
         } else {
-            DialogBuilder d = new DialogBuilder();
-            d.info("Info", "No file chosen.");
+            DialogBuilder d = new DialogBuilder(mainController.getTheme());
+            d.info("No file chosen.");
         }
     }
 
@@ -235,8 +235,8 @@ public class GraphController {
                 }
             }
         } catch (Exception e) {
-            DialogBuilder dialogBuilder = new DialogBuilder();
-            dialogBuilder.error("Error!","Failed to generate graph.");
+            DialogBuilder dialogBuilder = new DialogBuilder(mainController.getTheme());
+            dialogBuilder.error("Failed to generate graph.");
         }
     }
 
@@ -366,8 +366,8 @@ public class GraphController {
                 createEdge(line, graph);
             }
         } catch (Exception e) {
-            DialogBuilder dialogBuilder = new DialogBuilder();
-            dialogBuilder.error("Error!", e.getMessage());
+            DialogBuilder dialogBuilder = new DialogBuilder(mainController.getTheme());
+            dialogBuilder.error(e.getMessage());
         }
     }
 
@@ -398,8 +398,8 @@ public class GraphController {
                 }
             }
         } catch (Exception e) {
-            DialogBuilder dialogBuilder = new DialogBuilder();
-            dialogBuilder.error("Error!", e.getMessage());
+            DialogBuilder dialogBuilder = new DialogBuilder(mainController.getTheme());
+            dialogBuilder.error(e.getMessage());
         }
     }
 

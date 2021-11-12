@@ -6,6 +6,7 @@ import App.GraphUtility.SimpleFilter;
 import App.GraphUtility.TimeGraph;
 import com.google.gson.Gson;
 import javaFX.ChartController;
+import javaFX.MainController;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -44,11 +45,13 @@ public class FiltersController {
     @FXML
     TableColumn<Filter, Void> resetColumn;
 
+    private MainController mainController;
     private GraphController graphController;
     private ChartController chartController;
     private final ArrayList<Node> nodes = new ArrayList<>();
 
-    public void injectGraphController(GraphController graphController, ChartController chartController) {
+    public void injectGraphController(MainController mainController, GraphController graphController, ChartController chartController) {
+        this.mainController = mainController;
         this.graphController = graphController;
         this.chartController = chartController;
     }
@@ -179,8 +182,8 @@ public class FiltersController {
             }
         } catch (Exception e) {
             reset();
-            DialogBuilder dialogBuilder = new DialogBuilder();
-            dialogBuilder.error("Error!", e.getMessage());
+            DialogBuilder dialogBuilder = new DialogBuilder(mainController.getTheme());
+            dialogBuilder.error(e.getMessage());
         }
     }
 

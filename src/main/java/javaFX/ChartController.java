@@ -51,8 +51,10 @@ public class ChartController {
     @FXML
     RadioButton logarithmic = new RadioButton();
 
+    private MainController mainController;
 
     public void injectMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 
     /**
@@ -183,8 +185,8 @@ public class ChartController {
                 }));
 //                Thread.sleep(500);
             } catch (InterruptedException e) {
-                DialogBuilder d = new DialogBuilder();
-                d.error("Error!", e.getMessage());
+                DialogBuilder d = new DialogBuilder(mainController.getTheme());
+                d.error(e.getMessage());
             }
         }).start();
 
