@@ -36,6 +36,8 @@ public class FiltersController {
     @FXML
     TextField text;
     @FXML
+    TextField filtersName;
+    @FXML
     MenuButton attribute;
     @FXML
     MenuButton operator;
@@ -223,14 +225,26 @@ public class FiltersController {
      * @throws IOException
      */
     private void readJsonFile(Gson gson) throws IOException {
-        Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/file.json"));
-        Type filterListType = new TypeToken<ArrayList<FilterGroup>>() {}.getType();
-        ArrayList<FilterGroup> fromJson = gson.fromJson(reader,filterListType);
+        ArrayList<FilterGroup> fromJson = getListFromJson(gson);
         if(!filterGroups.toString().equals(fromJson.toString())) {
             filterGroups.addAll(fromJson);
             filterAdded += fromJson.size() + 1;
         }
+    }
+
+    /**
+     * Takes filters from Json file
+     *
+     * @param gson gson instance
+     * @return     arrayList of filters
+     * @throws IOException
+     */
+    private ArrayList<FilterGroup> getListFromJson(Gson gson) throws IOException {
+        Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/file.json"));
+        Type filterListType = new TypeToken<ArrayList<FilterGroup>>() {}.getType();
+        ArrayList<FilterGroup> fromJson = gson.fromJson(reader,filterListType);
         reader.close();
+        return fromJson;
     }
 
     /**
@@ -247,13 +261,43 @@ public class FiltersController {
         Optional<FilterGroup> l = filterGroups.stream().filter(f -> f.getFilters().equals(filterGroup.getFilters())).findFirst();
         if(l.isEmpty()) {
             filterGroups.add(filterGroup);
+            d.info("Filter" + filterAdded +" saved with success!");
             filterAdded++;
-            d.info("Filters saved with success!");
         }
         else
             d.warning("Filters already present!");
         gson.toJson(filterGroups, writer);
         writer.close();
+    }
+
+    /**
+     * Loads filters take from Json file on table and graph.
+     *
+     * @throws IOException
+     */
+    @FXML
+    private void loadFilters() throws IOException {
+        tableFilters.getItems().clear();
+        DialogBuilder d = new DialogBuilder(mainController.getTheme());
+        String name = filtersName.getText();
+        if(!(name.equals("") || graphController.getGraphList().isEmpty())) {
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Filter.class, interfaceSerializer(SimpleFilter.class))
+                    .registerTypeAdapter(FilterGroup.class, interfaceSerializer(SimpleFilterGroup.class))
+                    .create();
+            ArrayList<FilterGroup> fromJson = getListFromJson(gson);
+            Optional<FilterGroup> filterGroup = fromJson.stream().filter(f -> f.getName().equals(name)).findFirst();
+            if(filterGroup.isPresent()) {
+//                for (Filter f: filterGroup.get().getFilters()) {
+//                    if(!tableFilters.getItems().contains(f))
+//                } da mettere se non si pulisce la tabella
+                tableFilters.getItems().addAll(filterGroup.get().getFilters());
+                setCellValueFactory();
+                tableFilters.getItems().forEach(this::checkFilter);
+            } else
+                d.warning("Filters not found");
+        }
+        filtersName.clear();
     }
 
     /**

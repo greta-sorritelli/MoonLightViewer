@@ -92,10 +92,16 @@
                         <Font size="11.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#saveToJson" text="Add" GridPane.columnIndex="4">
+                  <TextField fx:id="filtersName" promptText="Insert name of filters.." GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                      <GridPane.margin>
-                        <Insets top="5.0" />
-                     </GridPane.margin></Button>
+                        <Insets bottom="5.0" left="10.0" right="10.0" top="10.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <Button mnemonicParsing="false" onAction="#loadFilters" text="Load" GridPane.columnIndex="3">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Button>
                </children>
             </GridPane>
          </top>
@@ -120,6 +126,7 @@
             <AnchorPane minWidth="0.0" BorderPane.alignment="CENTER">
                <children>
                   <Button mnemonicParsing="false" onAction="#resetFilters" text="Delete all filters" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0" />
+                  <Button layoutX="12.0" layoutY="5.0" mnemonicParsing="false" onAction="#saveToJson" text="Save filters in Json file" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0" />
                </children>
             </AnchorPane>
          </bottom>
