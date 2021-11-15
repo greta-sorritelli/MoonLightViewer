@@ -53,7 +53,7 @@
                            <children>
                               <BorderPane minWidth="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <center>
-                                    <ListView fx:id="list" focusTraversable="false" BorderPane.alignment="CENTER" />
+                                    <ListView fx:id="list" focusTraversable="false" onMouseExited="#deselectSeriesList" BorderPane.alignment="CENTER" />
                                  </center>
                                  <top>
                                     <AnchorPane minWidth="0.0" BorderPane.alignment="CENTER">
@@ -68,7 +68,7 @@
                         </AnchorPane>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="142.0" prefWidth="278.0">
                            <children>
-                              <TableView fx:id="variables" editable="true" focusTraversable="false" layoutX="10.0" layoutY="10.0" prefHeight="145.6" prefWidth="274.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <TableView fx:id="variables" editable="true" focusTraversable="false" layoutX="10.0" layoutY="10.0" onMouseExited="#deselectSeriesTable" prefHeight="145.6" prefWidth="274.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <columns>
                                     <TableColumn fx:id="nameVColumn" prefWidth="73.60003358125687" text="Variable" />
                                     <TableColumn fx:id="minColumn" prefWidth="103.19996643066406" text="Min value" />

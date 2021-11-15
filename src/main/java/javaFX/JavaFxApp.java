@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -19,7 +20,8 @@ public class JavaFxApp extends Application {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.getIcons().add(new Image("/images/ML.png"));
-        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.setTitle("MoonLightViewer");
+        stage.initStyle(StageStyle.DECORATED);
         stage.show();
     }
 }

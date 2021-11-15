@@ -263,4 +263,15 @@ public class ChartController {
             return d.getAsDouble();
         return 0;
     }
+
+    @FXML
+    private void deselectSeriesList() {
+        list.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    private void deselectSeriesTable() {
+        variables.getSelectionModel().clearSelection();
+    }
+
 }

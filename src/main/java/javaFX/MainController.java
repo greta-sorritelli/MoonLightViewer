@@ -2,15 +2,10 @@ package javaFX;
 
 import App.DialogUtility.DialogBuilder;
 import javaFX.GraphControllers.GraphController;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Menu;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 /**
  * Main controller of the application. It has other controllers nested in it.
@@ -30,8 +25,8 @@ public class MainController {
     VBox root;
     @FXML
     Menu menuCSV;
-    @FXML
-    HBox bar;
+//    @FXML
+//    HBox bar;
 
     private ThemeLoader themeLoader = new ThemeLoader();
 
@@ -143,50 +138,50 @@ public class MainController {
     }
 
 
-    /**
-     * Closes window and terminate the application run
-     */
-    @FXML
-    private void close() {
-        Platform.exit();
-    }
-
-    /**
-     * Maximize the size of window
-     */
-    @FXML
-    private void maximize() {
-        Stage stage = (Stage) root.getScene().getWindow();
-        stage.setMaximized(!stage.isMaximized());
-    }
-
-    /**
-     * Minimize the window to icon
-     */
-    @FXML
-    private void minimize() {
-        Stage stage = (Stage) root.getScene().getWindow();
-        stage.setIconified(true);
-    }
-
-    private double x, y;
-
-    /**
-     * Performs drag of window
-     */
-    @FXML
-    private void dragged(MouseEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setX(event.getScreenX() - x);
-        stage.setY(event.getScreenY() - y);
-    }
-
-    /**
-     * Gets positions of scene when mouse is pressed
-     */
-    @FXML
-    private void pressed(MouseEvent event) {
-        x = event.getSceneX();
-        y = event.getSceneY();
-    }
+//    /**
+//     * Closes window and terminate the application run
+//     */
+//    @FXML
+//    private void close() {
+//        Platform.exit();
+//    }
+//
+//    /**
+//     * Maximize the size of window
+//     */
+//    @FXML
+//    private void maximize() {
+//        Stage stage = (Stage) root.getScene().getWindow();
+//        stage.setMaximized(!stage.isMaximized());
+//    }
+//
+//    /**
+//     * Minimize the window to icon
+//     */
+//    @FXML
+//    private void minimize() {
+//        Stage stage = (Stage) root.getScene().getWindow();
+//        stage.setIconified(true);
+//    }
+//
+//    private double x, y;
+//
+//    /**
+//     * Performs drag of window (on vbox)
+//     */
+//    @FXML
+//    private void dragged(MouseEvent event) {
+//        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//        stage.setX(event.getScreenX() - x);
+//        stage.setY(event.getScreenY() - y);
+//    }
+//
+//    /**
+//     * Gets positions of scene when mouse is pressed (on vbox)
+//     */
+//    @FXML
+//    private void pressed(MouseEvent event) {
+//        x = event.getSceneX();
+//        y = event.getSceneY();
+//    }
 }

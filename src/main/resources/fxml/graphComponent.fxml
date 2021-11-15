@@ -18,7 +18,7 @@
             <Font size="18.0" fx:id="x1" />
          </font>
       </Label>
-      <TabPane layoutY="44.0" prefHeight="531.0" prefWidth="446.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
+      <TabPane layoutY="44.0" onMouseExited="#deselectNodeTable" prefHeight="531.0" prefWidth="446.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
          <tabs>
             <Tab text="Plotting">
                <content>
@@ -46,7 +46,7 @@
                               </AnchorPane>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="148.0" prefWidth="445.0">
                                  <children>
-                                    <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <BorderPane onMouseExited="#deselectFiltersTable" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <center>
                                           <fx:include fx:id="filtersComponent" source="filtersComponent.fxml" />
                                        </center>

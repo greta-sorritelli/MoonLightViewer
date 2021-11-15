@@ -469,6 +469,16 @@ public class GraphController {
         }
     }
 
+    @FXML
+    private void deselectFiltersTable() {
+        filtersComponentController.tableFilters.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    private void deselectNodeTable() {
+        nodeTableComponentController.nodesTable.getSelectionModel().clearSelection();
+    }
+
 //    @FXML
 //    Slider zoomSlider;
 //
