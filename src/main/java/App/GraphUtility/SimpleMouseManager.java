@@ -21,12 +21,12 @@ import java.util.Optional;
  * Class to manage mouse events on a graph. Implements {@link MouseManager}
  */
 public class SimpleMouseManager implements MouseManager {
-    protected View view;
-    protected GraphicGraph gGraph;
+    private View view;
+    private GraphicGraph gGraph;
     final private EnumSet<InteractiveElement> types;
     private double time = 0;
     private Graph graph;
-    protected PropertyChangeSupport propertyChangeSupport;
+    private PropertyChangeSupport propertyChangeSupport;
     private String label = "";
     private ChartController chartController;
 
@@ -74,7 +74,7 @@ public class SimpleMouseManager implements MouseManager {
         view.addListener(MouseEvent.MOUSE_CLICKED, mouseClicked);
     }
 
-    protected void mouseButtonPress(MouseEvent event) {
+    private void mouseButtonPress(MouseEvent event) {
         view.requireFocus();
         if (!event.isShiftDown()) {
             gGraph.nodes().filter(n -> n.hasAttribute("ui.selected")).forEach(n -> n.removeAttribute("ui.selected"));
@@ -83,14 +83,14 @@ public class SimpleMouseManager implements MouseManager {
         }
     }
 
-    protected void mouseButtonRelease(Iterable<GraphicElement> elementsInArea) {
+    private void mouseButtonRelease(Iterable<GraphicElement> elementsInArea) {
         for (GraphicElement element : elementsInArea) {
             if (!element.hasAttribute("ui.selected"))
                 element.setAttribute("ui.selected");
         }
     }
 
-    protected void mouseButtonPressOnElement(GraphicElement element,
+    private void mouseButtonPressOnElement(GraphicElement element,
                                              MouseEvent event) {
         view.freezeElement(element, true);
         if (event.getButton() == MouseButton.SECONDARY) {
@@ -100,11 +100,7 @@ public class SimpleMouseManager implements MouseManager {
         }
     }
 
-//    protected void elementMoving(GraphicElement element, MouseEvent event) {
-//        view.moveElementAtPx(element, event.getX(), event.getY());
-//    }
-
-    protected void mouseButtonReleaseOffElement(GraphicElement element,
+    private void mouseButtonReleaseOffElement(GraphicElement element,
                                                 MouseEvent event) {
         view.freezeElement(element, false);
         if (event.getButton() != MouseButton.SECONDARY) {
@@ -112,11 +108,11 @@ public class SimpleMouseManager implements MouseManager {
         }
     }
 
-    protected GraphicElement curElement;
+    private GraphicElement curElement;
 
-    protected double x1, y1;
+    private double x1, y1;
 
-    EventHandler<MouseEvent> mousePressed = new EventHandler<>() {
+    private final EventHandler<MouseEvent> mousePressed = new EventHandler<>() {
         @Override
         public void handle(MouseEvent e) {
             curElement = view.findGraphicElementAt(types, e.getX(), e.getY());
@@ -131,10 +127,7 @@ public class SimpleMouseManager implements MouseManager {
         }
     };
 
-//    EventHandler<MouseEvent> mouseDragged = event -> {
-//    };
-
-    EventHandler<MouseEvent> mouseRelease = new EventHandler<>() {
+    private final EventHandler<MouseEvent> mouseRelease = new EventHandler<>() {
         @Override
         public void handle(MouseEvent event) {
             if (curElement != null) {
