@@ -45,7 +45,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vbox" onMouseDragged="#dragged" onMousePressed="#pressed" prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/lightTheme.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javaFX.MainController">
+<VBox fx:id="root" onMouseDragged="#dragged" onMousePressed="#pressed" prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/lightTheme.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javaFX.MainController">
   <children>
       <HBox fx:id="bar" maxHeight="25.0" minHeight="25.0" prefHeight="25.0">
          <children>

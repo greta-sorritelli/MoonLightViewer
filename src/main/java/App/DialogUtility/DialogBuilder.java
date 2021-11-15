@@ -1,17 +1,15 @@
 package App.DialogUtility;
 
-import javafx.animation.PauseTransition;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 
 /**
  * Class that implements {@link Dialog} to show dialog window
  */
 public class DialogBuilder implements Dialog {
 
-    private String theme = "css/lightTheme.css";
+    private final String theme;
 
     public DialogBuilder(String theme) {
         this.theme = theme;
@@ -60,14 +58,9 @@ public class DialogBuilder implements Dialog {
         dialog.setHeaderText(null);
         dialog.setContentText(message);
         dialog.initStyle(StageStyle.UNDECORATED);
-
-            DialogPane dialogPane = dialog.getDialogPane();
-            dialogPane.getStylesheets().add(theme);
-            dialogPane.getStyleClass().add("dialog");
-
-        PauseTransition delay = new PauseTransition(Duration.seconds(5));
-        delay.setOnFinished(e -> dialog.close());
-        dialog.setOnShown(e -> delay.playFromStart());
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.getStylesheets().add(theme);
+        dialogPane.getStyleClass().add("dialog");
         dialog.showAndWait();
     }
 }

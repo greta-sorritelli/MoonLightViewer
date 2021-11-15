@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -13,17 +15,11 @@ import javafx.stage.StageStyle;
 public class JavaFxApp extends Application {
 
     public void start(Stage stage) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/mainComponent.fxml"));
-        Parent root = fxmlLoader.load();
+        VBox root = FXMLLoader.load(getClass().getResource("/fxml/mainComponent.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
-//        stage.getIcons().add(new Image("/images/ML.png"));
-        stage.initStyle(StageStyle.UNDECORATED);
-//        stage.setTitle("MoonLight Viewer");
+        stage.getIcons().add(new Image("/images/ML.png"));
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.show();
-
-
-
-
     }
 }

@@ -35,7 +35,7 @@
                                     </Label>
                                     <BorderPane fx:id="borderPane" minHeight="0.0" minWidth="0.0" styleClass=".borderpane" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <center>
-                                          <SubScene fx:id="scene" height="266.0" width="457.0" BorderPane.alignment="CENTER">
+                                          <SubScene fx:id="scene" height="266.0" visible="false" width="457.0" BorderPane.alignment="CENTER">
                                             <root>
                                               <Region />
                                             </root>

@@ -56,7 +56,7 @@ public class GraphController {
     private int totNodes = 0;
     private final List<TimeGraph> graphList = new ArrayList<>();
     private Graph currentGraph;
-    private String theme = "url('file://src/main/resources/css/graphLightTheme.css')";
+    private String theme;
     private ChartController chartController;
     private MainController mainController;
     private boolean csvRead = false;
@@ -96,7 +96,7 @@ public class GraphController {
      */
     private File open(String description, String extensions) {
         FileChooser fileChooser = new FileChooser();
-        Stage stage = (Stage) mainController.getVbox().getScene().getWindow();
+        Stage stage = (Stage) mainController.getRoot().getScene().getWindow();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(description, extensions);
         fileChooser.getExtensionFilters().add(extFilter);
         return fileChooser.showOpenDialog(stage);
@@ -328,6 +328,7 @@ public class GraphController {
             FxViewPanel panel = (FxViewPanel) v.getView(String.valueOf(time));
             scene.setRoot(panel);
             borderPane.setCenter(scene);
+            scene.setVisible(true);
             scene.heightProperty().bind(borderPane.heightProperty());
             scene.widthProperty().bind(borderPane.widthProperty());
             SimpleMouseManager sm = new SimpleMouseManager(graph, time, chartController);

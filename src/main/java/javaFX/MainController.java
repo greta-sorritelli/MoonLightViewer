@@ -1,5 +1,6 @@
 package javaFX;
 
+import App.DialogUtility.DialogBuilder;
 import javaFX.GraphControllers.GraphController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -26,14 +27,13 @@ public class MainController {
     GraphController graphComponentController;
 
     @FXML
-    VBox vbox;
+    VBox root;
     @FXML
     Menu menuCSV;
-
     @FXML
     HBox bar;
 
-    private String theme = "css/lightTheme.css";
+    private ThemeLoader themeLoader = new ThemeLoader();
 
     public ChartController getChartComponentController() {
         return chartComponentController;
@@ -44,20 +44,53 @@ public class MainController {
     }
 
     public String getTheme() {
-        return this.theme;
+        return themeLoader.getGeneralTheme();
     }
 
-    public VBox getVbox() {
-        return this.vbox;
+    public VBox getRoot() {
+        return this.root;
     }
 
     /**
-     * Gets all info and controllers from the others fxml files included and inject this {@link MainController} in its nested controllers
+     * Gets all info and controllers from the others fxml files included and inject this {@link MainController} in its nested controllers.
+     * Loads the theme if it was saved.
      */
     @FXML
     public void initialize() {
         this.chartComponentController.injectMainController(this);
         this.graphComponentController.injectMainController(this, chartComponentController);
+        loadTheme();
+    }
+
+    /**
+     * Loads the theme
+     */
+    private void loadTheme() {
+        try {
+            if (ThemeLoader.getThemeFromJson() != null) {
+                themeLoader = ThemeLoader.getThemeFromJson();
+                initializeThemes();
+            }
+        } catch (Exception e) {
+            DialogBuilder d = new DialogBuilder("css/lightTheme.css");
+            d.warning(e.getMessage());
+        }
+    }
+
+    /**
+     * Initializes the theme for the window and the graphs
+     */
+    private void initializeThemes() {
+        if (root.getStylesheets() != null) {
+            if (!root.getStylesheets().isEmpty())
+                root.getStylesheets().clear();
+            root.getStylesheets().add(themeLoader.getGeneralTheme());
+        }
+        if (this.graphComponentController.getCurrentGraph() != null && this.graphComponentController.getCurrentGraph().hasAttribute("ui.stylesheet")) {
+            this.graphComponentController.getCurrentGraph().removeAttribute("ui.stylesheet");
+            this.graphComponentController.getCurrentGraph().setAttribute("ui.stylesheet", themeLoader.getGraphTheme());
+        }
+        graphComponentController.setTheme(themeLoader.getGraphTheme());
     }
 
     /**
@@ -82,13 +115,15 @@ public class MainController {
      */
     @FXML
     private void loadDarkTheme() {
-        this.theme = "css/darkTheme.css";
-        this.vbox.getScene().getStylesheets().add(theme);
-        if (this.graphComponentController.getCurrentGraph() != null && this.graphComponentController.getCurrentGraph().hasAttribute("ui.stylesheet")) {
-            this.graphComponentController.getCurrentGraph().removeAttribute("ui.stylesheet");
-            this.graphComponentController.getCurrentGraph().setAttribute("ui.stylesheet", "url('file://src/main/resources/css/graphDarkTheme.css')");
+        try {
+            themeLoader.setGeneralTheme("css/darkTheme.css");
+            themeLoader.setGraphTheme("url('file://src/main/resources/css/graphDarkTheme.css')");
+            themeLoader.saveToJson();
+            initializeThemes();
+        } catch (Exception e) {
+            DialogBuilder d = new DialogBuilder("css/lightTheme.css");
+            d.warning(e.getMessage());
         }
-        graphComponentController.setTheme("url('file://src/main/resources/css/graphDarkTheme.css')");
     }
 
     /**
@@ -96,45 +131,59 @@ public class MainController {
      */
     @FXML
     private void loadLightTheme() {
-        this.theme = "css/lightTheme.css";
-        this.vbox.getScene().getStylesheets().clear();
-        if (this.graphComponentController.getCurrentGraph() != null && this.graphComponentController.getCurrentGraph().hasAttribute("ui.stylesheet")) {
-            this.graphComponentController.getCurrentGraph().removeAttribute("ui.stylesheet");
-            this.graphComponentController.getCurrentGraph().setAttribute("ui.stylesheet", "url('file://src/main/resources/css/graphLightTheme.css')");
+        try {
+            themeLoader.setGeneralTheme("css/lightTheme.css");
+            themeLoader.setGraphTheme("url('file://src/main/resources/css/graphLightTheme.css')");
+            themeLoader.saveToJson();
+            initializeThemes();
+        } catch (Exception e) {
+            DialogBuilder d = new DialogBuilder("css/lightTheme.css");
+            d.warning("Failed saving theme.");
         }
-        graphComponentController.setTheme("url('file://src/main/resources/graphLightTheme.css')");
     }
 
 
+    /**
+     * Closes window and terminate the application run
+     */
     @FXML
     private void close() {
         Platform.exit();
     }
 
+    /**
+     * Maximize the size of window
+     */
     @FXML
     private void maximize() {
-        Stage stage = (Stage) vbox.getScene().getWindow();
-        if (stage.isMaximized())
-            stage.setMaximized(false);
-        else
-            stage.setMaximized(true);
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.setMaximized(!stage.isMaximized());
     }
 
+    /**
+     * Minimize the window to icon
+     */
     @FXML
     private void minimize() {
-        Stage stage = (Stage) vbox.getScene().getWindow();
+        Stage stage = (Stage) root.getScene().getWindow();
         stage.setIconified(true);
     }
 
-    double x, y;
+    private double x, y;
 
+    /**
+     * Performs drag of window
+     */
     @FXML
     private void dragged(MouseEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setX(event.getScreenX() -x);
-        stage.setY(event.getScreenY() -y);
+        stage.setX(event.getScreenX() - x);
+        stage.setY(event.getScreenY() - y);
     }
 
+    /**
+     * Gets positions of scene when mouse is pressed
+     */
     @FXML
     private void pressed(MouseEvent event) {
         x = event.getSceneX();
