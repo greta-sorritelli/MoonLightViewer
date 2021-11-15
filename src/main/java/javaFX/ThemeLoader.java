@@ -39,7 +39,7 @@ public class ThemeLoader {
      */
     public void saveToJson() throws IOException {
         Gson gson = new Gson();
-        Writer writer = Files.newBufferedWriter(Paths.get("src/main/resources/theme.json"));
+        Writer writer = Files.newBufferedWriter(Paths.get("src/main/resources/json/theme.json"));
         gson.toJson(this, writer);
         writer.close();
     }
@@ -49,7 +49,7 @@ public class ThemeLoader {
      */
     public static ThemeLoader getThemeFromJson() throws IOException {
         Gson gson = new Gson();
-        Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/theme.json"));
+        Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/json/theme.json"));
         Type theme = new TypeToken<ThemeLoader>() {
         }.getType();
         ThemeLoader fromJson = gson.fromJson(reader, theme);
