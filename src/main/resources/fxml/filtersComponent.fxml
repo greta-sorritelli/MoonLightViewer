@@ -98,7 +98,7 @@
          <center>
             <AnchorPane minWidth="0.0" BorderPane.alignment="CENTER">
                <children>
-                  <TableView fx:id="tableFilters" layoutX="10.0" layoutY="8.0" prefHeight="391.0" prefWidth="499.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
+                  <TableView fx:id="tableFilters" focusTraversable="false" layoutX="10.0" layoutY="8.0" prefHeight="391.0" prefWidth="499.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
                      <columns>
                         <TableColumn fx:id="attributeColumn" minWidth="0.0" prefWidth="100.0" text="Attribute" />
                         <TableColumn fx:id="operatorColumn" minWidth="0.0" prefWidth="100.0" text="Operator" />

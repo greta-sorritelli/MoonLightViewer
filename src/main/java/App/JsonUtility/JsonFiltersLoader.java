@@ -33,7 +33,7 @@ public class JsonFiltersLoader implements JsonLoader {
                 .registerTypeAdapter(Filter.class, interfaceSerializer(SimpleFilter.class))
                 .registerTypeAdapter(FilterGroup.class, interfaceSerializer(SimpleFilterGroup.class))
                 .create();
-        File file = new File("src/main/resources/file.json");
+        File file = new File("src/main/resources/json/filters.json");
         if (file.length() != 0)
             readJsonFile(filterGroups,gson);
         writeJsonFile(gson,filters,filterGroups,name,theme);
@@ -59,7 +59,7 @@ public class JsonFiltersLoader implements JsonLoader {
      * @return     arrayList of filters
      */
     private ArrayList<FilterGroup> getListFromJson(Gson gson) throws IOException {
-        Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/file.json"));
+        Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/json/filters.json"));
         Type filterListType = new TypeToken<ArrayList<FilterGroup>>() {}.getType();
         ArrayList<FilterGroup> fromJson = gson.fromJson(reader,filterListType);
         reader.close();
@@ -74,7 +74,7 @@ public class JsonFiltersLoader implements JsonLoader {
      */
     private void writeJsonFile(Gson gson, ArrayList<Filter> filters,ArrayList<FilterGroup> filterGroups, String name, String theme) throws IOException {
         DialogBuilder d = new DialogBuilder(theme);
-        Writer writer = Files.newBufferedWriter(Paths.get("src/main/resources/file.json"));
+        Writer writer = Files.newBufferedWriter(Paths.get("src/main/resources/json/filters.json"));
         FilterGroup filterGroup = new SimpleFilterGroup(name, filters);
         boolean filterGroupPresent = filterGroups.stream().anyMatch(f -> f.equals(filterGroup));
         boolean filtersPresent = filterGroups.stream().anyMatch(f -> f.getFilters().equals(filterGroup.getFilters()));
