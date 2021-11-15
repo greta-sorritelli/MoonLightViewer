@@ -68,6 +68,8 @@ public class GraphController {
         return totNodes;
     }
 
+    public boolean getCsvRead(){ return this.csvRead; }
+
     public List<TimeGraph> getGraphList() {
         return graphList;
     }

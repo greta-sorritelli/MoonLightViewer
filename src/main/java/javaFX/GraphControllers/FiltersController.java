@@ -36,8 +36,6 @@ public class FiltersController {
     @FXML
     TextField text;
     @FXML
-    TextField filtersName;
-    @FXML
     MenuButton attribute;
     @FXML
     MenuButton operator;
@@ -56,7 +54,6 @@ public class FiltersController {
     private GraphController graphController;
     private ChartController chartController;
     private final ArrayList<Node> nodes = new ArrayList<>();
-    private int filterAdded = 0;
     private final ArrayList<FilterGroup> filterGroups = new ArrayList<>();
 
     public void injectGraphController(MainController mainController, GraphController graphController, ChartController chartController) {
@@ -145,7 +142,7 @@ public class FiltersController {
     }
 
     /**
-     * Resets all filters added.
+     * Resets all filters added from graphs and filtersTable.
      */
     @FXML
     private void resetFilters() {
@@ -159,6 +156,9 @@ public class FiltersController {
         chartController.selectAllSeries();
     }
 
+    /**
+     * Resets filters from table.
+     */
     public void resetFiltersNewFile() {
         tableFilters.getItems().clear();
         nodes.clear();
@@ -178,8 +178,9 @@ public class FiltersController {
      */
     @FXML
     private void saveFilter() {
+        DialogBuilder dialogBuilder = new DialogBuilder(mainController.getTheme());
         try {
-            if (!graphController.getGraphList().isEmpty()) {
+            if (graphController.getCsvRead()) {
                 if (!(text.getText().equals("") || attribute.getText().equals("Attribute") || operator.getText().equals("Operator"))) {
                     double value = Double.parseDouble(text.getText());
                     Filter filter = new SimpleFilter(attribute.getText(), operator.getText(), value);
@@ -188,47 +189,41 @@ public class FiltersController {
                     chartController.deselectAllSeries();
                     nodes.forEach(node -> chartController.selectOneSeries(node.getId()));
                 }
-            }
+            }else
+                dialogBuilder.warning("No attributes found.");
+            reset();
         } catch (Exception e) {
             reset();
-            DialogBuilder dialogBuilder = new DialogBuilder(mainController.getTheme());
             dialogBuilder.error(e.getMessage());
         }
     }
 
     /**
      * Saves filters in a Json file.
-     *
-     * @throws IOException
      */
     @FXML
-    private void saveToJson() throws IOException {
+    private void saveToJson(String name) throws IOException {
         ArrayList<Filter> filters = new ArrayList<>(tableFilters.getItems());
-        if (!filters.isEmpty()) {
-            Gson gson = new GsonBuilder()
+        Gson gson = new GsonBuilder()
                     .registerTypeAdapter(Filter.class, interfaceSerializer(SimpleFilter.class))
                     .registerTypeAdapter(FilterGroup.class, interfaceSerializer(SimpleFilterGroup.class))
                     .create();
             File file = new File("src/main/resources/file.json");
             if (file.length() != 0)
                     readJsonFile(gson);
-            else
-                filterAdded++;
-            writeJsonFile(gson,filters);
-        }
+            writeJsonFile(gson,filters,name);
     }
 
     /**
      * Reads an arrayList of filters in the Json File.
      *
      * @param gson gson instance
-     * @throws IOException
      */
     private void readJsonFile(Gson gson) throws IOException {
         ArrayList<FilterGroup> fromJson = getListFromJson(gson);
-        if(!filterGroups.toString().equals(fromJson.toString())) {
-            filterGroups.addAll(fromJson);
-            filterAdded += fromJson.size() + 1;
+        if(fromJson != null) {
+            if (!filterGroups.toString().equals(fromJson.toString()))
+                filterGroups.addAll(fromJson);
         }
     }
 
@@ -237,7 +232,6 @@ public class FiltersController {
      *
      * @param gson gson instance
      * @return     arrayList of filters
-     * @throws IOException
      */
     private ArrayList<FilterGroup> getListFromJson(Gson gson) throws IOException {
         Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/file.json"));
@@ -252,52 +246,95 @@ public class FiltersController {
      *
      * @param gson  gson instance
      * @param filters filters to write
-     * @throws IOException
      */
-    private void writeJsonFile(Gson gson, ArrayList<Filter> filters) throws IOException {
+    private void writeJsonFile(Gson gson, ArrayList<Filter> filters, String name) throws IOException {
         DialogBuilder d = new DialogBuilder(mainController.getTheme());
         Writer writer = Files.newBufferedWriter(Paths.get("src/main/resources/file.json"));
-        FilterGroup filterGroup = new SimpleFilterGroup("Filter" + filterAdded, filters);
-        Optional<FilterGroup> l = filterGroups.stream().filter(f -> f.getFilters().equals(filterGroup.getFilters())).findFirst();
-        if(l.isEmpty()) {
+        FilterGroup filterGroup = new SimpleFilterGroup(name, filters);
+        boolean filterGroupPresent = filterGroups.stream().anyMatch(f -> f.equals(filterGroup));
+        boolean filtersPresent = filterGroups.stream().anyMatch(f -> f.getFilters().equals(filterGroup.getFilters()));
+        boolean namePresent = filterGroups.stream().anyMatch(f -> f.getName().equals(name));
+        if(!(filtersPresent || namePresent || filterGroupPresent)) {
             filterGroups.add(filterGroup);
-            d.info("Filter" + filterAdded +" saved with success!");
-            filterAdded++;
-        }
-        else
-            d.warning("Filters already present!");
+            d.info(name + " filter saved with success!");
+        } else if(filterGroupPresent)
+            d.warning("Name and filters already present!");
+        else if(namePresent)
+            d.warning("Name already present!");
+        else d.warning("Filters already present!");
         gson.toJson(filterGroups, writer);
         writer.close();
     }
 
     /**
-     * Loads filters take from Json file on table and graph.
-     *
-     * @throws IOException
+     * Opens a dialog to insert a name of filters.
      */
     @FXML
-    private void loadFilters() throws IOException {
+    private void openSaveDialogInput(){
+        DialogBuilder d = new DialogBuilder(mainController.getTheme());
+        if (!tableFilters.getItems().isEmpty()) {
+            Optional<String> result = setDialog("Save filters in Json file");
+            result.ifPresent(name -> {
+                try {
+                    saveToJson(name);
+                } catch (IOException e) {
+                    d.error(e.getMessage());
+                }
+            });
+        }
+        else
+            d.warning("No filters in table.");
+    }
+
+    @FXML
+    private void openImportDialogInput(){
+        DialogBuilder d = new DialogBuilder(mainController.getTheme());
+        if(graphController.getCsvRead()) {
+            Optional<String> result = setDialog("Import filters from Json file");
+            result.ifPresent(name -> {
+                try {
+                    loadFilters(name);
+                } catch (IOException e) {
+                    d.error(e.getMessage());
+                }
+            });
+        } else
+            d.warning("Insert attributes.");
+    }
+
+    private Optional<String> setDialog(String title){
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle(title);
+        dialog.setHeaderText("Enter filters name:");
+        dialog.setContentText("Name:");
+        return dialog.showAndWait();
+    }
+
+    /**
+     * Loads filters take from Json file on table and graph.
+     *
+     */
+    @FXML
+    private void loadFilters(String name) throws IOException {
         tableFilters.getItems().clear();
         DialogBuilder d = new DialogBuilder(mainController.getTheme());
-        String name = filtersName.getText();
-        if(!(name.equals("") || graphController.getGraphList().isEmpty())) {
-            Gson gson = new GsonBuilder()
+            if(graphController.getCsvRead()){
+                Gson gson = new GsonBuilder()
                     .registerTypeAdapter(Filter.class, interfaceSerializer(SimpleFilter.class))
                     .registerTypeAdapter(FilterGroup.class, interfaceSerializer(SimpleFilterGroup.class))
                     .create();
-            ArrayList<FilterGroup> fromJson = getListFromJson(gson);
-            Optional<FilterGroup> filterGroup = fromJson.stream().filter(f -> f.getName().equals(name)).findFirst();
-            if(filterGroup.isPresent()) {
-//                for (Filter f: filterGroup.get().getFilters()) {
-//                    if(!tableFilters.getItems().contains(f))
-//                } da mettere se non si pulisce la tabella
-                tableFilters.getItems().addAll(filterGroup.get().getFilters());
-                setCellValueFactory();
-                tableFilters.getItems().forEach(this::checkFilter);
+                ArrayList<FilterGroup> fromJson = getListFromJson(gson);
+                if(fromJson != null){
+                    Optional<FilterGroup> filterGroup = fromJson.stream().filter(f -> f.getName().equals(name)).findFirst();
+                    if(filterGroup.isPresent()) {
+                    tableFilters.getItems().addAll(filterGroup.get().getFilters());
+                    setCellValueFactory();
+                    tableFilters.getItems().forEach(this::checkFilter);
+                    } else
+                        d.warning("Filters not found");
             } else
                 d.warning("Filters not found");
         }
-        filtersName.clear();
     }
 
     /**
@@ -305,7 +342,7 @@ public class FiltersController {
      *
      * @param filter {@link Filter} to add
      */
-    private void addFilter(Filter filter) throws IOException {
+    private void addFilter(Filter filter) {
         if (!tableFilters.getItems().contains(filter)) {
             validationFilter(filter);
             tableFilters.getItems().add(filter);
