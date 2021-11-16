@@ -1,4 +1,4 @@
-package App.javaModel.Graph;
+package App.javaModel.graph;
 
 public enum GraphType {
     STATIC, DYNAMIC;

@@ -1,7 +1,7 @@
-package App.javaFX.Controllers;
+package App.javaFX.controllers;
 
-import App.utility.DialogUtility.DialogBuilder;
-import App.utility.JsonUtility.ThemeLoader;
+import App.utility.dialogUtility.DialogBuilder;
+import App.utility.jsonUtility.ThemeLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.layout.AnchorPane;

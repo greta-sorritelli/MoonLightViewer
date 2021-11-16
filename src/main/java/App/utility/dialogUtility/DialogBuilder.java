@@ -1,4 +1,4 @@
-package App.utility.DialogUtility;
+package App.utility.dialogUtility;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;

@@ -1,6 +1,6 @@
-package App.javaModel.Chart;
+package App.javaModel.chart;
 
-import App.javaModel.Graph.TimeGraph;
+import App.javaModel.graph.TimeGraph;
 import javafx.scene.chart.XYChart;
 import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;

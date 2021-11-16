@@ -1,7 +1,7 @@
 package App.javaController;
 
-import App.javaModel.Filter.Filter;
-import App.javaModel.Graph.TimeGraph;
+import App.javaModel.filter.Filter;
+import App.javaModel.graph.TimeGraph;
 import javafx.collections.ObservableList;
 import org.graphstream.graph.Node;
 

@@ -1,12 +1,12 @@
-package App.javaFX.Controllers;
+package App.javaFX.controllers;
 
 import App.javaController.FiltersController;
-import App.javaModel.Filter.Filter;
-import App.javaModel.Filter.FilterGroup;
-import App.javaModel.Filter.SimpleFilter;
-import App.javaModel.Graph.TimeGraph;
-import App.utility.DialogUtility.DialogBuilder;
-import App.utility.JsonUtility.JsonFiltersLoader;
+import App.javaModel.filter.Filter;
+import App.javaModel.filter.FilterGroup;
+import App.javaModel.filter.SimpleFilter;
+import App.javaModel.graph.TimeGraph;
+import App.utility.dialogUtility.DialogBuilder;
+import App.utility.jsonUtility.JsonFiltersLoader;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

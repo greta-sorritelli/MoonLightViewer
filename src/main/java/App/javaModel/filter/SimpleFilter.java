@@ -1,4 +1,4 @@
-package App.javaModel.Filter;
+package App.javaModel.filter;
 
 import java.util.Objects;
 

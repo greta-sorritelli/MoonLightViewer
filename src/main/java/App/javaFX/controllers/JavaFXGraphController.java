@@ -1,10 +1,10 @@
-package App.javaFX.Controllers;
+package App.javaFX.controllers;
 
 import App.javaController.GraphController;
-import App.javaModel.Graph.GraphType;
-import App.javaModel.Graph.TimeGraph;
-import App.utility.DialogUtility.DialogBuilder;
-import App.utility.MouseUtility.SimpleMouseManager;
+import App.javaModel.graph.GraphType;
+import App.javaModel.graph.TimeGraph;
+import App.utility.dialogUtility.DialogBuilder;
+import App.utility.mouseUtility.SimpleMouseManager;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.SubScene;
@@ -20,6 +20,7 @@ import org.graphstream.graph.Graph;
 import org.graphstream.ui.fx_viewer.FxViewPanel;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.javafx.FxGraphRenderer;
+import org.graphstream.ui.view.Viewer;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -60,7 +61,7 @@ public class JavaFXGraphController {
     private final Label label = new Label();
     private final ArrayList<Double> time = new ArrayList<>();
 
-     public boolean getCsvRead() {
+    public boolean getCsvRead() {
         return this.csvRead;
     }
 
@@ -165,6 +166,11 @@ public class JavaFXGraphController {
         }
         graphList = graphController.getGraphList();
         this.csvRead = true;
+        disableAutoLayout();
+    }
+
+    private void disableAutoLayout() {
+        viewers.forEach(Viewer::disableAutoLayout);
     }
 
     /**
@@ -269,6 +275,7 @@ public class JavaFXGraphController {
         for (TimeGraph t : graphList) {
             FxViewer viewer = new FxViewer(t.getGraph(), FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
             viewer.addView(String.valueOf(t.getTime()), new FxGraphRenderer());
+            viewer.enableAutoLayout();
             viewers.add(viewer);
         }
     }
@@ -284,9 +291,9 @@ public class JavaFXGraphController {
         Optional<FxViewer> fv = viewers.stream().filter(fxViewer -> fxViewer.getView(String.valueOf(time)) != null).findFirst();
         if (fv.isPresent()) {
             FxViewer v = fv.get();
-            if (this.csvRead)
-                v.disableAutoLayout();
-            else v.enableAutoLayout();
+//            if (this.csvRead)
+//            v.disableAutoLayout();
+//            else v.enableAutoLayout();
             FxViewPanel panel = (FxViewPanel) v.getView(String.valueOf(time));
             scene.setRoot(panel);
             borderPane.setCenter(scene);

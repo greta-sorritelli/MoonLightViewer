@@ -1,4 +1,4 @@
-package App.javaFX.Controllers;
+package App.javaFX.controllers;
 
 import App.javaController.GraphController;
 import javafx.beans.property.SimpleObjectProperty;

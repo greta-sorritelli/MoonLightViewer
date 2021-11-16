@@ -1,4 +1,4 @@
-package App.utility.Exceptions;
+package App.utility.exceptions;
 
     /**
      * Exception to be thrown when a bound value isn't supported by the

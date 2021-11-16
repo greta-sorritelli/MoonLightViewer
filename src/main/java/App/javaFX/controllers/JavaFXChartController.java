@@ -1,10 +1,10 @@
-package App.javaFX.Controllers;
+package App.javaFX.controllers;
 
 import App.javaFX.axisUtility.LogarithmicAxis;
-import App.javaModel.Chart.ChartBuilder;
-import App.javaModel.Chart.SimpleChartBuilder;
-import App.javaModel.Graph.TimeGraph;
-import App.utility.DialogUtility.DialogBuilder;
+import App.javaModel.chart.ChartBuilder;
+import App.javaModel.chart.SimpleChartBuilder;
+import App.javaModel.graph.TimeGraph;
+import App.utility.dialogUtility.DialogBuilder;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;

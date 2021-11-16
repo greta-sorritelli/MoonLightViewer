@@ -1,8 +1,8 @@
 package App.javaController;
 
-import App.javaModel.Graph.GraphType;
-import App.javaModel.Graph.SimpleTimeGraph;
-import App.javaModel.Graph.TimeGraph;
+import App.javaModel.graph.GraphType;
+import App.javaModel.graph.SimpleTimeGraph;
+import App.javaModel.graph.TimeGraph;
 import org.apache.commons.lang3.StringUtils;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;

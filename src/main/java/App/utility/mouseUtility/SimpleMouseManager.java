@@ -1,6 +1,6 @@
-package App.utility.MouseUtility;
+package App.utility.mouseUtility;
 
-import App.javaFX.Controllers.JavaFXChartController;
+import App.javaFX.controllers.JavaFXChartController;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;

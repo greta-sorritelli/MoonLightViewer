@@ -1,4 +1,4 @@
-package App.javaModel.Filter;
+package App.javaModel.filter;
 
 /**
  * This interface is responsible to define a filter.
