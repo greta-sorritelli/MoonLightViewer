@@ -46,12 +46,12 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.9'
 
-    implementation 'de.jensd:fontawesomefx:8.2'
+    implementation 'de.jensd:fontawesomefx:8.9'
 
 }
 
 javafx {
-    version = "17"
+    version = "15"
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 
 }
