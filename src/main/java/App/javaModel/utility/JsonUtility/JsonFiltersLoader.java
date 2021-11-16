@@ -1,10 +1,10 @@
-package App.JsonUtility;
+package App.javaModel.utility.JsonUtility;
 
-import App.DialogUtility.DialogBuilder;
-import App.GraphUtility.Filter;
-import App.GraphUtility.FilterGroup;
-import App.GraphUtility.SimpleFilter;
-import App.GraphUtility.SimpleFilterGroup;
+import App.javaModel.utility.DialogUtility.DialogBuilder;
+import App.javaModel.Filter.Filter;
+import App.javaModel.Filter.FilterGroup;
+import App.javaModel.Filter.SimpleFilter;
+import App.javaModel.Filter.SimpleFilterGroup;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -18,7 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Optional;
-import static App.JsonUtility.Serializer.interfaceSerializer;
+import static App.javaModel.utility.JsonUtility.Serializer.interfaceSerializer;
 
 /**
  * This class implements the {@link JsonLoader} interface and is responsible to save and import filters.

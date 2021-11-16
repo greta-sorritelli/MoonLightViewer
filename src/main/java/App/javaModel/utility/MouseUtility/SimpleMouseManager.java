@@ -1,4 +1,4 @@
-package App.GraphUtility;
+package App.javaModel.utility.MouseUtility;
 
 import javaFX.ChartController;
 import javafx.event.EventHandler;
@@ -137,7 +137,6 @@ public class SimpleMouseManager implements MouseManager {
                 double x2 = event.getX();
                 double y2 = event.getY();
                 double t;
-
                 if (x1 > x2) {
                     t = x1;
                     x1 = x2;
@@ -148,7 +147,6 @@ public class SimpleMouseManager implements MouseManager {
                     y1 = y2;
                     y2 = t;
                 }
-
                 mouseButtonRelease(view.allGraphicElementsIn(types, x1, y1, x2, y2));
                 view.endSelectionAt(x2, y2);
             }

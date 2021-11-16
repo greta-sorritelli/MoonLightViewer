@@ -1,4 +1,4 @@
-package javaFX;
+package App.javaModel.utility.JsonUtility;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

@@ -1,4 +1,4 @@
-package App.GraphUtility;
+package App.javaModel.Filter;
 
 import java.util.ArrayList;
 import java.util.Objects;

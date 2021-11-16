@@ -1,6 +1,6 @@
 package javaFX;
 
-import App.Exceptions.IllegalLogarithmicRangeException;
+import App.javaModel.utility.Exceptions.IllegalLogarithmicRangeException;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;

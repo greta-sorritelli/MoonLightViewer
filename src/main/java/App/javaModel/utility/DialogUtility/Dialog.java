@@ -1,4 +1,4 @@
-package App.DialogUtility;
+package App.javaModel.utility.DialogUtility;
 
 /**
  * Interface for a dialog window

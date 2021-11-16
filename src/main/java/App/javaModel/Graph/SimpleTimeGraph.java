@@ -1,4 +1,4 @@
-package App.GraphUtility;
+package App.javaModel.Graph;
 
 import org.graphstream.graph.Graph;
 

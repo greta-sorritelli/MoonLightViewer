@@ -1,11 +1,10 @@
 package javaFX.GraphControllers;
 
-import App.DialogUtility.DialogBuilder;
-import App.GraphUtility.Filter;
-import App.GraphUtility.FilterGroup;
-import App.GraphUtility.SimpleFilter;
-import App.GraphUtility.TimeGraph;
-import App.JsonUtility.JsonFiltersLoader;
+import App.javaModel.Filter.Filter;
+import App.javaModel.Filter.FilterGroup;
+import App.javaModel.Filter.SimpleFilter;
+import App.javaModel.utility.DialogUtility.DialogBuilder;
+import App.javaModel.utility.JsonUtility.JsonFiltersLoader;
 import javaFX.ChartController;
 import javaFX.MainController;
 import javafx.beans.property.SimpleObjectProperty;
@@ -16,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 import org.graphstream.graph.Node;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -23,7 +23,7 @@ import java.util.Optional;
 /**
  * Class controller of filters
  */
-public class FiltersController {
+public class JavaFXFiltersController {
 
     @FXML
     TextField text;
@@ -42,15 +42,16 @@ public class FiltersController {
     @FXML
     TableColumn<Filter, Void> resetColumn;
 
-    private MainController mainController;
+    private MainController maincontroller;
     private GraphController graphController;
     private ChartController chartController;
     private final ArrayList<Node> nodes = new ArrayList<>();
-    private final JsonFiltersLoader jsonSaverFilters = new JsonFiltersLoader();
+    private final App.javaController.FiltersController filtersController = App.javaController.FiltersController.getInstance();
+    private final JsonFiltersLoader jsonFiltersLoader = new JsonFiltersLoader();
     private final ArrayList<FilterGroup> filterGroups = new ArrayList<>();
 
     public void injectGraphController(MainController mainController, GraphController graphController, ChartController chartController) {
-        this.mainController = mainController;
+        this.maincontroller = mainController ;
         this.graphController = graphController;
         this.chartController = chartController;
     }
@@ -128,7 +129,7 @@ public class FiltersController {
         else {
             filters.remove(filter);
             nodes.clear();
-            filters.forEach(this::checkFilter);
+            filters.forEach(f -> filtersController.checkFilter(f,filters,nodes));
         }
     }
 
@@ -155,21 +156,21 @@ public class FiltersController {
         nodes.clear();
     }
 
-    /**
-     * @return ArrayList of times, takes from all {@link TimeGraph}.
-     */
-    private ArrayList<Double> getTimes() {
-        ArrayList<Double> times = new ArrayList<>();
-        graphController.getGraphList().forEach(timeGraph -> times.add(timeGraph.getTime()));
-        return times;
-    }
+//    /**
+//     * @return ArrayList of times, takes from all {@link TimeGraph}.
+//     */
+//    private ArrayList<Double> getTimes() {
+//        ArrayList<Double> times = new ArrayList<>();
+//        graphController.getGraphList().forEach(timeGraph -> times.add(timeGraph.getTime()));
+//        return times;
+//    }
 
     /**
      * Applies filter entered from user.
      */
     @FXML
     private void saveFilter() {
-        DialogBuilder dialogBuilder = new DialogBuilder(mainController.getTheme());
+        DialogBuilder dialogBuilder = new DialogBuilder(maincontroller.getTheme());
         try {
             if (graphController.getCsvRead()) {
                 if (!(text.getText().equals("") || attribute.getText().equals("Attribute") || operator.getText().equals("Operator"))) {
@@ -189,18 +190,24 @@ public class FiltersController {
         }
     }
 
+//    private void saveFilter(String text, String operator, String attribute, ObservableList<Filter> filters) {
+//        double value = Double.parseDouble(text);
+//        Filter filter = new SimpleFilter(attribute, operator, value);
+//        addFilter(filter, filters);
+//    }
+
     /**
      * Opens a dialog to insert a name of filters and save them on file.
      */
     @FXML
     private void openSaveDialogInput() {
-        DialogBuilder d = new DialogBuilder(mainController.getTheme());
+        DialogBuilder d = new DialogBuilder(maincontroller.getTheme());
         ArrayList<Filter> filters = new ArrayList<>(tableFilters.getItems());
         if (!filters.isEmpty()) {
             Optional<String> result = setDialog("Save filters in Json file");
             result.ifPresent(name -> {
                 try {
-                    jsonSaverFilters.saveToJson(filters, filterGroups, name, mainController.getTheme());
+                    jsonFiltersLoader.saveToJson(filters, filterGroups, name, maincontroller.getTheme());
                 } catch (IOException e) {
                     d.error(e.getMessage());
                 }
@@ -214,16 +221,16 @@ public class FiltersController {
      */
     @FXML
     private void openImportDialogInput() {
-        DialogBuilder d = new DialogBuilder(mainController.getTheme());
+        DialogBuilder d = new DialogBuilder(maincontroller.getTheme());
         if (graphController.getCsvRead()) {
             Optional<String> result = setDialog("Import filters from Json file");
             result.ifPresent(name -> {
                 try {
                     tableFilters.getItems().clear();
                     if (graphController.getCsvRead()) {
-                        if (jsonSaverFilters.loadFromJson(name, tableFilters)) {
+                        if (jsonFiltersLoader.loadFromJson(name, tableFilters)) {
                             setCellValueFactory();
-                            tableFilters.getItems().forEach(this::checkFilter);
+                            tableFilters.getItems().forEach(f -> filtersController.checkFilter(f, tableFilters.getItems(),nodes));
                         } else
                             d.warning("Filter not found.");
                     } else
@@ -257,151 +264,152 @@ public class FiltersController {
      * @param filter {@link Filter} to add
      */
     private void addFilter(Filter filter) {
-        if (!tableFilters.getItems().contains(filter)) {
-            validationFilter(filter);
+        ObservableList<Filter> filters = tableFilters.getItems();
+        if (!filters.contains(filter)) {
+            filtersController.validationFilter(filter,filters);
             tableFilters.getItems().add(filter);
-            checkFilter(filter);
+            filtersController.checkFilter(filter,filters,nodes);
             reset();
             setCellValueFactory();
         } else
             throw new IllegalArgumentException("Filter already present.");
     }
 
-    /**
-     * Checks if the attribute and the operator of filter are already used.
-     *
-     * @param filter {@link Filter} to validate
-     */
-    private void validationFilter(Filter filter) {
-        ObservableList<Filter> filters = tableFilters.getItems();
-        filters.forEach(f -> {
-            if (f.getOperator().equals(filter.getOperator()) && f.getAttribute().equals(filter.getAttribute()))
-                throw new IllegalArgumentException("Operator already used.");
-        });
-    }
+//    /**
+//     * Checks if the attribute and the operator of filter are already used.
+//     *
+//     * @param filter {@link Filter} to validate
+//     */
+//    private void validationFilter(Filter filter) {
+//        ObservableList<Filter> filters = tableFilters.getItems();
+//        filters.forEach(f -> {
+//            if (f.getOperator().equals(filter.getOperator()) && f.getAttribute().equals(filter.getAttribute()))
+//                throw new IllegalArgumentException("Operator already used.");
+//        });
+//    }
 
-    /**
-     * Based on the filter entered by the user, checks if there are nodes
-     * in the graph that correspond to it.
-     *
-     * @param f {@link Filter} entered
-     */
-    private void checkFilter(Filter f) {
-        boolean check;
-        chartController.deselectAllSeries();
-        for (TimeGraph g : graphController.getGraphList()) {
-            int countNodes = g.getGraph().getNodeCount();
-            for (double t : getTimes()) {
-                for (int i = 0; i < countNodes; i++) {
-                    Node n = g.getGraph().getNode(i);
-                    if (n.getAttribute("time" + t) != null) {
-                        check = getVector(n, t, f);
-                        changeStyleNodes(check, n, f);
-                    }
-                }
-            }
-        }
-        nodes.forEach(node -> chartController.selectOneSeries(node.getId()));
-    }
+//    /**
+//     * Based on the filter entered by the user, checks if there are nodes
+//     * in the graph that correspond to it.
+//     *
+//     * @param f {@link Filter} entered
+//     */
+//    private void checkFilter(Filter f) {
+//        boolean check;
+//        chartController.deselectAllSeries();
+//        for (TimeGraph g : graphController.getGraphList()) {
+//            int countNodes = g.getGraph().getNodeCount();
+//            for (double t : getTimes()) {
+//                for (int i = 0; i < countNodes; i++) {
+//                    Node n = g.getGraph().getNode(i);
+//                    if (n.getAttribute("time" + t) != null) {
+//                        check = getVector(n, t, f);
+//                        changeStyleNodes(check, n, f);
+//                    }
+//                }
+//            }
+//        }
+//        nodes.forEach(node -> chartController.selectOneSeries(node.getId()));
+//    }
 
-    /**
-     * Takes attributes of node which will be compared with the filter.
-     *
-     * @param n node from which take the attributes
-     * @param t time of graph of node
-     * @param f {@link Filter} to compare
-     *
-     * @return true, if there are any mismatches or false
-     */
-    private boolean getVector(Node n, Double t, Filter f) {
-        String attributes = n.getAttribute("time" + t).toString();
-        String[] vector = attributes.replaceAll("^\\s*\\[|\\]\\s*$", "").split("\\s*,\\s*");
-        return checkAttribute(f.getAttribute(), f.getOperator(), f.getValue(), vector);
-    }
+//    /**
+//     * Takes attributes of node which will be compared with the filter.
+//     *
+//     * @param n node from which take the attributes
+//     * @param t time of graph of node
+//     * @param f {@link Filter} to compare
+//     *
+//     * @return true, if there are any mismatches or false
+//     */
+//    private boolean getVector(Node n, Double t, Filter f) {
+//        String attributes = n.getAttribute("time" + t).toString();
+//        String[] vector = attributes.replaceAll("^\\s*\\[|\\]\\s*$", "").split("\\s*,\\s*");
+//        return checkAttribute(f.getAttribute(), f.getOperator(), f.getValue(), vector);
+//    }
 
-    /**
-     * Adds or removes style on nodes when the user adds a filter.
-     *
-     * @param check boolean to know if there are any mismatches
-     * @param n     node to change style to
-     * @param f     {@link Filter} added
-     */
-    private void changeStyleNodes(boolean check, Node n, Filter f) {
-        if (check) {
-            if (tableFilters.getItems().indexOf(f) == 0) {
-                if (!nodes.contains(n))
-                    nodes.add(n);
-                n.setAttribute("ui.class", "filtered");
-            } else if (!nodes.contains(n))
-                n.removeAttribute("ui.class");
-        } else {
-            if (tableFilters.getItems().size() != 1) {
-                if (nodes.contains(n)) {
-                    nodes.remove(n);
-                    n.removeAttribute("ui.class");
-                }
-            }
-        }
-    }
+//    /**
+//     * Adds or removes style on nodes when the user adds a filter.
+//     *
+//     * @param check boolean to know if there are any mismatches
+//     * @param n     node to change style to
+//     * @param f     {@link Filter} added
+//     */
+//    private void changeStyleNodes(boolean check, Node n, Filter f) {
+//        if (check) {
+//            if (tableFilters.getItems().indexOf(f) == 0) {
+//                if (!nodes.contains(n))
+//                    nodes.add(n);
+//                n.setAttribute("ui.class", "filtered");
+//            } else if (!nodes.contains(n))
+//                n.removeAttribute("ui.class");
+//        } else {
+//            if (tableFilters.getItems().size() != 1) {
+//                if (nodes.contains(n)) {
+//                    nodes.remove(n);
+//                    n.removeAttribute("ui.class");
+//                }
+//            }
+//        }
+//    }
 
-    /**
-     * Check which attribute is selected.
-     *
-     * @param attribute attribute selected
-     * @param operator  operator selected
-     * @param value     value entered
-     * @param vector    attributes of node
-     *
-     * @return true, if the node is to be showed, or false
-     */
-    private boolean checkAttribute(String attribute, String operator, double value, String[] vector) {
-        double v;
-        boolean toShow = false;
-        if (attribute.equals("Direction")) {
-            v = Double.parseDouble(vector[2]);
-            toShow = checkOperator(operator, v, value);
-        }
-        if (attribute.equals("Speed")) {
-            v = Double.parseDouble(vector[3]);
-            toShow = checkOperator(operator, v, value);
-        }
-        if (attribute.equals("Value")) {
-            v = Double.parseDouble(vector[4]);
-            toShow = checkOperator(operator, v, value);
-        }
-        return toShow;
-    }
+//    /**
+//     * Check which attribute is selected.
+//     *
+//     * @param attribute attribute selected
+//     * @param operator  operator selected
+//     * @param value     value entered
+//     * @param vector    attributes of node
+//     *
+//     * @return true, if the node is to be showed, or false
+//     */
+//    private boolean checkAttribute(String attribute, String operator, double value, String[] vector) {
+//        double v;
+//        boolean toShow = false;
+//        if (attribute.equals("Direction")) {
+//            v = Double.parseDouble(vector[2]);
+//            toShow = checkOperator(operator, v, value);
+//        }
+//        if (attribute.equals("Speed")) {
+//            v = Double.parseDouble(vector[3]);
+//            toShow = checkOperator(operator, v, value);
+//        }
+//        if (attribute.equals("Value")) {
+//            v = Double.parseDouble(vector[4]);
+//            toShow = checkOperator(operator, v, value);
+//        }
+//        return toShow;
+//    }
 
-    /**
-     * Checks which operator is selected and if there are any mismatches.
-     *
-     * @param operator operator selected
-     * @param v        value of node
-     * @param value    value of textField
-     *
-     * @return true or false
-     */
-    private boolean checkOperator(String operator, double v, double value) {
-        boolean b = false;
-        switch (operator) {
-            case "=":
-                if (v == value) b = true;
-                break;
-            case ">":
-                if (v > value) b = true;
-                break;
-            case "<":
-                if (v < value) b = true;
-                break;
-            case ">=":
-                if (v >= value) b = true;
-                break;
-            case "<=":
-                if (v <= value) b = true;
-                break;
-            default:
-                return false;
-        }
-        return b;
-    }
+//    /**
+//     * Checks which operator is selected and if there are any mismatches.
+//     *
+//     * @param operator operator selected
+//     * @param v        value of node
+//     * @param value    value of textField
+//     *
+//     * @return true or false
+//     */
+//    private boolean checkOperator(String operator, double v, double value) {
+//        boolean b = false;
+//        switch (operator) {
+//            case "=":
+//                if (v == value) b = true;
+//                break;
+//            case ">":
+//                if (v > value) b = true;
+//                break;
+//            case "<":
+//                if (v < value) b = true;
+//                break;
+//            case ">=":
+//                if (v >= value) b = true;
+//                break;
+//            case "<=":
+//                if (v <= value) b = true;
+//                break;
+//            default:
+//                return false;
+//        }
+//        return b;
+//    }
 }

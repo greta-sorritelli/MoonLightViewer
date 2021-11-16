@@ -1,7 +1,7 @@
-package App.JsonUtility;
+package App.javaModel.utility.JsonUtility;
 
-import App.GraphUtility.Filter;
-import App.GraphUtility.FilterGroup;
+import App.javaModel.Filter.Filter;
+import App.javaModel.Filter.FilterGroup;
 import javafx.scene.control.TableView;
 
 import java.io.IOException;

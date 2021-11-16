@@ -1,4 +1,4 @@
-package App.GraphUtility;
+package App.javaModel.Filter;
 
 /**
  * This interface is responsible to define a filter.

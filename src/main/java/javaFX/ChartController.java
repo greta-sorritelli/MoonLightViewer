@@ -1,9 +1,9 @@
 package javaFX;
 
-import App.ChartUtility.ChartBuilder;
-import App.ChartUtility.SimpleChartBuilder;
-import App.DialogUtility.DialogBuilder;
-import App.GraphUtility.TimeGraph;
+import App.javaModel.Chart.ChartBuilder;
+import App.javaModel.Chart.SimpleChartBuilder;
+import App.javaModel.utility.DialogUtility.DialogBuilder;
+import App.javaModel.Graph.TimeGraph;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;

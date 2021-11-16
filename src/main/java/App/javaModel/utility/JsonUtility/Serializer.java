@@ -1,4 +1,4 @@
-package App.JsonUtility;
+package App.javaModel.utility.JsonUtility;
 
 import com.google.gson.*;
 

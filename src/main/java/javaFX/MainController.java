@@ -1,6 +1,7 @@
 package javaFX;
 
-import App.DialogUtility.DialogBuilder;
+import App.javaModel.utility.DialogUtility.DialogBuilder;
+import App.javaModel.utility.JsonUtility.ThemeLoader;
 import javaFX.GraphControllers.GraphController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;

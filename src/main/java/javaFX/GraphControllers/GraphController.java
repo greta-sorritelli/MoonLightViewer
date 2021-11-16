@@ -1,9 +1,9 @@
 package javaFX.GraphControllers;
 
-import App.DialogUtility.DialogBuilder;
-import App.GraphUtility.SimpleMouseManager;
-import App.GraphUtility.SimpleTimeGraph;
-import App.GraphUtility.TimeGraph;
+import App.javaModel.Graph.SimpleTimeGraph;
+import App.javaModel.Graph.TimeGraph;
+import App.javaModel.utility.DialogUtility.DialogBuilder;
+import App.javaModel.utility.MouseUtility.SimpleMouseManager;
 import javaFX.ChartController;
 import javaFX.MainController;
 import javafx.fxml.FXML;
@@ -26,7 +26,10 @@ import org.graphstream.ui.fx_viewer.FxViewPanel;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.javafx.FxGraphRenderer;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +49,7 @@ public class GraphController {
     @FXML
     NodesTableController nodeTableComponentController;
     @FXML
-    FiltersController filtersComponentController;
+    JavaFXFiltersController filtersComponentController;
     @FXML
     Slider slider;
     @FXML

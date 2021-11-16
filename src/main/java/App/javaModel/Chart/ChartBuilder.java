@@ -1,6 +1,6 @@
-package App.ChartUtility;
+package App.javaModel.Chart;
 
-import App.GraphUtility.TimeGraph;
+import App.javaModel.Graph.TimeGraph;
 import javafx.scene.chart.XYChart;
 
 import java.util.List;
