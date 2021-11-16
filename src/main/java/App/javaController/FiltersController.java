@@ -2,17 +2,12 @@ package App.javaController;
 
 import App.javaModel.Filter.Filter;
 import App.javaModel.Graph.TimeGraph;
-import javaFX.JavaFXChartController;
-import javaFX.GraphControllers.JavaFXGraphController;
 import javafx.collections.ObservableList;
 import org.graphstream.graph.Node;
 
 import java.util.ArrayList;
 
 public class FiltersController implements Controller {
-
-    private JavaFXGraphController graphController;
-    private JavaFXChartController chartController;
 
     private static FiltersController instance= null;
 
@@ -45,12 +40,10 @@ public class FiltersController implements Controller {
      * @param filters filters of table
      * @param nodes  list of nodes
      */
-    public void checkFilter(Filter f, ObservableList<Filter> filters, ArrayList<Node> nodes) {
+    public void checkFilter(Filter f, ObservableList<Filter> filters, ArrayList<Node> nodes, TimeGraph g, ArrayList<Double> times) {
         boolean check;
-        chartController.deselectAllSeries();
-        for (TimeGraph g : graphController.getGraphList()) {
-            int countNodes = g.getGraph().getNodeCount();
-            for (double t : getTimes()) {
+        int countNodes = g.getGraph().getNodeCount();
+            for (double t : times) {
                 for (int i = 0; i < countNodes; i++) {
                     Node n = g.getGraph().getNode(i);
                     if (n.getAttribute("time" + t) != null) {
@@ -59,17 +52,6 @@ public class FiltersController implements Controller {
                     }
                 }
             }
-        }
-        nodes.forEach(node -> chartController.selectOneSeries(node.getId()));
-    }
-
-    /**
-     * @return ArrayList of times, takes from all {@link TimeGraph}.
-     */
-    private ArrayList<Double> getTimes() {
-        ArrayList<Double> times = new ArrayList<>();
-        graphController.getGraphList().forEach(timeGraph -> times.add(timeGraph.getTime()));
-        return times;
     }
 
     /**

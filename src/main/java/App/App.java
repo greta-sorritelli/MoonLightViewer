@@ -1,6 +1,6 @@
 package App;
 
-import javaFX.JavaFxApp;
+import App.javaFX.JavaFxApp;
 import javafx.application.Application;
 
 /**

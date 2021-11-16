@@ -1,5 +1,6 @@
 package App.javaController;
 
+import App.javaModel.Graph.GraphType;
 import App.javaModel.Graph.SimpleTimeGraph;
 import App.javaModel.Graph.TimeGraph;
 import org.apache.commons.lang3.StringUtils;
