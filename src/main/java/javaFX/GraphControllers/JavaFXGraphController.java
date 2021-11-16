@@ -4,7 +4,7 @@ import App.javaModel.Graph.SimpleTimeGraph;
 import App.javaModel.Graph.TimeGraph;
 import App.javaModel.utility.DialogUtility.DialogBuilder;
 import App.javaModel.utility.MouseUtility.SimpleMouseManager;
-import javaFX.ChartController;
+import javaFX.JavaFXChartController;
 import javaFX.MainController;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -38,7 +38,7 @@ import java.util.Optional;
 /**
  * Controller for graphs
  */
-public class GraphController {
+public class JavaFXGraphController {
 
     @FXML
     Label graphType;
@@ -47,7 +47,7 @@ public class GraphController {
     @FXML
     Label infoNode;
     @FXML
-    NodesTableController nodeTableComponentController;
+    JavaFXNodesTableController nodeTableComponentController;
     @FXML
     JavaFXFiltersController filtersComponentController;
     @FXML
@@ -60,7 +60,7 @@ public class GraphController {
     private final List<TimeGraph> graphList = new ArrayList<>();
     private Graph currentGraph;
     private String theme;
-    private ChartController chartController;
+    private JavaFXChartController chartController;
     private MainController mainController;
     private boolean csvRead = false;
     private final ArrayList<FxViewer> viewers = new ArrayList<>();
@@ -81,7 +81,7 @@ public class GraphController {
         this.theme = theme;
     }
 
-    public void injectMainController(MainController mainController, ChartController chartComponentController) {
+    public void injectMainController(MainController mainController, JavaFXChartController chartComponentController) {
         this.mainController = mainController;
         this.chartController = chartComponentController;
         initialize();

@@ -2,7 +2,7 @@ package javaFX;
 
 import App.javaModel.utility.DialogUtility.DialogBuilder;
 import App.javaModel.utility.JsonUtility.ThemeLoader;
-import javaFX.GraphControllers.GraphController;
+import javaFX.GraphControllers.JavaFXGraphController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.layout.AnchorPane;
@@ -16,11 +16,11 @@ public class MainController {
     @FXML
     AnchorPane chartComponent;
     @FXML
-    ChartController chartComponentController;
+    JavaFXChartController chartComponentController;
     @FXML
     AnchorPane graphComponent;
     @FXML
-    GraphController graphComponentController;
+    JavaFXGraphController graphComponentController;
 
     @FXML
     VBox root;
@@ -31,11 +31,11 @@ public class MainController {
 
     private ThemeLoader themeLoader = new ThemeLoader();
 
-    public ChartController getChartComponentController() {
+    public JavaFXChartController getChartComponentController() {
         return chartComponentController;
     }
 
-    public GraphController getGraphComponentController() {
+    public JavaFXGraphController getGraphComponentController() {
         return graphComponentController;
     }
 

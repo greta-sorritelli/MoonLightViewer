@@ -21,8 +21,7 @@ import java.util.OptionalDouble;
 /**
  * Controller for a chart
  */
-public class ChartController {
-
+public class JavaFXChartController {
 
     @FXML
     NumberAxis yAxis = new NumberAxis();

@@ -2,8 +2,8 @@ package App.javaController;
 
 import App.javaModel.Filter.Filter;
 import App.javaModel.Graph.TimeGraph;
-import javaFX.ChartController;
-import javaFX.GraphControllers.GraphController;
+import javaFX.JavaFXChartController;
+import javaFX.GraphControllers.JavaFXGraphController;
 import javafx.collections.ObservableList;
 import org.graphstream.graph.Node;
 
@@ -11,8 +11,8 @@ import java.util.ArrayList;
 
 public class FiltersController implements Controller {
 
-    private GraphController graphController;
-    private ChartController chartController;
+    private JavaFXGraphController graphController;
+    private JavaFXChartController chartController;
 
     private static FiltersController instance= null;
 

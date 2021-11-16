@@ -5,7 +5,7 @@ import App.javaModel.Filter.FilterGroup;
 import App.javaModel.Filter.SimpleFilter;
 import App.javaModel.utility.DialogUtility.DialogBuilder;
 import App.javaModel.utility.JsonUtility.JsonFiltersLoader;
-import javaFX.ChartController;
+import javaFX.JavaFXChartController;
 import javaFX.MainController;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -43,14 +43,14 @@ public class JavaFXFiltersController {
     TableColumn<Filter, Void> resetColumn;
 
     private MainController maincontroller;
-    private GraphController graphController;
-    private ChartController chartController;
+    private JavaFXGraphController graphController;
+    private JavaFXChartController chartController;
     private final ArrayList<Node> nodes = new ArrayList<>();
     private final App.javaController.FiltersController filtersController = App.javaController.FiltersController.getInstance();
     private final JsonFiltersLoader jsonFiltersLoader = new JsonFiltersLoader();
     private final ArrayList<FilterGroup> filterGroups = new ArrayList<>();
 
-    public void injectGraphController(MainController mainController, GraphController graphController, ChartController chartController) {
+    public void injectGraphController(MainController mainController, JavaFXGraphController graphController, JavaFXChartController chartController) {
         this.maincontroller = mainController ;
         this.graphController = graphController;
         this.chartController = chartController;

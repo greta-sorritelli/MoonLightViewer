@@ -11,15 +11,15 @@ import java.util.List;
 /**
  * Class controller of a table of nodes
  */
-public class NodesTableController {
+public class JavaFXNodesTableController {
 
     @FXML
     TableView<String> nodesTable;
     @FXML
     TableColumn<String, String> nameColumn;
-    private GraphController graphController;
+    private JavaFXGraphController graphController;
 
-    public void injectGraphController(GraphController graphController) {
+    public void injectGraphController(JavaFXGraphController graphController) {
         this.graphController = graphController;
     }
 

@@ -1,6 +1,6 @@
 package App.javaModel.utility.MouseUtility;
 
-import javaFX.ChartController;
+import javaFX.JavaFXChartController;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -28,13 +28,13 @@ public class SimpleMouseManager implements MouseManager {
     private Graph graph;
     private PropertyChangeSupport propertyChangeSupport;
     private String label = "";
-    private ChartController chartController;
+    private JavaFXChartController chartController;
 
     public SimpleMouseManager(EnumSet<InteractiveElement> types) {
         this.types = types;
     }
 
-    public SimpleMouseManager(Graph graph, Double time, ChartController chartController) {
+    public SimpleMouseManager(Graph graph, Double time, JavaFXChartController chartController) {
         this(EnumSet.of(InteractiveElement.NODE, InteractiveElement.SPRITE));
         propertyChangeSupport = new PropertyChangeSupport(this);
         this.time = time;
