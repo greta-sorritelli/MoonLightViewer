@@ -1,5 +1,6 @@
 package javaFX.GraphControllers;
 
+import App.javaController.FiltersController;
 import App.javaModel.Filter.Filter;
 import App.javaModel.Filter.FilterGroup;
 import App.javaModel.Filter.SimpleFilter;
@@ -46,7 +47,7 @@ public class JavaFXFiltersController {
     private JavaFXGraphController graphController;
     private JavaFXChartController chartController;
     private final ArrayList<Node> nodes = new ArrayList<>();
-    private final App.javaController.FiltersController filtersController = App.javaController.FiltersController.getInstance();
+    private final FiltersController filtersController = FiltersController.getInstance();
     private final JsonFiltersLoader jsonFiltersLoader = new JsonFiltersLoader();
     private final ArrayList<FilterGroup> filterGroups = new ArrayList<>();
 
