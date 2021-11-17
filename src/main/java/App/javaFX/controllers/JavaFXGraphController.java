@@ -5,6 +5,7 @@ import App.javaModel.graph.GraphType;
 import App.javaModel.graph.TimeGraph;
 import App.utility.dialogUtility.DialogBuilder;
 import App.utility.mouseUtility.SimpleMouseManager;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.SubScene;
@@ -57,9 +58,15 @@ public class JavaFXGraphController {
     private GraphController graphController;
     private JavaFXMainController mainController;
     private boolean csvRead = false;
+    private GraphType graphVisualization;
     private final ArrayList<FxViewer> viewers = new ArrayList<>();
     private final Label label = new Label();
     private final ArrayList<Double> time = new ArrayList<>();
+
+    private final ChangeListener<? super Number> sliderListener = (obs, oldValue, newValue) -> {
+        label.setText(String.valueOf(this.time.get(newValue.intValue())));
+        changeGraphView(String.valueOf(this.time.get(newValue.intValue())));
+    };
 
     public boolean getCsvRead() {
         return this.csvRead;
@@ -126,9 +133,13 @@ public class JavaFXGraphController {
         if (file != null) {
             try {
                 readCSV(file);
-                chartController.createDataFromGraphs(graphList);
+                if (graphVisualization.equals(GraphType.STATIC))
+                    chartController.createDataFromStaticGraph(graphController.getStaticGraph());
+                else
+                    chartController.createDataFromGraphs(graphList);
             } catch (Exception e) {
                 DialogBuilder d = new DialogBuilder(mainController.getTheme());
+                e.printStackTrace();
                 d.error("Failed to load chart data.");
             }
         } else {
@@ -147,9 +158,20 @@ public class JavaFXGraphController {
         nodeTableComponentController.resetTable();
         filtersComponentController.resetFiltersNewFile();
         chartController.reset();
-        slider.setMax(50);
+        resetSlider();
         csvRead = false;
         infoNode.setText(" ");
+    }
+
+    private void resetSlider() {
+        slider.valueProperty().removeListener(sliderListener);
+        slider.setLabelFormatter(null);
+        label.setText("");
+        slider.setMin(0);
+        slider.setMax(50);
+        slider.setMajorTickUnit(1);
+        slider.setMinorTickCount(0);
+        slider.setValue(slider.getMin());
     }
 
     /**
@@ -159,19 +181,17 @@ public class JavaFXGraphController {
      */
     private void readCSV(File file) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
-        String line;
-        graphController.setGraphList(graphList);
-        while (((line = br.readLine()) != null)) {
-            createNodesVector(line);
-        }
-        graphList = graphController.getGraphList();
+        if(graphVisualization.equals(GraphType.STATIC))
+            getStaticAttributesFromCsv(br.readLine());
+        else
+            getDynamicAttributesFromCsv(br);
         this.csvRead = true;
-        disableAutoLayout();
+
     }
 
-    private void disableAutoLayout() {
-        viewers.forEach(Viewer::disableAutoLayout);
-    }
+//    private void disableAutoLayout() {
+//        viewers.forEach(Viewer::disableAutoLayout);
+//    }
 
     /**
      * Creates vectors for every node in a single instant
@@ -182,6 +202,20 @@ public class JavaFXGraphController {
         graphController.createNodesVector(line);
     }
 
+    private void getStaticAttributesFromCsv(String line) {
+        graphController.getNodesValues(line);
+    }
+
+    private void getDynamicAttributesFromCsv(BufferedReader br) throws IOException {
+        graphController.setGraphList(graphList);
+        String line;
+        while (((line = br.readLine()) != null)) {
+            createNodesVector(line);
+        }
+        graphList = graphController.getGraphList();
+//        disableAutoLayout();
+    }
+
     /**
      * Create a graph from a file
      *
@@ -190,25 +224,53 @@ public class JavaFXGraphController {
     private void createGraphFromFile(File file) {
         try {
             graphController.setGraphList(graphList);
-            GraphType t = graphController.createGraphFromFile(file);
+            graphVisualization = graphController.createGraphFromFile(file);
             graphList = graphController.getGraphList();
             for (TimeGraph g : graphList) {
                 g.getGraph().setAttribute("ui.stylesheet", this.theme);
             }
-            if (t.equals(GraphType.STATIC))
-                changeView(graphController.getStaticGraph(), 0.0);
-            else if (t.equals(GraphType.DYNAMIC)) {
+            if (graphVisualization.equals(GraphType.STATIC)) {
+                slider.setDisable(true);
+                showStaticGraph(graphController.getStaticGraph());
+            } else if (graphVisualization.equals(GraphType.DYNAMIC)) {
                 createViews();
                 createTimeSlider();
                 changeGraphView(String.valueOf(graphList.get(0).getTime()));
             }
         } catch (Exception e) {
             DialogBuilder dialogBuilder = new DialogBuilder(mainController.getTheme());
+            e.printStackTrace();
             dialogBuilder.error("Failed to generate graph.");
         }
     }
 
+    private void showStaticGraph(Graph staticGraph) {
+        if (staticGraph.hasAttribute("ui.stylesheet"))
+            staticGraph.removeAttribute("ui.stylesheet");
+        staticGraph.setAttribute("ui.stylesheet", this.theme);
+        FxViewer v = new FxViewer(staticGraph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+        v.addDefaultView(false, new FxGraphRenderer());
+        if (this.csvRead)
+            v.disableAutoLayout();
+        else v.enableAutoLayout();
+        FxViewPanel panel = (FxViewPanel) v.getDefaultView();
+        scene.setRoot(panel);
+        borderPane.setCenter(scene);
+        scene.setVisible(true);
+        scene.heightProperty().bind(borderPane.heightProperty());
+        scene.widthProperty().bind(borderPane.widthProperty());
+        SimpleMouseManager sm = new SimpleMouseManager(staticGraph, chartController);
+        sm.addPropertyChangeListener(evt -> {
+            if (evt.getPropertyName().equals("LabelProperty")) {
+                infoNode.setText(evt.getNewValue().toString());
+            }
+        });
+        v.getDefaultView().setMouseManager(sm);
+
+    }
+
     private void createTimeSlider() {
+        slider.setDisable(false);
         time.clear();
         for (TimeGraph t : graphList) {
             time.add(t.getTime());
@@ -242,10 +304,7 @@ public class JavaFXGraphController {
             label.setTextAlignment(TextAlignment.CENTER);
             thumb.setPrefHeight(20);
         }
-        slider.valueProperty().addListener((obs, oldValue, newValue) -> {
-            label.setText(String.valueOf(this.time.get(newValue.intValue())));
-            changeGraphView(String.valueOf(this.time.get(newValue.intValue())));
-        });
+        slider.valueProperty().addListener(sliderListener);
         slider.setOnMousePressed(event -> borderPane.getScene().setCursor(Cursor.CLOSED_HAND));
         slider.setOnMouseReleased(event -> borderPane.getScene().setCursor(Cursor.DEFAULT));
     }
@@ -275,10 +334,11 @@ public class JavaFXGraphController {
         for (TimeGraph t : graphList) {
             FxViewer viewer = new FxViewer(t.getGraph(), FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
             viewer.addView(String.valueOf(t.getTime()), new FxGraphRenderer());
-            viewer.enableAutoLayout();
+//            viewer.enableAutoLayout();
             viewers.add(viewer);
         }
     }
+
 
     /**
      * Change viewer in order to display a different graph
@@ -291,9 +351,9 @@ public class JavaFXGraphController {
         Optional<FxViewer> fv = viewers.stream().filter(fxViewer -> fxViewer.getView(String.valueOf(time)) != null).findFirst();
         if (fv.isPresent()) {
             FxViewer v = fv.get();
-//            if (this.csvRead)
-//            v.disableAutoLayout();
-//            else v.enableAutoLayout();
+            if (this.csvRead)
+            v.disableAutoLayout();
+            else v.enableAutoLayout();
             FxViewPanel panel = (FxViewPanel) v.getView(String.valueOf(time));
             scene.setRoot(panel);
             borderPane.setCenter(scene);

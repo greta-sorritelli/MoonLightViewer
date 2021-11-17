@@ -41,7 +41,7 @@
                                             </root>
                                           </SubScene>
                                        </center></BorderPane>
-                                    <Slider fx:id="slider" blockIncrement="0.1" layoutY="264.0" majorTickUnit="1.0" max="50.0" maxHeight="40.0" minHeight="40.0" minorTickCount="0" prefHeight="40.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                                    <Slider fx:id="slider" blockIncrement="0.1" disable="true" layoutY="264.0" majorTickUnit="1.0" max="50.0" maxHeight="40.0" minHeight="40.0" minorTickCount="0" prefHeight="40.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="148.0" prefWidth="445.0">

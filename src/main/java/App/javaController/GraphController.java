@@ -75,13 +75,35 @@ public class GraphController {
             node++;
             nodes.add(vector);
         }
-        addPositions(elements, nodes);
+        addPositionsDynamicGraph(elements, nodes);
+    }
+
+    public void getNodesValues(String line) {
+        String[] lineToArray = line.split(", ");
+        int index = 0;
+        for (int node = 0; node < this.staticGraph.getNodeCount(); node++) {
+            if (index < lineToArray.length) {
+                ArrayList<String> attributesOneNode = new ArrayList<>();
+                for (int i = 0; i <= 2; i++) {
+                    attributesOneNode.add(lineToArray[index]);
+                    index++;
+                }
+                Node n = this.staticGraph.getNode(String.valueOf(node));
+                n.setAttribute("Attributes", attributesOneNode);
+                addPositionsStaticGraph(n, attributesOneNode);
+            }
+        }
+    }
+
+    private void addPositionsStaticGraph(Node node, ArrayList<String> elements) {
+        node.setAttribute("x", elements.get(0));
+        node.setAttribute("y", elements.get(1));
     }
 
     /**
      * Gets positions from the .csv file and adds them to the node coordinates
      */
-    private void addPositions(String[] elements, ArrayList<ArrayList<String>> nodes) {
+    private void addPositionsDynamicGraph(String[] elements, ArrayList<ArrayList<String>> nodes) {
         for (TimeGraph g : graphList) {
             if (g.getTime() == Double.parseDouble(elements[0])) {
                 for (int i = 0; i < nodes.size(); i++) {
@@ -100,15 +122,15 @@ public class GraphController {
      * @param file file to read
      */
     public GraphType createGraphFromFile(File file) throws IOException {
+        idGraph = 0;
         BufferedReader br = new BufferedReader(new FileReader(file));
         String line = br.readLine();
-        Graph graph = new MultiGraph("id" + idGraph);
-        idGraph++;
         if (line.contains("LOCATIONS")) {
             totNodes = Integer.parseInt(StringUtils.substringAfterLast(line, "LOCATIONS "));
             if ((line = br.readLine()) != null && line.contains(",")) {
-                staticGraph(line, br, graph, totNodes);
-                this.staticGraph = graph;
+                staticGraph = new MultiGraph("id" + idGraph);
+                idGraph++;
+                staticGraph(line, br, staticGraph, totNodes);
                 return GraphType.STATIC;
             } else if (!line.contains(",")) {
                 dynamicGraph(line, br, totNodes);

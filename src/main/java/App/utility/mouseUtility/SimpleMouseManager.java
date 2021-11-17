@@ -36,8 +36,15 @@ public class SimpleMouseManager implements MouseManager {
 
     public SimpleMouseManager(Graph graph, Double time, JavaFXChartController chartController) {
         this(EnumSet.of(InteractiveElement.NODE, InteractiveElement.SPRITE));
-        propertyChangeSupport = new PropertyChangeSupport(this);
+        this.propertyChangeSupport = new PropertyChangeSupport(this);
         this.time = time;
+        this.graph = graph;
+        this.chartController = chartController;
+    }
+
+    public SimpleMouseManager(Graph graph, JavaFXChartController chartController) {
+        this(EnumSet.of(InteractiveElement.NODE, InteractiveElement.SPRITE));
+        this.propertyChangeSupport = new PropertyChangeSupport(this);
         this.graph = graph;
         this.chartController = chartController;
     }
@@ -125,6 +132,9 @@ public class SimpleMouseManager implements MouseManager {
                 view.beginSelectionAt(x1, y1);
             }
         }
+    };
+
+    private final  EventHandler<MouseEvent> mouseDragged = event -> {
     };
 
     private final EventHandler<MouseEvent> mouseRelease = new EventHandler<>() {
@@ -222,6 +232,11 @@ public class SimpleMouseManager implements MouseManager {
                     String s = attribute.toString();
                     String[] list = s.substring(1, s.length() - 1).split(", ");
                     String newLabel = "Node " + n.getId() + " attributes:  x: " + list[0] + ", y: " + list[1] + ", direction: " + list[2] + ", speed: " + list[3] + ", v: " + list[4];
+                    setLabel(newLabel);
+                } else if((attribute = n.getAttribute("Attributes")) != null) {
+                    String s = attribute.toString();
+                    String[] list = s.substring(1, s.length() - 1).split(", ");
+                    String newLabel = "Node " + n.getId() + " attributes:  x: " + list[0] + ", y: " + list[1] + ", v: " + list[2];
                     setLabel(newLabel);
                 }
             }

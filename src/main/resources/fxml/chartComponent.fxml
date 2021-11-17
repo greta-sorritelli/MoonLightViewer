@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import App.javaFX.axisUtility.LogarithmicAxis?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
@@ -14,7 +16,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="chartComponent" minWidth="350.0" prefHeight="574.0" prefWidth="429.0" xmlns="http://javafx.com/javafx/15" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.javaFX.controllers.JavaFXChartController">
+<AnchorPane fx:id="chartComponent" minWidth="350.0" prefHeight="574.0" prefWidth="429.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.javaFX.controllers.JavaFXChartController">
    <children>
       <Label alignment="CENTER" layoutX="24.0" layoutY="24.0" style="&#10;" text="Chart Visualization" textAlignment="CENTER" wrapText="false" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
          <font>
@@ -43,6 +45,14 @@
                         <NumberAxis fx:id="yAxis" side="LEFT" />
                      </yAxis>
                   </LineChart>
+                  <BarChart fx:id="barChart" layoutX="-43.0" layoutY="-44.0" legendSide="RIGHT" prefHeight="340.0" prefWidth="428.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <xAxis>
+                      <CategoryAxis fx:id="categoryBarAxis" side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis fx:id="numberBarAxis" side="LEFT" />
+                    </yAxis>
+                  </BarChart>
                </children>
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="165.0" prefWidth="445.0">
@@ -58,8 +68,8 @@
                                  <top>
                                     <AnchorPane minWidth="0.0" BorderPane.alignment="CENTER">
                                        <children>
-                                        <Button minWidth="0.0" mnemonicParsing="false" onAction="#selectAllSeries" text="Select all" textOverrun="CLIP" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                          <Button alignment="CENTER_RIGHT" minWidth="0.0" mnemonicParsing="false" onAction="#deselectAllSeries" text="Deselect all" textOverrun="CLIP" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                        <Button fx:id="selectAll" minWidth="0.0" mnemonicParsing="false" onAction="#selectAllSeries" text="Select all" textOverrun="CLIP" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <Button fx:id="deselectAll" alignment="CENTER_RIGHT" minWidth="0.0" mnemonicParsing="false" onAction="#deselectAllSeries" text="Deselect all" textOverrun="CLIP" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                  </top>

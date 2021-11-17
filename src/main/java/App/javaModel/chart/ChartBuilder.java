@@ -2,6 +2,7 @@ package App.javaModel.chart;
 
 import App.javaModel.graph.TimeGraph;
 import javafx.scene.chart.XYChart;
+import org.graphstream.graph.Graph;
 
 import java.util.List;
 
@@ -17,4 +18,5 @@ public interface ChartBuilder {
      */
     List<XYChart.Series<Number, Number>> getSeriesFromNodes(List<TimeGraph> timeGraph);
 
+    List<XYChart.Series<String, Number>> barChartFromNodes(Graph staticGraph);
 }
