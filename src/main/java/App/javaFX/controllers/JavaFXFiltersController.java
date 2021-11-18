@@ -1,6 +1,7 @@
 package App.javaFX.controllers;
 
 import App.javaController.FiltersController;
+import App.javaController.SimpleFiltersController;
 import App.javaModel.filter.Filter;
 import App.javaModel.filter.FilterGroup;
 import App.javaModel.filter.SimpleFilter;
@@ -63,7 +64,7 @@ public class JavaFXFiltersController {
     public void initialize() {
         attribute.getItems().forEach(menuItem -> menuItem.setOnAction(event -> attribute.setText(menuItem.getText())));
         operator.getItems().forEach(menuItem -> menuItem.setOnAction(event -> operator.setText(menuItem.getText())));
-        filtersController = FiltersController.getInstance();
+        filtersController = SimpleFiltersController.getInstance();
     }
 
     /**

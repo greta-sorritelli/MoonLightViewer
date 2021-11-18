@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class SimpleGraphController {
+public class SimpleGraphController implements GraphController{
 
     private static SimpleGraphController instance = null;
     private List<TimeGraph> graphList;

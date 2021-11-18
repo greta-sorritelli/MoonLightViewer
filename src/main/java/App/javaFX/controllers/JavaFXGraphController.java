@@ -1,5 +1,6 @@
 package App.javaFX.controllers;
 
+import App.javaController.GraphController;
 import App.javaController.SimpleGraphController;
 import App.javaModel.graph.GraphType;
 import App.javaModel.graph.TimeGraph;
@@ -55,7 +56,7 @@ public class JavaFXGraphController {
     private Graph currentGraph;
     private String theme;
     private JavaFXChartController chartController;
-    private SimpleGraphController graphController;
+    private GraphController graphController;
     private JavaFXMainController mainController;
     private boolean csvRead = false;
     private GraphType graphVisualization;
