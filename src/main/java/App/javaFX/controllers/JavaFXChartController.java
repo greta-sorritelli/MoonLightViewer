@@ -10,10 +10,12 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.chart.*;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
-import org.graphstream.graph.Graph;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,9 +69,26 @@ public class JavaFXChartController {
     public void createDataFromGraphs(List<TimeGraph> timeGraph) {
         resetCharts();
         lineChart.getData().addAll(cb.getSeriesFromNodes(timeGraph));
+        showToolTip(lineChart);
         lineChartLog.getData().addAll(cb.getSeriesFromNodes(timeGraph));
+        showToolTip(lineChartLog);
         linearSelected();
         initLists();
+    }
+
+    /**
+     * Adds a toolTip to all nodes of series.
+     *
+     * @param l  lineChart
+     */
+    private void showToolTip(LineChart<Number,Number> l){
+        for (XYChart.Series<Number, Number> s : l.getData()) {
+            for (XYChart.Data<Number, Number> d : s.getData()) {
+                Tooltip t = new Tooltip(s.getName());
+                t.setShowDelay(Duration.seconds(0));
+                Tooltip.install(d.getNode(),t);
+            }
+        }
     }
 
 
