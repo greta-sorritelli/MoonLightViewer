@@ -1,6 +1,6 @@
 package App.javaFX.controllers;
 
-import App.javaController.GraphController;
+import App.javaController.SimpleGraphController;
 import App.javaModel.graph.GraphType;
 import App.javaModel.graph.TimeGraph;
 import App.utility.dialogUtility.DialogBuilder;
@@ -55,7 +55,7 @@ public class JavaFXGraphController {
     private Graph currentGraph;
     private String theme;
     private JavaFXChartController chartController;
-    private GraphController graphController;
+    private SimpleGraphController graphController;
     private JavaFXMainController mainController;
     private boolean csvRead = false;
     private GraphType graphVisualization;
@@ -87,7 +87,7 @@ public class JavaFXGraphController {
     }
 
     private void initialize() {
-        this.graphController = GraphController.getInstance();
+        this.graphController = SimpleGraphController.getInstance();
         this.nodeTableComponentController.injectGraphController(graphController);
         this.filtersComponentController.injectGraphController(mainController, this, chartController);
     }
@@ -133,9 +133,7 @@ public class JavaFXGraphController {
         if (file != null) {
             try {
                 readCSV(file);
-                if (graphVisualization.equals(GraphType.STATIC))
-                    chartController.createDataFromStaticGraph(graphController.getStaticGraph());
-                else
+                if (graphVisualization.equals(GraphType.DYNAMIC))
                     chartController.createDataFromGraphs(graphList);
             } catch (Exception e) {
                 DialogBuilder d = new DialogBuilder(mainController.getTheme());
@@ -181,9 +179,9 @@ public class JavaFXGraphController {
      */
     private void readCSV(File file) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
-        if(graphVisualization.equals(GraphType.STATIC))
-            getStaticAttributesFromCsv(br.readLine());
-        else
+        if (graphVisualization.equals(GraphType.STATIC)) {
+            getStaticAttributesFromCsv(br);
+        } else
             getDynamicAttributesFromCsv(br);
         this.csvRead = true;
 
@@ -202,9 +200,37 @@ public class JavaFXGraphController {
         graphController.createNodesVector(line);
     }
 
-    private void getStaticAttributesFromCsv(String line) {
-        graphController.getNodesValues(line);
+//    private void createStaticNodesVector(String line) {
+//        graphController.createStaticNodesVector(line);
+//    }
+
+    private void createPositions(String line) {
+        graphController.createPositions(line);
     }
+
+    private void getStaticAttributesFromCsv(BufferedReader br) throws IOException {
+        String line = br.readLine();
+        if (line != null) {
+            createPositions(line);
+            resetCharts();
+            createSeriesFromStaticGraph(line);
+            while (((line = br.readLine()) != null)) {
+                addDataToSeries(line);
+//            createStaticNodesVector(line);
+            }
+            chartController.init();
+        }
+//        graphController.getNodesValues(br);
+    }
+
+    private void addDataToSeries(String line) {
+        chartController.addDataToSeries(line);
+    }
+
+    private void createSeriesFromStaticGraph(String line) {
+        chartController.createSeriesFromStaticGraph(line);
+    }
+
 
     private void getDynamicAttributesFromCsv(BufferedReader br) throws IOException {
         graphController.setGraphList(graphList);
@@ -214,6 +240,10 @@ public class JavaFXGraphController {
         }
         graphList = graphController.getGraphList();
 //        disableAutoLayout();
+    }
+
+    private void resetCharts() {
+        chartController.resetCharts();
     }
 
     /**
@@ -352,7 +382,7 @@ public class JavaFXGraphController {
         if (fv.isPresent()) {
             FxViewer v = fv.get();
             if (this.csvRead)
-            v.disableAutoLayout();
+                v.disableAutoLayout();
             else v.enableAutoLayout();
             FxViewPanel panel = (FxViewPanel) v.getView(String.valueOf(time));
             scene.setRoot(panel);

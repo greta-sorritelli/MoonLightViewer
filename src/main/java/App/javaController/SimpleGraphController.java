@@ -18,22 +18,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class GraphController {
+public class SimpleGraphController {
 
-    private static GraphController instance = null;
+    private static SimpleGraphController instance = null;
     private List<TimeGraph> graphList;
     private Graph staticGraph;
     private int idGraph = 0;
     private int totNodes = 0;
 
-    private GraphController() {
+    private SimpleGraphController() {
     }
 
-    public static GraphController getInstance() {
+    public static SimpleGraphController getInstance() {
         if (instance == null)
-            instance = new GraphController();
+            instance = new SimpleGraphController();
         return instance;
     }
+
 
     public List<TimeGraph> getGraphList() {
         return graphList;
@@ -77,6 +78,43 @@ public class GraphController {
         }
         addPositionsDynamicGraph(elements, nodes);
     }
+
+    public void createPositions(String line) {
+        String[] array = line.split(",");
+        int index = 1;
+        for (int i = 0; i < staticGraph.getNodeCount(); i++){
+            staticGraph.getNode(String.valueOf(i)).setAttribute("x", array[index]);
+            staticGraph.getNode(String.valueOf(i)).setAttribute("y", array[++index]);
+            index += 4;
+        }
+    }
+
+
+//    public void createStaticNodesVector(String line) {
+//
+//
+//
+//
+//        int node = 0;
+//        ArrayList<ArrayList<String>> nodes = new ArrayList<>();
+//        String[] elements = line.split(",");
+//        double time = Double.parseDouble(elements[0]);
+//        int index = 1;
+//        while (index < elements.length) {
+//            ArrayList<String> vector = new ArrayList<>();
+//            for (int i = 1; i <= 5; i++) {
+//                vector.add(elements[index]);
+//                index++;
+//            }
+//            Optional<TimeGraph> t = graphList.stream().filter(graph -> graph.getGraphFromTime(time) != null).findFirst();
+//            if (t.isPresent()) {
+//                t.get().getGraph().getNode(node).setAttribute("time" + time, vector);
+//            }
+//            node++;
+//            nodes.add(vector);
+//        }
+//        addPositionsDynamicGraph(elements, nodes);
+//    }
 
     public void getNodesValues(String line) {
         String[] lineToArray = line.split(", ");

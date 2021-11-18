@@ -1,6 +1,6 @@
 package App.javaFX.controllers;
 
-import App.javaController.GraphController;
+import App.javaController.SimpleGraphController;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -18,9 +18,9 @@ public class JavaFXNodesTableController {
     TableView<String> nodesTable;
     @FXML
     TableColumn<String, String> nameColumn;
-    private GraphController graphController;
+    private SimpleGraphController graphController;
 
-    public void injectGraphController(GraphController graphController) {
+    public void injectGraphController(SimpleGraphController graphController) {
         this.graphController = graphController;
     }
 

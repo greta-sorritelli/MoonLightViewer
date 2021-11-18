@@ -10,10 +10,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.*;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
 import org.graphstream.graph.Graph;
@@ -42,12 +39,6 @@ public class JavaFXChartController {
     @FXML
     LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
     @FXML
-    CategoryAxis categoryBarAxis = new CategoryAxis();
-    @FXML
-    NumberAxis numberBarAxis = new NumberAxis();
-    @FXML
-    BarChart<String, Number> barChart = new BarChart<>(categoryBarAxis, numberBarAxis);
-    @FXML
     TableView<Series<Number, Number>> variables;
     @FXML
     TableColumn<Series<Number, Number>, String> nameVColumn;
@@ -59,12 +50,10 @@ public class JavaFXChartController {
     RadioButton linear = new RadioButton();
     @FXML
     RadioButton logarithmic = new RadioButton();
-    @FXML
-    Button selectAll;
-    @FXML
-    Button deselectAll;
 
     private JavaFXMainController mainController;
+
+    private ChartBuilder cb = new SimpleChartBuilder();
 
     public void injectMainController(JavaFXMainController mainController) {
         this.mainController = mainController;
@@ -76,9 +65,7 @@ public class JavaFXChartController {
      * @param timeGraph a {@link TimeGraph}
      */
     public void createDataFromGraphs(List<TimeGraph> timeGraph) {
-        selectLineCharts();
-        ChartBuilder cb = new SimpleChartBuilder();
-        reset();
+        resetCharts();
         lineChart.getData().addAll(cb.getSeriesFromNodes(timeGraph));
         lineChartLog.getData().addAll(cb.getSeriesFromNodes(timeGraph));
         linearSelected();
@@ -86,42 +73,24 @@ public class JavaFXChartController {
     }
 
 
-    public void createDataFromStaticGraph(Graph staticGraph) {
-        selectBarChart();
-        disableLists();
-        ChartBuilder cb = new SimpleChartBuilder();
-        reset();
-        barChart.getData().addAll(cb.barChartFromNodes(staticGraph));
+    public void createSeriesFromStaticGraph(String line) {
+        List<Series<Number, Number>> series = cb.getSeriesFromStaticGraph(line);
+        lineChart.getData().addAll(series);
+        lineChartLog.getData().addAll(series);
     }
 
-    private void disableLists() {
-        selectAll.setDisable(true);
-        deselectAll.setDisable(true);
-        list.setDisable(true);
-        variables.setDisable(true);
+
+    public void addDataToSeries(String line) {
+        String[] attributes = line.split(",");
+        cb.addAttributes(attributes);
+        cb.addData(lineChart, attributes);
+        cb.addData(lineChartLog, attributes);
     }
 
-    private void enableLists() {
-        selectAll.setDisable(false);
-        deselectAll.setDisable(false);
-        list.setDisable(false);
-        variables.setDisable(false);
-    }
 
-    private void selectBarChart() {
-        lineChart.setVisible(false);
-        lineChartLog.setVisible(false);
-        linear.setVisible(false);
-        logarithmic.setVisible(false);
-        barChart.setVisible(true);
-    }
-
-    private void selectLineCharts() {
-        lineChart.setVisible(true);
-        lineChartLog.setVisible(false);
-        linear.setVisible(true);
-        logarithmic.setVisible(true);
-        barChart.setVisible(false);
+    public void init() {
+        linearSelected();
+        initLists();
     }
 
     /**
@@ -153,7 +122,6 @@ public class JavaFXChartController {
     }
 
     private void initLists() {
-        enableLists();
         initVariablesList();
         showList();
     }
@@ -177,9 +145,13 @@ public class JavaFXChartController {
     public void reset() {
         this.lineChartLog.getData().clear();
         this.lineChart.getData().clear();
-        this.barChart.getData().clear();
         this.list.getItems().clear();
         this.variables.getItems().clear();
+    }
+
+    public void resetCharts() {
+        cb.clearList();
+        reset();
     }
 
     /**
@@ -189,6 +161,7 @@ public class JavaFXChartController {
     public void selectAllSeries() {
         list.getItems().forEach(checkBox -> checkBox.setSelected(true));
     }
+
 
     /**
      * Initialize all checkbox in a list and their listener
@@ -327,5 +300,11 @@ public class JavaFXChartController {
     private void deselectSeriesTable() {
         variables.getSelectionModel().clearSelection();
     }
+
+
+    public void setDataForStaticGraph(String line) {
+
+    }
+
 
 }
