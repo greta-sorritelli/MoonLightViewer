@@ -89,33 +89,6 @@ public class SimpleGraphController implements GraphController{
         }
     }
 
-
-//    public void createStaticNodesVector(String line) {
-//
-//
-//
-//
-//        int node = 0;
-//        ArrayList<ArrayList<String>> nodes = new ArrayList<>();
-//        String[] elements = line.split(",");
-//        double time = Double.parseDouble(elements[0]);
-//        int index = 1;
-//        while (index < elements.length) {
-//            ArrayList<String> vector = new ArrayList<>();
-//            for (int i = 1; i <= 5; i++) {
-//                vector.add(elements[index]);
-//                index++;
-//            }
-//            Optional<TimeGraph> t = graphList.stream().filter(graph -> graph.getGraphFromTime(time) != null).findFirst();
-//            if (t.isPresent()) {
-//                t.get().getGraph().getNode(node).setAttribute("time" + time, vector);
-//            }
-//            node++;
-//            nodes.add(vector);
-//        }
-//        addPositionsDynamicGraph(elements, nodes);
-//    }
-
     public void getNodesValues(String line) {
         String[] lineToArray = line.split(", ");
         int index = 0;

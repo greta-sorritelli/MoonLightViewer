@@ -15,21 +15,33 @@ import java.util.Optional;
  */
 public class SimpleChartBuilder implements ChartBuilder {
 
-    private final List<List<String>> attributes = new ArrayList<>();
+    private final ArrayList<ArrayList<String>> attributes = new ArrayList<>();
 
-    public List<List<String>> getAttributes() {
+    public ArrayList<ArrayList<String>> getAttributes() {
         return attributes;
     }
 
     public void addAttributes(String[] attributes) {
-        this.attributes.add(Arrays.asList(attributes));
+        ArrayList<String> a = new ArrayList<>(Arrays.stream(attributes).toList());
+        this.attributes.add(a);
     }
 
-    private ArrayList<XYChart.Series<Number, Number>> list = new ArrayList<>();
+    private final ArrayList<XYChart.Series<Number, Number>> listLinear = new ArrayList<>();
+
+    private final ArrayList<XYChart.Series<Number, Number>> listLog = new ArrayList<>();
+
+    public ArrayList<XYChart.Series<Number, Number>> getListLinear() {
+        return listLinear;
+    }
+
+    public ArrayList<XYChart.Series<Number, Number>> getListLog() {
+        return listLog;
+    }
 
     @Override
     public void clearList() {
-        list.clear();
+        listLinear.clear();
+        listLog.clear();
     }
 
 
@@ -57,15 +69,17 @@ public class SimpleChartBuilder implements ChartBuilder {
     }
 
     @Override
-    public ArrayList<XYChart.Series<Number, Number>> getSeriesFromStaticGraph(String line) {
+    public ArrayList<XYChart.Series<Number, Number>> getSeriesFromStaticGraph(String line, ArrayList<XYChart.Series<Number, Number>> list, boolean first) {
         int index = 5;
         int node = 0;
         XYChart.Series<Number, Number> series = null;
-        String[] attributes = line.split(",");
+        String[] attributes = line.split(", ");
         double time = Double.parseDouble(attributes[0]);
-        for (int i = 0; i < 5; i++) {
-            List<String> timeAttributes = Arrays.asList(attributes);
+        if(first) {
+            ArrayList<String> timeAttributes = new ArrayList<>(Arrays.asList(attributes));
             this.attributes.add(timeAttributes);
+        }
+        for (int i = 0; i < 5; i++) {
             int finalNode = node;
             if (list.stream().noneMatch(numberNumberSeries -> numberNumberSeries.getName().equals("Node " + finalNode))) {
                 series = new XYChart.Series<>();

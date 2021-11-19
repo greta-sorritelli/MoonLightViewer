@@ -22,11 +22,18 @@ public interface ChartBuilder {
      */
     List<XYChart.Series<Number, Number>> getSeriesFromNodes(List<TimeGraph> timeGraph);
 
-    ArrayList<XYChart.Series<Number, Number>> getSeriesFromStaticGraph(String line);
+    ArrayList<XYChart.Series<Number, Number>> getSeriesFromStaticGraph(String line, ArrayList<XYChart.Series<Number, Number>> list, boolean b);
 
     void clearList();
 
     void addData(LineChart<Number, Number> lineChart, String[] attributes);
+
+
+    ArrayList<ArrayList<String>> getAttributes();
+
+    ArrayList<XYChart.Series<Number, Number>> getListLinear();
+
+    ArrayList<XYChart.Series<Number, Number>> getListLog();
 
     void addAttributes(String[] attributes);
 //    List<XYChart.Series<Number, Number>> getSeriesFromNodes(Graph staticGraph);

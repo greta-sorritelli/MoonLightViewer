@@ -188,10 +188,6 @@ public class JavaFXGraphController {
 
     }
 
-//    private void disableAutoLayout() {
-//        viewers.forEach(Viewer::disableAutoLayout);
-//    }
-
     /**
      * Creates vectors for every node in a single instant
      *
@@ -200,10 +196,6 @@ public class JavaFXGraphController {
     private void createNodesVector(String line) {
         graphController.createNodesVector(line);
     }
-
-//    private void createStaticNodesVector(String line) {
-//        graphController.createStaticNodesVector(line);
-//    }
 
     private void createPositions(String line) {
         graphController.createPositions(line);
@@ -217,11 +209,9 @@ public class JavaFXGraphController {
             createSeriesFromStaticGraph(line);
             while (((line = br.readLine()) != null)) {
                 addDataToSeries(line);
-//            createStaticNodesVector(line);
             }
-            chartController.init();
+            chartController.initStatic();
         }
-//        graphController.getNodesValues(br);
     }
 
     private void addDataToSeries(String line) {
@@ -240,7 +230,6 @@ public class JavaFXGraphController {
             createNodesVector(line);
         }
         graphList = graphController.getGraphList();
-//        disableAutoLayout();
     }
 
     private void resetCharts() {
@@ -365,7 +354,6 @@ public class JavaFXGraphController {
         for (TimeGraph t : graphList) {
             FxViewer viewer = new FxViewer(t.getGraph(), FxViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
             viewer.addView(String.valueOf(t.getTime()), new FxGraphRenderer());
-//            viewer.enableAutoLayout();
             viewers.add(viewer);
         }
     }
