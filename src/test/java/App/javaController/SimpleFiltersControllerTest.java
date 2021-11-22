@@ -35,20 +35,25 @@ class SimpleFiltersControllerTest {
         ArrayList<Filter> filters = new ArrayList<>();
         ArrayList<Node> nodes = new ArrayList<>();
         ArrayList<String> vector = new ArrayList<>();
+        ArrayList<Double> times = new ArrayList<>();
+        times.add(0.0);
         vector.add("1");
         vector.add("2");
         vector.add("2.5");
         vector.add("0.5");
         vector.add("0");
-        Filter filter = new SimpleFilter("Value", "=",2.0);
-        Filter filter1 = new SimpleFilter("Direction","<", 3.0);
+        Filter filter = new SimpleFilter("Value", "=",0.0);
+        filters.add(filter);
+        Filter filter1 = new SimpleFilter("Direction",">", 3.0);
+        filters.add(filter1);
         Graph graph = new SingleGraph("0");
         Node n = graph.addNode(String.valueOf(0));
-        Node n1 = graph.addNode(String.valueOf(1));
-        n.setAttribute("time"+ 0.0);
-
+        n.setAttribute("time" + 0.0, vector);
         nodes.add(n);
         TimeGraph g = new SimpleTimeGraph(graph,0.0);
-
+        filtersController.checkFilter(filter,filters,nodes,g,times);
+        assertTrue(n.hasAttribute("ui.class"));
+        filtersController.checkFilter(filter1,filters,nodes,g,times);
+        assertFalse(n.hasAttribute("ui.class"));
     }
 }
