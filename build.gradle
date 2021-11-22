@@ -29,8 +29,11 @@ dependencies {
     implementation 'jgrapht:jgrapht:0.7.3'
     implementation 'org.javabits.jgrapht:jgrapht-core:0.9.3'
 
-    // Use JUnit test framework
-    testImplementation 'junit:junit:4.13.2'
+    // Use JUnit Jupiter API for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
+
+    // Use JUnit Jupiter Engine for testing.
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
 
     implementation 'com.opencsv:opencsv:5.5.2'
 
@@ -61,5 +64,10 @@ application {
     // Define the main class for the application.
 //    mainClassName = 'App.App'
         mainClass.set("App")
+}
+
+test {
+    // Use junit platform for unit tests
+    useJUnitPlatform()
 }
 

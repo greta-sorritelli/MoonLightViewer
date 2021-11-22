@@ -2,7 +2,6 @@ package App.javaController;
 
 import App.javaModel.filter.Filter;
 import App.javaModel.graph.TimeGraph;
-import javafx.collections.ObservableList;
 import org.graphstream.graph.Node;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class SimpleFiltersController implements FiltersController {
      * @param filter {@link Filter} to validate
      * @param filters filters of table
      */
-    public void validationFilter(Filter filter, ObservableList<Filter> filters) {
+    public void validationFilter(Filter filter, ArrayList<Filter> filters) {
         filters.forEach(f -> {
             if (f.getOperator().equals(filter.getOperator()) && f.getAttribute().equals(filter.getAttribute()))
                 throw new IllegalArgumentException("Operator already used.");
@@ -40,7 +39,7 @@ public class SimpleFiltersController implements FiltersController {
      * @param filters filters of table
      * @param nodes  list of nodes
      */
-    public void checkFilter(Filter f, ObservableList<Filter> filters, ArrayList<Node> nodes, TimeGraph g, ArrayList<Double> times) {
+    public void checkFilter(Filter f, ArrayList<Filter> filters, ArrayList<Node> nodes, TimeGraph g, ArrayList<Double> times) {
         boolean check;
         int countNodes = g.getGraph().getNodeCount();
             for (double t : times) {
@@ -78,7 +77,7 @@ public class SimpleFiltersController implements FiltersController {
      * @param filters filters of table
      * @param nodes   list of nodes
      */
-    private void changeStyleNodes(boolean check, Node n, Filter f, ObservableList<Filter> filters, ArrayList<Node> nodes) {
+    private void changeStyleNodes(boolean check, Node n, Filter f, ArrayList<Filter> filters, ArrayList<Node> nodes) {
         if (check) {
             if (filters.indexOf(f) == 0) {
                 if (!nodes.contains(n))

@@ -260,7 +260,7 @@ public class JavaFXFiltersController {
      * @param filter {@link Filter} to add
      */
     private void addFilter(Filter filter) {
-        ObservableList<Filter> filters = tableFilters.getItems();
+        ArrayList<Filter> filters = new ArrayList<>(tableFilters.getItems());
         if (!filters.contains(filter)) {
             filtersController.validationFilter(filter,filters);
             tableFilters.getItems().add(filter);
@@ -277,9 +277,8 @@ public class JavaFXFiltersController {
      */
     private void checkFilter(Filter f) {
         chartController.deselectAllSeries();
-        for (TimeGraph g : graphController.getGraphList()) {
-            filtersController.checkFilter(f,tableFilters.getItems(),nodes,g,getTimes());
-        }
+        ArrayList<Filter> filters = new ArrayList<>(tableFilters.getItems());
+        graphController.getGraphList().forEach(g -> filtersController.checkFilter(f,filters,nodes,g,getTimes()));
         nodes.forEach(node -> chartController.selectOneSeries(node.getId()));
     }
 }
