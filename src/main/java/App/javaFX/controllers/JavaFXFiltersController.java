@@ -203,7 +203,8 @@ public class JavaFXFiltersController {
             Optional<String> result = setDialog("Save filters in Json file");
             result.ifPresent(name -> {
                 try {
-                    jsonFiltersLoader.saveToJson(filters, filterGroups, name, mainController.getTheme());
+                    String filterInfo = jsonFiltersLoader.saveToJson(filters, filterGroups, name);
+                        d.info(filterInfo);
                 } catch (IOException e) {
                     d.error(e.getMessage());
                 }
@@ -217,6 +218,7 @@ public class JavaFXFiltersController {
      */
     @FXML
     private void openImportDialogInput() {
+        ArrayList<Filter> filters = new ArrayList<>();
         DialogBuilder d = new DialogBuilder(mainController.getTheme());
         if (graphController.getCsvRead()) {
             Optional<String> result = setDialog("Import filters from Json file");
@@ -224,14 +226,15 @@ public class JavaFXFiltersController {
                 try {
                     tableFilters.getItems().clear();
                     if (graphController.getCsvRead()) {
-                        if (jsonFiltersLoader.loadFromJson(name, tableFilters)) {
+                        if (jsonFiltersLoader.getFromJson(name, filters)) {
+                            tableFilters.getItems().addAll(filters);
                             setCellValueFactory();
                             tableFilters.getItems().forEach(this::checkFilter);
                         } else
                             d.warning("Filter not found.");
                     } else
                         d.warning("Insert attributes!");
-                } catch (IOException e) {
+                } catch (Exception e) {
                     d.error(e.getMessage());
                 }
             });

@@ -2,7 +2,6 @@ package App.utility.jsonUtility;
 
 import App.javaModel.filter.Filter;
 import App.javaModel.filter.FilterGroup;
-import javafx.scene.control.TableView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
  */
 public interface JsonLoader {
 
-    void saveToJson(ArrayList<Filter> filters, ArrayList<FilterGroup> filterGroups, String name, String theme) throws IOException;
+    String saveToJson(ArrayList<Filter> filters, ArrayList<FilterGroup> filterGroups, String name) throws IOException;
 
-    boolean loadFromJson(String name, TableView<Filter> tableView) throws IOException;
+    boolean getFromJson(String name, ArrayList<Filter> filters) throws IOException;
 }
