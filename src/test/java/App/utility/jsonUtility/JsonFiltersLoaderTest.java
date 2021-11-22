@@ -7,7 +7,7 @@ import App.javaModel.filter.SimpleFilterGroup;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileWriter;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class JsonFiltersLoaderTest {
 
-    JsonFiltersLoader jsonFiltersLoader = new JsonFiltersLoader();
+    FiltersLoader jsonFiltersLoader = new JsonFiltersLoader();
 
     @Test
     void saveToJsonTest() throws IOException {
@@ -66,8 +66,8 @@ class JsonFiltersLoaderTest {
     }
 
     @Test
-    @AfterAll
-    static void resetFile() throws IOException {
+    @AfterEach
+    void resetFile() throws IOException {
         new FileWriter("src/main/resources/json/filters.json",false).close();
     }
 }
