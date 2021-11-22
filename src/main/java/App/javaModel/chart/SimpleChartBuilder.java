@@ -100,7 +100,7 @@ public class SimpleChartBuilder implements ChartBuilder {
 
 
     @Override
-    public void addData(LineChart<Number, Number> lineChart, String[] attributes) {
+    public void addLineData(LineChart<Number, Number> lineChart, String[] attributes) {
         int index = 5;
         int node = 0;
         XYChart.Series<Number, Number> series = null;
@@ -117,27 +117,6 @@ public class SimpleChartBuilder implements ChartBuilder {
         }
     }
 
-//    @Override
-//    public List<XYChart.Series<Number, Number>> getSeriesFromNodes(Graph staticGraph) {
-//        List<XYChart.Series<Number, Number>> series = new ArrayList<>();
-//        int totSeries = staticGraph.getNodeCount();
-//        int node = 0;
-//        while (node < totSeries) {
-//            XYChart.Series<Number, Number> seriesX = new XYChart.Series<>();
-//            seriesX.setName("Node " + node);
-//            addData(seriesX, staticGraph.getNode(String.valueOf(node)));
-//            series.add(seriesX);
-//            node++;
-//        }
-//        return series;
-//    }
-//
-//    private void addData(XYChart.Series<Number, Number> series, Node node) {
-//        String attributes = node.getAttribute("Attributes").toString();
-//        String[] a = attributes.split(", ");
-//        double variable = Double.parseDouble(StringUtils.substringBefore(a[2], "]"));
-//        series.getData().add(new XYChart.Data<>(, variable));
-//    }
 
     /**
      * Add all data of a series

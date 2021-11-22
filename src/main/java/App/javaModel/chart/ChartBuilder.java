@@ -26,7 +26,7 @@ public interface ChartBuilder {
 
     void clearList();
 
-    void addData(LineChart<Number, Number> lineChart, String[] attributes);
+    void addLineData(LineChart<Number, Number> lineChart, String[] attributes);
 
 
     ArrayList<ArrayList<String>> getAttributes();

@@ -101,11 +101,11 @@ public class JavaFXChartController {
     }
 
 
-    public void addDataToSeries(String line) {
+    public void addLineDataToSeries(String line) {
         String[] attributes = line.split(",");
         cb.addAttributes(attributes);
-        cb.addData(lineChart, attributes);
-        cb.addData(lineChartLog, attributes);
+        cb.addLineData(lineChart, attributes);
+        cb.addLineData(lineChartLog, attributes);
     }
 
 

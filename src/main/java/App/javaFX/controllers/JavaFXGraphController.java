@@ -208,14 +208,14 @@ public class JavaFXGraphController {
             resetCharts();
             createSeriesFromStaticGraph(line);
             while (((line = br.readLine()) != null)) {
-                addDataToSeries(line);
+                addLineDataToSeries(line);
             }
             chartController.initStatic();
         }
     }
 
-    private void addDataToSeries(String line) {
-        chartController.addDataToSeries(line);
+    private void addLineDataToSeries(String line) {
+        chartController.addLineDataToSeries(line);
     }
 
     private void createSeriesFromStaticGraph(String line) {
