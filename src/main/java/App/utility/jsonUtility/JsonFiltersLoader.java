@@ -20,9 +20,9 @@ import java.util.Optional;
 import static App.utility.jsonUtility.Serializer.interfaceSerializer;
 
 /**
- * This class implements the {@link JsonLoader} interface and is responsible to save and import filters.
+ * This class implements the {@link FiltersLoader} interface and is responsible to save and import filters.
  */
-public class JsonFiltersLoader implements JsonLoader {
+public class JsonFiltersLoader implements FiltersLoader {
 
     /**
      * Saves filters in a Json file.

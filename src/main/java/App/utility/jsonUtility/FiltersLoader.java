@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * This interface is responsible to define a JsonLoader.
  */
-public interface JsonLoader {
+public interface FiltersLoader {
 
     String saveToJson(ArrayList<Filter> filters, ArrayList<FilterGroup> filterGroups, String name) throws IOException;
 

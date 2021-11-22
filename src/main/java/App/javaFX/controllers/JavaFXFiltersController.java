@@ -7,6 +7,7 @@ import App.javaModel.filter.FilterGroup;
 import App.javaModel.filter.SimpleFilter;
 import App.javaModel.graph.TimeGraph;
 import App.utility.dialogUtility.DialogBuilder;
+import App.utility.jsonUtility.FiltersLoader;
 import App.utility.jsonUtility.JsonFiltersLoader;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -48,7 +49,7 @@ public class JavaFXFiltersController {
     private JavaFXChartController chartController;
     private final ArrayList<Node> nodes = new ArrayList<>();
     private FiltersController filtersController;
-    private final JsonFiltersLoader jsonFiltersLoader = new JsonFiltersLoader();
+    private final FiltersLoader jsonFiltersLoader = new JsonFiltersLoader();
     private final ArrayList<FilterGroup> filterGroups = new ArrayList<>();
 
     public void injectGraphController(JavaFXMainController mainController, JavaFXGraphController graphController, JavaFXChartController chartController) {
