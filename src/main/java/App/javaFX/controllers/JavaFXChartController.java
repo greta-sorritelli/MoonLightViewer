@@ -16,7 +16,9 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
@@ -58,7 +60,6 @@ public class JavaFXChartController {
     private JavaFXMainController mainController;
 
     private final ChartBuilder cb = new SimpleChartBuilder();
-
 
 
     public void injectMainController(JavaFXMainController mainController) {
@@ -141,8 +142,7 @@ public class JavaFXChartController {
 
     @FXML
     public void clearLabel(MouseEvent event) {
-        System.out.println(event.getSource());
-        if (event.getSource() == null)
+        if (!event.getTarget().getClass().equals(StackPane.class))
             attributes.setText(" ");
     }
 
@@ -256,19 +256,20 @@ public class JavaFXChartController {
         new Thread(() -> {
             try {
                 Thread.sleep(500);
-                lineChart.getData().forEach(series -> Platform.runLater(() -> {
-                    if (series.getName().equals(name)) {
-                        series.getNode().setVisible(!series.getNode().isVisible());
-                        series.getData().forEach(data -> data.getNode().setVisible(!data.getNode().isVisible()));
-                    }
-                }));
+                Platform.runLater(() -> {
+                    lineChart.getData().forEach(series -> {
+                        if (series.getName().equals(name)) {
+                            series.getNode().setVisible(!series.getNode().isVisible());
+                            series.getData().forEach(data -> data.getNode().setVisible(!data.getNode().isVisible()));
+                        }
+                    });
+                });
 //                Thread.sleep(500);
             } catch (InterruptedException e) {
                 DialogBuilder d = new DialogBuilder(mainController.getTheme());
                 d.error(e.getMessage());
             }
         }).start();
-        lineChart.setVisible(lineChart.isVisible());
 
 
 //        new Thread(() -> {
