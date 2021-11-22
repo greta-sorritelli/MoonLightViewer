@@ -104,8 +104,8 @@ public class JavaFXChartController {
     public void addLineDataToSeries(String line) {
         String[] attributes = line.split(",");
         cb.addAttributes(attributes);
-        cb.addLineData(lineChart, attributes);
-        cb.addLineData(lineChartLog, attributes);
+        cb.addLineData(lineChart.getData().stream().toList(), attributes);
+        cb.addLineData(lineChartLog.getData().stream().toList(), attributes);
     }
 
 
