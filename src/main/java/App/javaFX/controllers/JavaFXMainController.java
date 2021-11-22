@@ -1,6 +1,7 @@
 package App.javaFX.controllers;
 
 import App.utility.dialogUtility.DialogBuilder;
+import App.utility.jsonUtility.JsonThemeLoader;
 import App.utility.jsonUtility.ThemeLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
@@ -28,7 +29,7 @@ public class JavaFXMainController {
 //    @FXML
 //    HBox bar;
 
-    private ThemeLoader themeLoader = new ThemeLoader();
+    private ThemeLoader themeLoader = new JsonThemeLoader();
 
     public JavaFXChartController getChartComponentController() {
         return chartComponentController;
@@ -62,8 +63,8 @@ public class JavaFXMainController {
      */
     private void loadTheme() {
         try {
-            if (ThemeLoader.getThemeFromJson() != null) {
-                themeLoader = ThemeLoader.getThemeFromJson();
+            if (JsonThemeLoader.getThemeFromJson() != null) {
+                themeLoader = JsonThemeLoader.getThemeFromJson();
                 initializeThemes();
             }
         } catch (Exception e) {
