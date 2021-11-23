@@ -20,8 +20,8 @@ class SimpleGraphControllerTest {
 
     GraphController graphController = SimpleGraphController.getInstance();
     List<TimeGraph> timeGraphList = new ArrayList<>();
-    File fileStatic = new File((Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("test/static.tra"))).getFile());
-    File fileDynamic = new File((Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("test/dynamic.tra"))).getFile());
+    File fileStatic = new File((Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("static.tra"))).getFile());
+    File fileDynamic = new File((Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("dynamic.tra"))).getFile());
 
 
     @Test
