@@ -4,6 +4,7 @@ import App.javaModel.graph.GraphType;
 import App.javaModel.graph.TimeGraph;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -20,7 +21,23 @@ class SimpleGraphControllerTest {
     List<TimeGraph> timeGraphList = new ArrayList<>();
 
     @Test
-    void createNodesVectorTest() {
+    void createNodesVectorTest() throws IOException {
+        graphController.setGraphList(timeGraphList);
+        File file1 = new File("src/main/resources/test/dynamic.tra");
+        graphController.createGraphFromFile(file1);
+        String line = "0,3,17,1,0.8,0,14,13,3,0.6,0,9,13,2,0.05,0,25,16,5,0.1,0,14,16,5,0.6,0";
+        graphController.createNodesVector(line);
+        List<Node> nodesWithVector = new ArrayList<>();
+        graphController.getGraphList().forEach(g -> {
+            for (int i = 0; i < 5; i++)
+                if(g.getGraph().getNode(String.valueOf(i)).hasAttribute("time" + 0.0))
+                    nodesWithVector.add(g.getGraph().getNode(String.valueOf(i)));
+        });
+        assertEquals(5,nodesWithVector.size());
+        assertTrue(nodesWithVector.stream().allMatch(n -> n.hasAttribute("x")));
+        assertTrue(nodesWithVector.stream().allMatch(n -> n.hasAttribute("y")));
+        String vectorNode0 = graphController.getGraphList().get(0).getGraph().getNode(String.valueOf(0)).getAttribute("time" + 0.0).toString();
+        assertEquals("3, 17, 1, 0.8, 0",vectorNode0.replaceAll("\\[", "").replaceAll("\\]",""));
     }
 
     @Test
@@ -43,10 +60,6 @@ class SimpleGraphControllerTest {
     }
 
     @Test
-    void getNodesValuesTest() {
-    }
-
-    @Test
     void createGraphFromFileTest() throws IOException {
         File file = new File("src/main/resources/test/static.tra");
         GraphType graphType = graphController.createGraphFromFile(file);
@@ -62,5 +75,11 @@ class SimpleGraphControllerTest {
         Node n1 = graphController.getGraphList().get(0).getGraph().getNode(String.valueOf(1));
         assertEquals(n0,graphController.getGraphList().get(0).getGraph().getEdge("id" + 1).getSourceNode());
         assertEquals(n1,graphController.getGraphList().get(0).getGraph().getEdge("id" + 1).getTargetNode());
+    }
+
+    @Test
+    @AfterEach
+    void resetList(){
+        timeGraphList.clear();
     }
 }
