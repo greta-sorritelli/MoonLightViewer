@@ -3,12 +3,12 @@ package App.utility.jsonUtility;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 /**
  * Class to load the theme and save it
@@ -39,7 +39,9 @@ public class JsonThemeLoader implements ThemeLoader {
      */
     public void saveToJson() throws IOException {
         Gson gson = new Gson();
-        Writer writer = Files.newBufferedWriter(Paths.get("src/main/resources/json/theme.json"));
+        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+        File file = new File((Objects.requireNonNull(classLoader.getResource("json/theme.json"))).getFile());
+        Writer writer = new FileWriter(file);
         gson.toJson(this, writer);
         writer.close();
     }
@@ -47,12 +49,20 @@ public class JsonThemeLoader implements ThemeLoader {
     /**
      * Gets the theme from a json file
      */
-    public static JsonThemeLoader getThemeFromJson() throws IOException {
+    public static JsonThemeLoader getThemeFromJson() throws IOException, URISyntaxException {
         Gson gson = new Gson();
-        Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/json/theme.json"));
+        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+        File file = new File((Objects.requireNonNull(classLoader.getResource("json/theme.json"))).getFile());
+        Reader reader = new FileReader(file);
         Type theme = new TypeToken<JsonThemeLoader>() {
         }.getType();
         JsonThemeLoader fromJson = gson.fromJson(reader, theme);
+        if (fromJson == null) {
+            fromJson = new JsonThemeLoader();
+            fromJson.setGeneralTheme(Objects.requireNonNull(classLoader.getResource("css/lightTheme.css")).toString());
+            fromJson.setGraphTheme(Objects.requireNonNull(classLoader.getResource("css/graphLightTheme.css")).toURI().toString());
+            fromJson.saveToJson();
+        }
         reader.close();
         return fromJson;
     }

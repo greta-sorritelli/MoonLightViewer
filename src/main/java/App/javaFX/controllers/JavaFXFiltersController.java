@@ -20,6 +20,7 @@ import org.graphstream.graph.Node;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -110,8 +111,7 @@ public class JavaFXFiltersController {
                             setGraphic(null);
                         else {
                             setGraphic(btn);
-                            btn.setGraphic(new ImageView("images/remove.png"));
-                        }
+                            btn.setGraphic(new ImageView((Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("images/remove.png"))).toString()));                        }
                     }
                 };
             }

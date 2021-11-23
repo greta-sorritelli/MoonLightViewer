@@ -7,14 +7,13 @@ import App.javaModel.filter.SimpleFilterGroup;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+
+import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 
 import static App.utility.jsonUtility.Serializer.interfaceSerializer;
@@ -23,6 +22,8 @@ import static App.utility.jsonUtility.Serializer.interfaceSerializer;
  * This class implements the {@link FiltersLoader} interface and is responsible to save and import filters.
  */
 public class JsonFiltersLoader implements FiltersLoader {
+
+    private final ClassLoader classLoader = ClassLoader.getSystemClassLoader();
 
     /**
      * Saves filters in a Json file.
@@ -37,7 +38,7 @@ public class JsonFiltersLoader implements FiltersLoader {
                 .registerTypeAdapter(Filter.class, interfaceSerializer(SimpleFilter.class))
                 .registerTypeAdapter(FilterGroup.class, interfaceSerializer(SimpleFilterGroup.class))
                 .create();
-        File file = new File("src/main/resources/json/filters.json");
+        File file = new File((Objects.requireNonNull(classLoader.getResource("json/filters.json"))).getFile());
         if (file.length() != 0)
             readJsonFile(filterGroups,gson);
         return writeJsonFile(gson,filters,filterGroups,name);
@@ -63,7 +64,8 @@ public class JsonFiltersLoader implements FiltersLoader {
      * @param gson gson instance
      */
     private ArrayList<FilterGroup> getListFromJson(Gson gson) throws IOException {
-        Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/json/filters.json"));
+        File file = new File((Objects.requireNonNull(classLoader.getResource("json/filters.json"))).getFile());
+        Reader reader = new FileReader(file);
         Type filterListType = new TypeToken<ArrayList<FilterGroup>>() {}.getType();
         ArrayList<FilterGroup> fromJson = gson.fromJson(reader,filterListType);
         reader.close();
@@ -81,7 +83,8 @@ public class JsonFiltersLoader implements FiltersLoader {
      */
     private String writeJsonFile(Gson gson, ArrayList<Filter> filters,ArrayList<FilterGroup> filterGroups, String name) throws IOException {
         String checkGroup;
-        Writer writer = Files.newBufferedWriter(Paths.get("src/main/resources/json/filters.json"));
+        File file = new File((Objects.requireNonNull(classLoader.getResource("json/filters.json"))).getFile());
+        Writer writer = new FileWriter(file);
         FilterGroup filterGroup = new SimpleFilterGroup(name, filters);
         boolean filterGroupPresent = filterGroups.stream().anyMatch(f -> f.equals(filterGroup));
         boolean filtersPresent = filterGroups.stream().anyMatch(f -> f.getFilters().equals(filterGroup.getFilters()));

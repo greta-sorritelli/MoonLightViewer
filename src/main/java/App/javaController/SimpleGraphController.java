@@ -89,22 +89,22 @@ public class SimpleGraphController implements GraphController{
         }
     }
 
-    public void getNodesValues(String line) {
-        String[] lineToArray = line.split(", ");
-        int index = 0;
-        for (int node = 0; node < this.staticGraph.getNodeCount(); node++) {
-            if (index < lineToArray.length) {
-                ArrayList<String> attributesOneNode = new ArrayList<>();
-                for (int i = 0; i <= 2; i++) {
-                    attributesOneNode.add(lineToArray[index]);
-                    index++;
-                }
-                Node n = this.staticGraph.getNode(String.valueOf(node));
-                n.setAttribute("Attributes", attributesOneNode);
-                addPositionsStaticGraph(n, attributesOneNode);
-            }
-        }
-    }
+//    public void getNodesValues(String line) {
+//        String[] lineToArray = line.split(", ");
+//        int index = 0;
+//        for (int node = 0; node < this.staticGraph.getNodeCount(); node++) {
+//            if (index < lineToArray.length) {
+//                ArrayList<String> attributesOneNode = new ArrayList<>();
+//                for (int i = 0; i <= 2; i++) {
+//                    attributesOneNode.add(lineToArray[index]);
+//                    index++;
+//                }
+//                Node n = this.staticGraph.getNode(String.valueOf(node));
+//                n.setAttribute("Attributes", attributesOneNode);
+//                addPositionsStaticGraph(n, attributesOneNode);
+//            }
+//        }
+//    }
 
     private void addPositionsStaticGraph(Node node, ArrayList<String> elements) {
         node.setAttribute("x", elements.get(0));

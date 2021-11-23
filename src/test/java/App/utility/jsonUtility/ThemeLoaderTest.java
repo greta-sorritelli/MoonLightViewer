@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -35,7 +36,7 @@ class ThemeLoaderTest {
 
     @Test
     @BeforeAll
-    static void getThemeFromJsonTest() throws IOException {
+    static void getThemeFromJsonTest() throws IOException, URISyntaxException {
         ThemeLoader loader = JsonThemeLoader.getThemeFromJson();
         generalTheme = loader.getGeneralTheme();
         graphTheme = loader.getGraphTheme();
