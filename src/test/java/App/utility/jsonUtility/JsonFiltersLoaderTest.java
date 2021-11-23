@@ -11,14 +11,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static App.utility.jsonUtility.Serializer.interfaceSerializer;
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class JsonFiltersLoaderTest {
 
     FiltersLoader jsonFiltersLoader = new JsonFiltersLoader();
+    static File file = new File((Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("json/filters.json"))).getFile());
     static ArrayList<FilterGroup> filterGroups = new ArrayList<>();
     static Gson gson = new GsonBuilder()
             .registerTypeAdapter(Filter.class, interfaceSerializer(SimpleFilter.class))
@@ -44,7 +41,7 @@ class JsonFiltersLoaderTest {
         filters.add(filter2);
         jsonFiltersLoader.saveToJson(filters,filterGroups,"Filters1");
         assertEquals("Filters1", filterGroups.get(0).getName());
-        Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/json/filters.json"));
+        Reader reader = new FileReader(file);
         Type filterListType = new TypeToken<ArrayList<FilterGroup>>() {}.getType();
         ArrayList<FilterGroup> fromJson = gson.fromJson(reader,filterListType);
         reader.close();
@@ -53,7 +50,7 @@ class JsonFiltersLoaderTest {
 
     @Test
     void getFromJsonTest() throws IOException {
-        new FileWriter("src/main/resources/json/filters.json",false).close();
+        new FileWriter(file,false).close();
         ArrayList<Filter> filters = new ArrayList<>();
         ArrayList<FilterGroup> filterGroups = new ArrayList<>();
         Filter filter = new SimpleFilter("Value", "=",0.0);
@@ -71,19 +68,19 @@ class JsonFiltersLoaderTest {
     @Test
     @BeforeAll
     static void resetFile() throws IOException {
-        Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/json/filters.json"));
+        Reader reader = new FileReader(file);
         Type filterListType = new TypeToken<ArrayList<FilterGroup>>() {}.getType();
         ArrayList<FilterGroup> filterGroups1 = gson.fromJson(reader,filterListType);
         if(filterGroups1 != null)
             filterGroups.addAll(filterGroups1);
-        new FileWriter("src/main/resources/json/filters.json",false).close();
+        new FileWriter(file,false).close();
     }
 
     @Test
     @AfterAll
     static void reset() throws IOException {
-        new FileWriter("src/main/resources/json/filters.json",false).close();
-        Writer writer = Files.newBufferedWriter(Paths.get("src/main/resources/json/filters.json"));
+        new FileWriter(file,false).close();
+        Writer writer = new FileWriter(file);
         gson.toJson(filterGroups, writer);
         writer.close();
     }

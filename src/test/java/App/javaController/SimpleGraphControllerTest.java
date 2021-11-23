@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,12 +20,14 @@ class SimpleGraphControllerTest {
 
     GraphController graphController = SimpleGraphController.getInstance();
     List<TimeGraph> timeGraphList = new ArrayList<>();
+    File fileStatic = new File((Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("test/static.tra"))).getFile());
+    File fileDynamic = new File((Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("test/dynamic.tra"))).getFile());
+
 
     @Test
     void createNodesVectorTest() throws IOException {
         graphController.setGraphList(timeGraphList);
-        File file1 = new File("src/main/resources/test/dynamic.tra");
-        graphController.createGraphFromFile(file1);
+        graphController.createGraphFromFile(fileDynamic);
         String line = "0,3,17,1,0.8,0,14,13,3,0.6,0,9,13,2,0.05,0,25,16,5,0.1,0,14,16,5,0.6,0";
         graphController.createNodesVector(line);
         List<Node> nodesWithVector = new ArrayList<>();
@@ -42,8 +45,7 @@ class SimpleGraphControllerTest {
 
     @Test
     void createPositionsTest() throws IOException {
-        File file = new File("src/main/resources/test/static.tra");
-        graphController.createGraphFromFile(file);
+        graphController.createGraphFromFile(fileStatic);
         String line = "0,3,17,1,0,0,14,19,3,0,0";
         graphController.createPositions(line);
         Graph graph = graphController.getStaticGraph();
@@ -61,12 +63,10 @@ class SimpleGraphControllerTest {
 
     @Test
     void createGraphFromFileTest() throws IOException {
-        File file = new File("src/main/resources/test/static.tra");
-        GraphType graphType = graphController.createGraphFromFile(file);
+        GraphType graphType = graphController.createGraphFromFile(fileStatic);
         assertEquals(GraphType.STATIC, graphType);
         graphController.setGraphList(timeGraphList);
-        File file1 = new File("src/main/resources/test/dynamic.tra");
-        GraphType graphType1 = graphController.createGraphFromFile(file1);
+        GraphType graphType1 = graphController.createGraphFromFile(fileDynamic);
         assertEquals(GraphType.DYNAMIC, graphType1);
         assertEquals(1, graphController.getGraphList().size());
         TimeGraph graph = graphController.getGraphList().get(0);
