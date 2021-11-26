@@ -81,5 +81,4 @@ class SimpleGraphControllerTest {
     @AfterEach
     void resetList(){
         timeGraphList.clear();
-    }
-}
+    }}

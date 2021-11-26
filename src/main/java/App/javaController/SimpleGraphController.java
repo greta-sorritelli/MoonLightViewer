@@ -79,6 +79,10 @@ public class SimpleGraphController implements GraphController{
         addPositionsDynamicGraph(elements, nodes);
     }
 
+    /**
+     * Sets positions of nodes
+     *
+     */
     public void createPositions(String line) {
         String[] array = line.split(",");
         int index = 1;
@@ -87,28 +91,6 @@ public class SimpleGraphController implements GraphController{
             staticGraph.getNode(String.valueOf(i)).setAttribute("y", array[++index]);
             index += 4;
         }
-    }
-
-//    public void getNodesValues(String line) {
-//        String[] lineToArray = line.split(", ");
-//        int index = 0;
-//        for (int node = 0; node < this.staticGraph.getNodeCount(); node++) {
-//            if (index < lineToArray.length) {
-//                ArrayList<String> attributesOneNode = new ArrayList<>();
-//                for (int i = 0; i <= 2; i++) {
-//                    attributesOneNode.add(lineToArray[index]);
-//                    index++;
-//                }
-//                Node n = this.staticGraph.getNode(String.valueOf(node));
-//                n.setAttribute("Attributes", attributesOneNode);
-//                addPositionsStaticGraph(n, attributesOneNode);
-//            }
-//        }
-//    }
-
-    private void addPositionsStaticGraph(Node node, ArrayList<String> elements) {
-        node.setAttribute("x", elements.get(0));
-        node.setAttribute("y", elements.get(1));
     }
 
     /**
@@ -230,14 +212,10 @@ public class SimpleGraphController implements GraphController{
         boolean exist = graph.edges().anyMatch(edge1 -> (edge1.getSourceNode().equals(graph.getNode(vertex1)) || edge1.getSourceNode().equals(graph.getNode(vertex2))) && (edge1.getTargetNode().equals(graph.getNode(vertex2)) || edge1.getTargetNode().equals(graph.getNode(vertex1))));
         Edge e = graph.addEdge("id" + idGraph, graph.getNode(vertex1), graph.getNode(vertex2));
         idGraph++;
-//        e.setAttribute("ui.label", edge);
         if (exist)
             e.setAttributes(Map.of(
-//                    "ui.label", edge,
                     "ui.class", "multiple"
             ));
-//        else
-//            e.setAttribute("ui.label", edge);
     }
 
     /**

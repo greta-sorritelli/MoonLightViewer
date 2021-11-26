@@ -53,6 +53,10 @@ public class JavaFXFiltersController {
     private final FiltersLoader jsonFiltersLoader = new JsonFiltersLoader();
     private final ArrayList<FilterGroup> filterGroups = new ArrayList<>();
 
+    public TableView<Filter> getTableFilters() {
+        return tableFilters;
+    }
+
     public void injectGraphController(JavaFXMainController mainController, JavaFXGraphController graphController, JavaFXChartController chartController) {
         this.mainController = mainController ;
         this.graphController = graphController;
@@ -77,6 +81,18 @@ public class JavaFXFiltersController {
         attribute.setText("Attribute");
         operator.setText("Operator");
         text.clear();
+    }
+
+    /**
+     * Checks if the value entered by the user contains only numbers.
+     *
+     * @return   string of value
+     */
+    public String getValue(){
+        if(text.getText().matches("[0-9]+"))
+            return text.getText();
+        else
+            throw new IllegalArgumentException("Value must contains only numbers.");
     }
 
     /**
@@ -177,7 +193,7 @@ public class JavaFXFiltersController {
         try {
             if (graphController.getCsvRead()) {
                 if (!(text.getText().equals("") || attribute.getText().equals("Attribute") || operator.getText().equals("Operator"))) {
-                    double value = Double.parseDouble(text.getText());
+                    double value = Double.parseDouble(getValue());
                     Filter filter = new SimpleFilter(attribute.getText(), operator.getText(), value);
                     addFilter(filter);
                 } else if (!tableFilters.getItems().isEmpty()) {
@@ -205,7 +221,7 @@ public class JavaFXFiltersController {
             result.ifPresent(name -> {
                 try {
                     String filterInfo = jsonFiltersLoader.saveToJson(filters, filterGroups, name);
-                        d.info(filterInfo);
+                    d.info(filterInfo);
                 } catch (IOException e) {
                     d.error(e.getMessage());
                 }

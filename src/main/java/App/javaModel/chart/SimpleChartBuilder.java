@@ -5,6 +5,7 @@ import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,6 +47,65 @@ public class SimpleChartBuilder implements ChartBuilder {
     public void clearList() {
         listLinear.clear();
         listLog.clear();
+    }
+
+
+    @Override
+    public ArrayList<Series<Number, Number>> createSeriesForConstantChart(File file) throws IOException {
+        FileInputStream fIn = new FileInputStream(file);
+        BufferedReader br = new BufferedReader(new InputStreamReader(fIn));
+        String line = br.readLine();
+        String[] attributes = line.split(", ");
+        int columns = ((attributes.length - 1) / 5) + 1;
+        int rows = calculateRows(br);
+        fIn.getChannel().position(0);
+        br = new BufferedReader(new InputStreamReader(fIn));
+        Double[][] matrix = new Double[rows][columns];
+        populateMatrix(br, columns, matrix);
+        return createSeriesFromMatrix(matrix);
+    }
+
+    private void populateMatrix(BufferedReader br, int columns, Double[][] matrix) throws IOException {
+        String line;
+        int rows;
+        rows = 0;
+        while ((line = br.readLine()) != null) {
+            String[] array = line.split(", ");
+            int index = 0;
+            for (int i = 0; i < columns; i++) {
+                matrix[rows][i] = Double.valueOf(array[index]);
+                index += 5;
+            }
+            rows++;
+        }
+    }
+
+    private int calculateRows(BufferedReader br) throws IOException {
+        int rows = 0;
+        do
+            rows++;
+        while (br.readLine() != null);
+        return rows;
+    }
+
+    private ArrayList<Series<Number, Number>> createSeriesFromMatrix(Double[][] matrix) {
+        ArrayList<Series<Number, Number>> list = new ArrayList<>();
+        //per ogni colonna
+        for (int column = 0; column < matrix[0].length - 1; column++) {
+            Series<Number, Number> series = new Series<>();
+            series.setName("Node " + column);
+            //per ogni riga
+            for (int row = 0; row < matrix.length; row++) {
+                if (row == 0)
+                    series.getData().add(new Data<>(matrix[row][0], matrix[row][column + 1]));
+                else {
+                    series.getData().add(new Data<>(matrix[row][0], matrix[row - 1][column + 1]));
+                    series.getData().add(new Data<>(matrix[row][0], matrix[row][column + 1]));
+                }
+            }
+            list.add(series);
+        }
+        return list;
     }
 
 
@@ -97,7 +157,6 @@ public class SimpleChartBuilder implements ChartBuilder {
 
     /**
      * Creates and returns a series if it doesn't exist or returns the existing series
-     *
      */
     private Series<Number, Number> getSeries(ArrayList<Series<Number, Number>> list, int node, Series<Number, Number> series, int finalNode) {
         if (list.stream().noneMatch(numberNumberSeries -> numberNumberSeries.getName().equals("Node " + finalNode))) {
@@ -114,10 +173,9 @@ public class SimpleChartBuilder implements ChartBuilder {
 
     /**
      * Checks if the attributes have already been added
-     *
      */
     private void checkFirst(boolean first, String[] attributes) {
-        if(first) {
+        if (first) {
             ArrayList<String> timeAttributes = new ArrayList<>(Arrays.asList(attributes));
             this.attributes.add(timeAttributes);
         }
@@ -126,7 +184,6 @@ public class SimpleChartBuilder implements ChartBuilder {
 
     /**
      * Adds data to the chart from an array of attributes
-     *
      */
     @Override
     public void addLineData(List<Series<Number, Number>> series, String[] attributes) {

@@ -42,15 +42,15 @@ public class SimpleFiltersController implements FiltersController {
     public void checkFilter(Filter f, ArrayList<Filter> filters, ArrayList<Node> nodes, TimeGraph g, ArrayList<Double> times) {
         boolean check;
         int countNodes = g.getGraph().getNodeCount();
-            for (double t : times) {
-                for (int i = 0; i < countNodes; i++) {
-                    Node n = g.getGraph().getNode(i);
-                    if (n.getAttribute("time" + t) != null) {
-                        check = getVector(n, t, f);
-                        changeStyleNodes(check, n, f, filters, nodes);
-                    }
+        for (double t : times) {
+            for (int i = 0; i < countNodes; i++) {
+                Node n = g.getGraph().getNode(i);
+                if (n.getAttribute("time" + t) != null) {
+                    check = getVector(n, t, f);
+                    changeStyleNodes(check, n, f, filters, nodes);
                 }
             }
+        }
     }
 
     /**

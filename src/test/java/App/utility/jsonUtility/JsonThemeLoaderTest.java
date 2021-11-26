@@ -2,6 +2,7 @@ package App.utility.jsonUtility;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,9 +20,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class JsonThemeLoaderTest {
 
     static ThemeLoader themeLoader = new JsonThemeLoader();
+    static ThemeLoader resetThemeLoader = new JsonThemeLoader();
     static ClassLoader classLoader = ClassLoader.getSystemClassLoader();
     static String generalTheme;
     static String graphTheme;
+    static String path = System.getProperty("user.home") + File.separator + "MoonLightConfig" + File.separator + "theme.json";
+    static File file = new File(path);
+
+    @Test
+    @BeforeAll
+    static void saveTheme() throws IOException, URISyntaxException {
+        resetThemeLoader = JsonThemeLoader.getThemeFromJson();
+    }
 
     @Test
     void saveToJsonTest() throws IOException {
@@ -29,7 +39,6 @@ class JsonThemeLoaderTest {
         themeLoader.setGraphTheme(graphTheme);
         themeLoader.saveToJson();
         Gson gson = new Gson();
-        File file = new File((Objects.requireNonNull(classLoader.getResource("json/theme.json"))).getFile());
         Reader reader = new FileReader(file);
         Type theme = new TypeToken<JsonThemeLoader>() {}.getType();
         JsonThemeLoader fromJson = gson.fromJson(reader, theme);
@@ -59,5 +68,11 @@ class JsonThemeLoaderTest {
         themeLoader.setGeneralTheme(generalTheme);
         themeLoader.setGraphTheme(graphTheme);
         themeLoader.saveToJson();
+    }
+
+    @Test
+    @AfterAll
+    static void resetTheme() throws IOException {
+        resetThemeLoader.saveToJson();
     }
 }
