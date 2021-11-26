@@ -5,6 +5,8 @@ import javafx.application.Application;
 
 /**
  * Main class. Launch the user interface
+ *
+ * @author Albanese Clarissa, Sorritelli Greta
  */
 public class App {
 

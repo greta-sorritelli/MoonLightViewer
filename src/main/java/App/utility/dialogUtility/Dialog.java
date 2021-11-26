@@ -2,6 +2,8 @@ package App.utility.dialogUtility;
 
 /**
  * Interface for a dialog window
+ *
+ * @author Albanese Clarissa, Sorritelli Greta
  */
 public interface Dialog {
 

@@ -13,6 +13,8 @@ import java.util.Objects;
 
 /**
  * Class for fxml load
+ *
+ * @author Albanese Clarissa, Sorritelli Greta
  */
 public class JavaFxApp extends Application {
 

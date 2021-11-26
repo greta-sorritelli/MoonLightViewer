@@ -27,6 +27,8 @@ import java.util.OptionalDouble;
 
 /**
  * Controller for a chart
+ *
+ * @author Albanese Clarissa, Sorritelli Greta
  */
 public class JavaFXChartController {
 

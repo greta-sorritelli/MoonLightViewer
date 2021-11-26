@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Class that creates a logarithmic axis for a {@link javafx.scene.chart.LineChart}
+ */
 public class LogarithmicAxis extends ValueAxis<Number> {
 
     private static final double ANIMATION_TIME = 2000;

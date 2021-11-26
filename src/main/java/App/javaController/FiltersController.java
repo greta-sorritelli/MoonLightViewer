@@ -6,6 +6,11 @@ import org.graphstream.graph.Node;
 
 import java.util.ArrayList;
 
+/**
+ * Interface that defines a controller for filters
+ *
+ * @author Albanese Clarissa, Sorritelli Greta
+ */
 public interface FiltersController {
 
     void validationFilter(Filter filter, ArrayList<Filter> filters);

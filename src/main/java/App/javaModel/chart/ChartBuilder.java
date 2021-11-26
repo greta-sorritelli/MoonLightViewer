@@ -10,6 +10,8 @@ import java.util.List;
 
 /**
  * Interface for a builder of charts from a graph
+ *
+ * @author Albanese Clarissa, Sorritelli Greta
  */
 public interface ChartBuilder {
     ArrayList<XYChart.Series<Number, Number>> createSeriesForConstantChart(File file) throws IOException;

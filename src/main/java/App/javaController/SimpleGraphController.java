@@ -18,6 +18,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+
+/**
+ * Creates graphs
+ *
+ * @author Albanese Clarissa, Sorritelli Greta
+ */
 public class SimpleGraphController implements GraphController{
 
     private static SimpleGraphController instance = null;

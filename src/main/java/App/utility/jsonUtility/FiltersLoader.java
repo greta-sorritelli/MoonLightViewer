@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * This interface is responsible to define a JsonLoader.
+ * An Interface that defines how to load filters on or from a .json file
+ *
+ * @author Albanese Clarissa, Sorritelli Greta
  */
 public interface FiltersLoader {
 

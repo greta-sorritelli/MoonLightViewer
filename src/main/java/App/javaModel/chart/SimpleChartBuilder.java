@@ -13,6 +13,8 @@ import java.util.Optional;
 
 /**
  * Class that builds a simple chart from a {@link TimeGraph}
+ *
+ * @author Albanese Clarissa, Sorritelli Greta
  */
 public class SimpleChartBuilder implements ChartBuilder {
 
@@ -49,7 +51,10 @@ public class SimpleChartBuilder implements ChartBuilder {
         listLog.clear();
     }
 
-
+    /**
+     * Reads a file and create series
+     *
+     */
     @Override
     public ArrayList<Series<Number, Number>> createSeriesForConstantChart(File file) throws IOException {
         FileInputStream fIn = new FileInputStream(file);
@@ -65,6 +70,10 @@ public class SimpleChartBuilder implements ChartBuilder {
         return createSeriesFromMatrix(matrix);
     }
 
+    /**
+     * Builds a matrix for the values of a constant chart
+     *
+     */
     private void populateMatrix(BufferedReader br, int columns, Double[][] matrix) throws IOException {
         String line;
         int rows;
@@ -88,6 +97,10 @@ public class SimpleChartBuilder implements ChartBuilder {
         return rows;
     }
 
+    /**
+     * Creates series from a matrix of values
+     *
+     */
     private ArrayList<Series<Number, Number>> createSeriesFromMatrix(Double[][] matrix) {
         ArrayList<Series<Number, Number>> list = new ArrayList<>();
         //per ogni colonna

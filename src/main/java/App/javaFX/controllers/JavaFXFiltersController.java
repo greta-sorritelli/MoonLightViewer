@@ -25,6 +25,8 @@ import java.util.Optional;
 
 /**
  * Class controller of filters
+ *
+ * @author Albanese Clarissa, Sorritelli Greta
  */
 public class JavaFXFiltersController {
 
