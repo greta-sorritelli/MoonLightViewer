@@ -12,22 +12,13 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Class that builds a simple chart from a {@link TimeGraph}
+ * Class that implements the {@link ChartBuilder} interface and builds a simple chart from a {@link TimeGraph}
  *
  * @author Albanese Clarissa, Sorritelli Greta
  */
 public class SimpleChartBuilder implements ChartBuilder {
 
     private final ArrayList<ArrayList<String>> attributes = new ArrayList<>();
-
-    public ArrayList<ArrayList<String>> getAttributes() {
-        return attributes;
-    }
-
-    public void addAttributes(String[] attributes) {
-        ArrayList<String> a = new ArrayList<>(Arrays.stream(attributes).toList());
-        this.attributes.add(a);
-    }
 
     private final ArrayList<Series<Number, Number>> listLinear = new ArrayList<>();
 
@@ -41,6 +32,14 @@ public class SimpleChartBuilder implements ChartBuilder {
         return listLog;
     }
 
+    public ArrayList<ArrayList<String>> getAttributes() {
+        return attributes;
+    }
+
+    public void addAttributes(String[] attributes) {
+        ArrayList<String> a = new ArrayList<>(Arrays.stream(attributes).toList());
+        this.attributes.add(a);
+    }
 
     /**
      * Clears the lists of series
@@ -54,6 +53,8 @@ public class SimpleChartBuilder implements ChartBuilder {
     /**
      * Reads a file and create series
      *
+     * @param file file to read
+     * @return     ArrayList of series
      */
     @Override
     public ArrayList<Series<Number, Number>> createSeriesForConstantChart(File file) throws IOException {
@@ -73,6 +74,9 @@ public class SimpleChartBuilder implements ChartBuilder {
     /**
      * Builds a matrix for the values of a constant chart
      *
+     * @param br      bufferedReader
+     * @param columns columns of matrix
+     * @param matrix  matrix
      */
     private void populateMatrix(BufferedReader br, int columns, Double[][] matrix) throws IOException {
         String line;
@@ -100,6 +104,8 @@ public class SimpleChartBuilder implements ChartBuilder {
     /**
      * Creates series from a matrix of values
      *
+     * @param matrix matrix
+     * @return       ArrayList of series
      */
     private ArrayList<Series<Number, Number>> createSeriesFromMatrix(Double[][] matrix) {
         ArrayList<Series<Number, Number>> list = new ArrayList<>();
@@ -121,13 +127,11 @@ public class SimpleChartBuilder implements ChartBuilder {
         return list;
     }
 
-
     /**
      * Gets all nodes info and create a relative series for each
      *
      * @param timeGraph a {@link TimeGraph}
-     *
-     * @return a list of all series
+     * @return          a list of all series
      */
     public List<Series<Number, Number>> getSeriesFromNodes(List<TimeGraph> timeGraph) {
         List<Series<Number, Number>> series = new ArrayList<>();
@@ -147,6 +151,11 @@ public class SimpleChartBuilder implements ChartBuilder {
 
     /**
      * Creates series of a chart from a file of a static graph
+     *
+     * @param line  line to read
+     * @param list  list of series
+     * @param first boolean
+     * @return      ArrayList of series
      */
     @Override
     public ArrayList<Series<Number, Number>> getSeriesFromStaticGraph(String line, ArrayList<Series<Number, Number>> list, boolean first) {
@@ -167,9 +176,14 @@ public class SimpleChartBuilder implements ChartBuilder {
         return list;
     }
 
-
     /**
      * Creates and returns a series if it doesn't exist or returns the existing series
+     *
+     * @param list       list of series
+     * @param node       id of node
+     * @param series     series
+     * @param finalNode  id of final node
+     * @return           series
      */
     private Series<Number, Number> getSeries(ArrayList<Series<Number, Number>> list, int node, Series<Number, Number> series, int finalNode) {
         if (list.stream().noneMatch(numberNumberSeries -> numberNumberSeries.getName().equals("Node " + finalNode))) {
@@ -186,6 +200,9 @@ public class SimpleChartBuilder implements ChartBuilder {
 
     /**
      * Checks if the attributes have already been added
+     *
+     * @param first      boolean
+     * @param attributes attributes of node
      */
     private void checkFirst(boolean first, String[] attributes) {
         if (first) {
@@ -194,9 +211,11 @@ public class SimpleChartBuilder implements ChartBuilder {
         }
     }
 
-
     /**
      * Adds data to the chart from an array of attributes
+     *
+     * @param series     list of series
+     * @param attributes attributes of node
      */
     @Override
     public void addLineData(List<Series<Number, Number>> series, String[] attributes) {
@@ -215,7 +234,6 @@ public class SimpleChartBuilder implements ChartBuilder {
             index += 5;
         }
     }
-
 
     /**
      * Add all data of a series

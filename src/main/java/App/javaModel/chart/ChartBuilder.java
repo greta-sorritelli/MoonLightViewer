@@ -9,11 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Interface for a builder of charts from a graph
+ * Interface that defines a builder of charts from a graph
  *
  * @author Albanese Clarissa, Sorritelli Greta
  */
 public interface ChartBuilder {
+
     ArrayList<XYChart.Series<Number, Number>> createSeriesForConstantChart(File file) throws IOException;
 
     /**
@@ -38,7 +39,6 @@ public interface ChartBuilder {
      *
      */
     void addLineData(List<XYChart.Series<Number, Number>> series, String[] attributes);
-
 
     ArrayList<ArrayList<String>> getAttributes();
 

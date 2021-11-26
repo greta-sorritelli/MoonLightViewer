@@ -7,7 +7,7 @@ import org.graphstream.graph.Node;
 import java.util.ArrayList;
 
 /**
- * A controller for filters
+ * Class that implements the {@link FiltersController} interface and defines a controller for filters
  *
  * @author Albanese Clarissa, Sorritelli Greta
  */
@@ -40,9 +40,11 @@ public class SimpleFiltersController implements FiltersController {
      * Based on the filter entered by the user, checks if there are nodes
      * in the graph that correspond to it.
      *
-     * @param f {@link Filter} entered
+     * @param f       {@link Filter} entered
      * @param filters filters of table
-     * @param nodes  list of nodes
+     * @param nodes   list of nodes
+     * @param g       graph
+     * @param times   all time instants
      */
     public void checkFilter(Filter f, ArrayList<Filter> filters, ArrayList<Node> nodes, TimeGraph g, ArrayList<Double> times) {
         boolean check;
@@ -61,11 +63,10 @@ public class SimpleFiltersController implements FiltersController {
     /**
      * Takes attributes of node which will be compared with the filter.
      *
-     * @param n node from which take the attributes
-     * @param t time of graph of node
-     * @param f {@link Filter} to compare
-     *
-     * @return true, if there are any mismatches or false
+     * @param n  node from which take the attributes
+     * @param t  time of graph of node
+     * @param f  {@link Filter} to compare
+     * @return   true, if there are any mismatches or false
      */
     private boolean getVector(Node n, Double t, Filter f) {
         String attributes = n.getAttribute("time" + t).toString();
@@ -76,9 +77,9 @@ public class SimpleFiltersController implements FiltersController {
     /**
      * Adds or removes style on nodes when the user adds a filter.
      *
-     * @param check boolean to know if there are any mismatches
-     * @param n     node to change style to
-     * @param f     {@link Filter} added
+     * @param check   boolean to know if there are any mismatches
+     * @param n       node to change style to
+     * @param f       {@link Filter} added
      * @param filters filters of table
      * @param nodes   list of nodes
      */
@@ -107,8 +108,7 @@ public class SimpleFiltersController implements FiltersController {
      * @param operator  operator selected
      * @param value     value entered
      * @param vector    attributes of node
-     *
-     * @return true, if the node is to be showed, or false
+     * @return          true, if the node is to be showed, or false
      */
     private boolean checkAttribute(String attribute, String operator, double value, String[] vector) {
         double v;
@@ -134,8 +134,7 @@ public class SimpleFiltersController implements FiltersController {
      * @param operator operator selected
      * @param v        value of node
      * @param value    value of textField
-     *
-     * @return true or false
+     * @return         true or false
      */
     private boolean checkOperator(String operator, double v, double value) {
         boolean b = false;

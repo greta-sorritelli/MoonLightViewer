@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class controller of a table of nodes
+ * Controller of JavaFX for a table of nodes
  *
  * @author Albanese Clarissa, Sorritelli Greta
  */
@@ -20,6 +20,7 @@ public class JavaFXNodesTableController {
     TableView<String> nodesTable;
     @FXML
     TableColumn<String, String> nameColumn;
+
     private GraphController graphController;
 
     public void injectGraphController(GraphController graphController) {
@@ -48,5 +49,4 @@ public class JavaFXNodesTableController {
     public void resetTable() {
         nodesTable.getItems().clear();
     }
-
 }

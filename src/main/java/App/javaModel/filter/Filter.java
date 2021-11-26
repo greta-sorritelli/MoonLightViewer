@@ -1,7 +1,7 @@
 package App.javaModel.filter;
 
 /**
- * This interface is responsible to define a filter.
+ * Interface that defines a filter
  *
  * @author Albanese Clarissa, Sorritelli Greta
  */

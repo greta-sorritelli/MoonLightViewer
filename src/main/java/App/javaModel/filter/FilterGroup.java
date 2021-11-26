@@ -3,7 +3,7 @@ package App.javaModel.filter;
 import java.util.ArrayList;
 
 /**
- * This interface is responsible to define a group of filters.
+ * Interface that defines a group of filters
  *
  * @author Albanese Clarissa, Sorritelli Greta
  */

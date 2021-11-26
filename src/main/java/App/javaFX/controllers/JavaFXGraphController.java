@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Controller for graphs
+ * Controller of JavaFX for graphs
  *
  * @author Albanese Clarissa, Sorritelli Greta
  */
@@ -99,9 +99,9 @@ public class JavaFXGraphController {
     /**
      * Open the explorer to choose a file
      *
-     * @param extensions extension of a file to choose
-     *
-     * @return the file chosen
+     * @param description description of file to choose
+     * @param extensions  extension of a file to choose
+     * @return            the file chosen
      */
     private File open(String description, String extensions) {
         FileChooser fileChooser = new FileChooser();
@@ -129,7 +129,7 @@ public class JavaFXGraphController {
     }
 
     /**
-     * Opens explorer with only .csv files
+     * Opens explorer with only .csv files for pieceWise linear visualization
      */
     public void openCSVExplorer() {
         chartController.reset();
@@ -151,7 +151,7 @@ public class JavaFXGraphController {
     }
 
     /**
-     * Opens explorer with only .csv files
+     * Opens explorer with only .csv files for constant stepWise visualization
      */
     public void openConstantCsvExplorer() {
         chartController.reset();
@@ -186,7 +186,6 @@ public class JavaFXGraphController {
         chartController.initConstantChart(file);
         this.csvRead =true;
     }
-
 
     /**
      * Reset all lists and info
@@ -240,6 +239,8 @@ public class JavaFXGraphController {
 
     /**
      * Sets positions of nodes
+     *
+     * @param line a string of a time instant with all info about nodes
      */
     private void createPositions(String line) {
         graphController.createPositions(line);
@@ -247,6 +248,8 @@ public class JavaFXGraphController {
 
     /**
      * Reads attributes of nodes of a static graph from a file and creates positions and charts
+     *
+     * @param br bufferedReader
      */
     private void getStaticAttributesFromCsv(BufferedReader br) throws IOException {
         String line = br.readLine();
@@ -263,6 +266,8 @@ public class JavaFXGraphController {
 
     /**
      * For each line of a file adds data to the charts
+     *
+     * @param line a string of a time instant with all info about nodes
      */
     private void addLineDataToSeries(String line) {
         chartController.addLineDataToSeries(line);
@@ -270,6 +275,8 @@ public class JavaFXGraphController {
 
     /**
      * Creates the series of charts corresponding to nodes of a static graph
+     *
+     * @param line a string of a time instant with all info about nodes
      */
     private void createSeriesFromStaticGraph(String line) {
         chartController.createSeriesFromStaticGraph(line);
@@ -277,6 +284,8 @@ public class JavaFXGraphController {
 
     /**
      * Gets attributes of nodes of a dynamic graph from a file
+     *
+     * @param br bufferedReader
      */
     private void getDynamicAttributesFromCsv(BufferedReader br) throws IOException {
         graphController.setGraphList(graphList);
@@ -321,6 +330,8 @@ public class JavaFXGraphController {
 
     /**
      * Shows the static graph
+     *
+     * @param staticGraph  static Graph
      */
     private void showStaticGraph(Graph staticGraph) {
         if (staticGraph.hasAttribute("ui.stylesheet"))
@@ -345,7 +356,6 @@ public class JavaFXGraphController {
             }
         });
         v.getDefaultView().setMouseManager(sm);
-
     }
 
     private void createTimeSlider() {
@@ -417,7 +427,6 @@ public class JavaFXGraphController {
         }
     }
 
-
     /**
      * Change viewer in order to display a different graph
      *
@@ -450,6 +459,9 @@ public class JavaFXGraphController {
 
     /**
      * Sets attributes to the graph displayed
+     *
+     * @param graph graph
+     * @param time  time instant
      */
     private void setGraphAttribute(Graph graph, Double time) {
         Optional<TimeGraph> g = graphList.stream().filter(timeGraph -> timeGraph.getTime() == time).findFirst();
@@ -468,5 +480,4 @@ public class JavaFXGraphController {
     private void deselectNodeTable() {
         nodeTableComponentController.nodesTable.getSelectionModel().clearSelection();
     }
-
 }

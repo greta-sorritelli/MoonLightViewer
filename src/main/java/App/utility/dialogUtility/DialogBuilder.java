@@ -5,7 +5,7 @@ import javafx.scene.control.DialogPane;
 import javafx.stage.StageStyle;
 
 /**
- * Class that implements {@link Dialog} to show dialog window
+ * Class that implements {@link Dialog} interface to show dialog window
  *
  * @author Albanese Clarissa, Sorritelli Greta
  */

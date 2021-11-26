@@ -3,7 +3,7 @@ package App.javaModel.filter;
 import java.util.Objects;
 
 /**
- * This class implements the {@link Filter} interface and is responsible to define a filter.
+ * Class that implements the {@link Filter} interface and is responsible to define a filter
  *
  * @author Albanese Clarissa, Sorritelli Greta
  */
