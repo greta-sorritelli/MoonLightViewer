@@ -15,5 +15,5 @@ Permette di visualizzare i dati raccolti tramite dei grafici:
   - grafico stepwise constant 
 
 
-Creazione grafi tramite file .tra
-Creazione grafici e posizionamento nodi grafi tramite file .csv
+ - Creazione grafi tramite file .tra
+ - Creazione grafici e posizionamento nodi grafi tramite file .csv
