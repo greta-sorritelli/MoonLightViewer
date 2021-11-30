@@ -5,6 +5,8 @@ import it.unicam.cs.project.moonlightviewer.utility.jsonUtility.JsonThemeLoader;
 import it.unicam.cs.project.moonlightviewer.utility.jsonUtility.ThemeLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
@@ -52,6 +54,18 @@ public class JavaFXMainController {
         this.chartComponentController.injectMainController(this);
         this.graphComponentController.injectMainController(this, chartComponentController);
         loadTheme();
+        loadPlaySpaceBar();
+    }
+
+    /**
+     * Loads listener on spaceBar pressed
+     */
+    private void loadPlaySpaceBar(){
+        root.addEventFilter(KeyEvent.KEY_PRESSED, event->{
+            if (event.getCode() == KeyCode.SPACE) {
+                graphComponentController.play();
+            }
+        });
     }
 
     /**

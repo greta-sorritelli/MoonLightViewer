@@ -89,6 +89,17 @@ public class JavaFXGraphController {
         initialize();
     }
 
+    /**
+     * Slides the slider automatically
+     */
+    public void play(){
+        if(!slider.isDisabled()) {
+            double nValue = slider.getValue();
+            double nMaxValue = slider.getMax();
+            slider.setValue(nMaxValue);
+        }
+    }
+
     private void initialize() {
         this.graphController = SimpleGraphController.getInstance();
         this.nodeTableComponentController.injectGraphController(graphController);
