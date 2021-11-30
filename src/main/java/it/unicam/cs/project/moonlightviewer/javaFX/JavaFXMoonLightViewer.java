@@ -16,7 +16,7 @@ import java.util.Objects;
  *
  * @author Albanese Clarissa, Sorritelli Greta
  */
-public class JavaFxMoonlightViewer extends Application {
+public class JavaFXMoonLightViewer extends Application {
 
     /**
      * Launch the principle stage.

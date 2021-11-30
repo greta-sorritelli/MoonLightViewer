@@ -1,6 +1,6 @@
 package it.unicam.cs.project.moonlightviewer;
 
-import it.unicam.cs.project.moonlightviewer.javaFX.JavaFxMoonlightViewer;
+import it.unicam.cs.project.moonlightviewer.javaFX.JavaFXMoonLightViewer;
 import javafx.application.Application;
 
 /**
@@ -15,6 +15,6 @@ public class App {
     }
 
     private static void launchGui() {
-        Application.launch(JavaFxMoonlightViewer.class);
+        Application.launch(JavaFXMoonLightViewer.class);
     }
 }
