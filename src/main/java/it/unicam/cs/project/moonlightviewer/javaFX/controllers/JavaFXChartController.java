@@ -1,6 +1,7 @@
 package it.unicam.cs.project.moonlightviewer.javaFX.controllers;
 
-import it.unicam.cs.project.moonlightviewer.javaFX.axisUtility.LogarithmicAxis;
+import it.unicam.cs.project.moonlightviewer.javaFX.chartUtility.LineChartWithMarkers;
+import it.unicam.cs.project.moonlightviewer.javaFX.chartUtility.LogarithmicAxis;
 import it.unicam.cs.project.moonlightviewer.javaModel.chart.ChartBuilder;
 import it.unicam.cs.project.moonlightviewer.javaModel.chart.SimpleChartBuilder;
 import it.unicam.cs.project.moonlightviewer.javaModel.graph.TimeGraph;
@@ -12,7 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -47,11 +48,11 @@ public class JavaFXChartController {
     @FXML
     ListView<CheckBox> list;
     @FXML
-    LineChart<Number, Number> lineChartLog = new LineChart<>(xLAxis, yLAxis);
+    LineChartWithMarkers<Number,Number> lineChartLog = new LineChartWithMarkers<>(xLAxis, yLAxis);
     @FXML
-    LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
+    LineChartWithMarkers<Number,Number> lineChart = new LineChartWithMarkers<>(xAxis,yAxis);
     @FXML
-    LineChart<Number, Number> constantChart = new LineChart<>(xCAxis, yCAxis);
+    LineChartWithMarkers<Number,Number> constantChart = new LineChartWithMarkers<>(xCAxis, yCAxis);
     @FXML
     TableView<Series<Number, Number>> variables;
     @FXML
@@ -68,11 +69,13 @@ public class JavaFXChartController {
     Label attributes;
 
     private JavaFXMainController mainController;
+    private JavaFXGraphController javaFXGraphController;
 
     private final ChartBuilder cb = new SimpleChartBuilder();
 
-    public void injectMainController(JavaFXMainController mainController) {
+    public void injectMainController(JavaFXMainController mainController, JavaFXGraphController graphController) {
         this.mainController = mainController;
+        this.javaFXGraphController = graphController;
     }
 
     /**
@@ -88,18 +91,29 @@ public class JavaFXChartController {
     }
 
     /**
-     * Adds a toolTip to all nodes of series.
+     * Adds a toolTip to all nodes of series
      *
      * @param l lineChart
      */
     private void showToolTip(LineChart<Number, Number> l) {
-        for (XYChart.Series<Number, Number> s : l.getData()) {
-            for (XYChart.Data<Number, Number> d : s.getData()) {
+        for (Series<Number, Number> s : l.getData()) {
+            for (Data<Number, Number> d : s.getData()) {
                 Tooltip t = new Tooltip(s.getName());
                 t.setShowDelay(Duration.seconds(0));
                 Tooltip.install(d.getNode(), t);
             }
         }
+    }
+
+    /**
+     * Loads a vertical line to a lineChart
+     *
+     * @param lineChart lineChart which to add line
+     */
+    private void loadVerticalLine(LineChartWithMarkers<Number,Number> lineChart){
+        Data<Number, Number> verticalMarker = new Data<>(0, 0);
+        lineChart.addVerticalValueMarker(verticalMarker);
+        javaFXGraphController.slider.valueProperty().bindBidirectional(verticalMarker.XValueProperty());
     }
 
     /**
@@ -129,6 +143,8 @@ public class JavaFXChartController {
         initLists();
         showToolTip(lineChart);
         showToolTip(lineChartLog);
+        loadVerticalLine(lineChart);
+        loadVerticalLine(lineChartLog);
     }
 
     public void initStatic() {
@@ -147,7 +163,7 @@ public class JavaFXChartController {
      */
     private void addListener(LineChart<Number, Number> chart) {
         for (Series<Number, Number> s : chart.getData()) {
-            for (XYChart.Data<Number, Number> d : s.getData()) {
+            for (Data<Number, Number> d : s.getData()) {
                 d.getNode().setOnMouseClicked(event -> {
                     int id = Integer.parseInt(s.getName().substring(5));
                     Double time = d.getXValue().doubleValue();
@@ -412,6 +428,7 @@ public class JavaFXChartController {
         constantChart.getData().addAll(cb.createSeriesForConstantChart(file));
         initLists();
         showToolTip(constantChart);
+        loadVerticalLine(constantChart);
     }
 
     private void deselectInconstantCharts() {

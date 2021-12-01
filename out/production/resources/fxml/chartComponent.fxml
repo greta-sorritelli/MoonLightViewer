@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import it.unicam.cs.project.moonlightviewer.javaFX.axisUtility.LogarithmicAxis?>
+<?import it.unicam.cs.project.moonlightviewer.javaFX.chartUtility.LogarithmicAxis?>
+<?import it.unicam.cs.project.moonlightviewer.javaFX.chartUtility.LineChartWithMarkers?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -33,42 +33,42 @@
               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
               AnchorPane.topAnchor="45.0">
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="374.0" prefWidth="401.0">
-         <LineChart fx:id="lineChartLog" legendSide="RIGHT" legendVisible="false" onMouseClicked="#clearLabel"
-                    styleClass="lineChart.css" visible="false" AnchorPane.bottomAnchor="10.0"
-                    AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+         <LineChartWithMarkers fx:id="lineChartLog" legendSide="RIGHT" legendVisible="false" onMouseClicked="#clearLabel"
+                               styleClass="lineChart.css" visible="false" AnchorPane.bottomAnchor="10.0"
+                               AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
             <xAxis>
                <NumberAxis label="Time" side="BOTTOM" fx:id="xLAxis"/>
             </xAxis>
             <yAxis>
                <LogarithmicAxis fx:id="yLAxis" prefHeight="407.0" prefWidth="21.0" side="LEFT"/>
             </yAxis>
-         </LineChart>
-         <LineChart fx:id="lineChart" layoutX="10.0" layoutY="9.0" legendSide="RIGHT" legendVisible="false"
-                    onMouseClicked="#clearLabel" styleClass="lineChart.css" AnchorPane.bottomAnchor="10.0"
-                    AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+         </LineChartWithMarkers>
+         <LineChartWithMarkers fx:id="lineChart" layoutX="10.0" layoutY="9.0" legendSide="RIGHT" legendVisible="false"
+                               onMouseClicked="#clearLabel" styleClass="lineChart.css" AnchorPane.bottomAnchor="10.0"
+                               AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
             <xAxis>
                <NumberAxis label="Time" side="BOTTOM" fx:id="xAxis"/>
             </xAxis>
             <yAxis>
                <NumberAxis fx:id="yAxis" side="LEFT"/>
             </yAxis>
-         </LineChart>
+         </LineChartWithMarkers>
          <Label fx:id="attributes" layoutX="109.0" layoutY="313.0" prefHeight="22.0" AnchorPane.bottomAnchor="0.0"
                 AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <padding>
                <Insets left="10.0" right="10.0"/>
             </padding>
          </Label>
-         <LineChart fx:id="constantChart" legendSide="RIGHT" legendVisible="false" visible="false"
-                    AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
-                    AnchorPane.topAnchor="10.0">
+         <LineChartWithMarkers fx:id="constantChart" legendSide="RIGHT" legendVisible="false" visible="false"
+                               AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
+                               AnchorPane.topAnchor="10.0">
             <xAxis>
                <NumberAxis side="BOTTOM" fx:id="xCAxis"/>
             </xAxis>
             <yAxis>
                <NumberAxis fx:id="yCAxis" side="LEFT"/>
             </yAxis>
-         </LineChart>
+         </LineChartWithMarkers>
       </AnchorPane>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="165.0" prefWidth="445.0">
          <SplitPane dividerPositions="0.35" layoutX="-2.0" layoutY="-2.0" prefHeight="151.0" prefWidth="448.0"

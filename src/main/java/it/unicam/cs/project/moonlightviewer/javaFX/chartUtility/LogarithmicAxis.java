@@ -1,4 +1,4 @@
-package it.unicam.cs.project.moonlightviewer.javaFX.axisUtility;
+package it.unicam.cs.project.moonlightviewer.javaFX.chartUtility;
 
 import it.unicam.cs.project.moonlightviewer.utility.exceptions.IllegalLogarithmicRangeException;
 import javafx.animation.KeyFrame;
