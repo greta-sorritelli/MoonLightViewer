@@ -11,6 +11,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 import java.util.Objects;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Main controller of the application. It has other controllers nested in it.
@@ -54,19 +57,8 @@ public class JavaFXMainController {
         this.chartComponentController.injectMainController(this,graphComponentController);
         this.graphComponentController.injectMainController(this, chartComponentController);
         loadTheme();
-        loadPlaySpaceBar();
     }
 
-    /**
-     * Loads listener on spaceBar pressed
-     */
-    private void loadPlaySpaceBar(){
-        root.addEventFilter(KeyEvent.KEY_PRESSED, event->{
-            if (event.getCode() == KeyCode.SPACE) {
-                graphComponentController.play();
-            }
-        });
-    }
 
     /**
      * Loads the theme
@@ -93,7 +85,7 @@ public class JavaFXMainController {
         }
         if (this.graphComponentController.getCurrentGraph() != null && this.graphComponentController.getCurrentGraph().hasAttribute("ui.stylesheet")) {
             this.graphComponentController.getCurrentGraph().removeAttribute("ui.stylesheet");
-            this.graphComponentController.getCurrentGraph().setAttribute("ui.stylesheet",  "url('" + themeLoader.getGraphTheme() + "')");
+            this.graphComponentController.getCurrentGraph().setAttribute("ui.stylesheet", "url('" + themeLoader.getGraphTheme() + "')");
         }
         graphComponentController.setTheme(themeLoader.getGraphTheme());
     }

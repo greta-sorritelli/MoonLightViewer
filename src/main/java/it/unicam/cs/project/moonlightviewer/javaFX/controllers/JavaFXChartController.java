@@ -18,6 +18,7 @@ import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Line;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -48,11 +49,11 @@ public class JavaFXChartController {
     @FXML
     ListView<CheckBox> list;
     @FXML
-    LineChartWithMarkers<Number,Number> lineChartLog = new LineChartWithMarkers<>(xLAxis, yLAxis);
+    LineChartWithMarkers<Number, Number> lineChartLog = new LineChartWithMarkers<>(xLAxis, yLAxis);
     @FXML
-    LineChartWithMarkers<Number,Number> lineChart = new LineChartWithMarkers<>(xAxis,yAxis);
+    LineChartWithMarkers<Number, Number> lineChart = new LineChartWithMarkers<>(xAxis, yAxis);
     @FXML
-    LineChartWithMarkers<Number,Number> constantChart = new LineChartWithMarkers<>(xCAxis, yCAxis);
+    LineChartWithMarkers<Number, Number> constantChart = new LineChartWithMarkers<>(xCAxis, yCAxis);
     @FXML
     TableView<Series<Number, Number>> variables;
     @FXML
@@ -110,7 +111,7 @@ public class JavaFXChartController {
      *
      * @param lineChart lineChart which to add line
      */
-    private void loadVerticalLine(LineChartWithMarkers<Number,Number> lineChart){
+    private void loadVerticalLine(LineChartWithMarkers<Number, Number> lineChart) {
         Data<Number, Number> verticalMarker = new Data<>(0, 0);
         lineChart.addVerticalValueMarker(verticalMarker);
         javaFXGraphController.slider.valueProperty().bindBidirectional(verticalMarker.XValueProperty());
@@ -317,17 +318,15 @@ public class JavaFXChartController {
         new Thread(() -> {
             try {
                 Thread.sleep(500);
-                Platform.runLater(() -> {
-                    lineChart.getData().forEach(series -> {
-                        if (series.getName().equals(name)) {
-                            series.getNode().setVisible(!series.getNode().isVisible());
-                            series.getData().forEach(data -> {
-                                if (data.getNode() != null)
-                                    data.getNode().setVisible(!data.getNode().isVisible());
-                            });
-                        }
-                    });
-                });
+                Platform.runLater(() -> lineChart.getData().forEach(series -> {
+                    if (series.getName().equals(name)) {
+                        series.getNode().setVisible(!series.getNode().isVisible());
+                        series.getData().forEach(data -> {
+                            if (data.getNode() != null)
+                                data.getNode().setVisible(!data.getNode().isVisible());
+                        });
+                    }
+                }));
 //                Thread.sleep(500);
             } catch (InterruptedException e) {
                 DialogBuilder d = new DialogBuilder(mainController.getTheme());
@@ -388,8 +387,9 @@ public class JavaFXChartController {
     /**
      * Return the min value of a series
      *
-     * @param series  all series
-     * @return        min value
+     * @param series all series
+     *
+     * @return min value
      */
     public Number getMinSeries(Series<Number, Number> series) {
         OptionalDouble d = series.getData().stream().mapToDouble(num -> num.getYValue().doubleValue()).min();
@@ -402,7 +402,8 @@ public class JavaFXChartController {
      * Return the max value of a series
      *
      * @param series all series
-     * @return       max value
+     *
+     * @return max value
      */
     public Number getMaxSeries(Series<Number, Number> series) {
         OptionalDouble d = series.getData().stream().mapToDouble(num -> num.getYValue().doubleValue()).max();

@@ -57,7 +57,7 @@ public class LineChartWithMarkers<X,Y> extends LineChart<X,Y>{
         super.layoutPlotChildren();
         for (Data<X,Y> verticalMarker : verticalMarkers) {
             Line line = (Line) verticalMarker.getNode();
-            line.setStartX(getXAxis().getDisplayPosition( verticalMarker.getXValue()));
+            line.setStartX(getXAxis().getDisplayPosition(verticalMarker.getXValue()));
             line.setEndX(line.getStartX());
             line.setStartY(0d);
             line.setEndY(getBoundsInLocal().getHeight());

@@ -6,17 +6,22 @@ import it.unicam.cs.project.moonlightviewer.javaModel.graph.GraphType;
 import it.unicam.cs.project.moonlightviewer.javaModel.graph.TimeGraph;
 import it.unicam.cs.project.moonlightviewer.utility.dialogUtility.DialogBuilder;
 import it.unicam.cs.project.moonlightviewer.utility.mouseUtility.SimpleMouseManager;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.SubScene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.graphstream.graph.Graph;
 import org.graphstream.ui.fx_viewer.FxViewPanel;
@@ -31,6 +36,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Controller of JavaFX for graphs
@@ -65,10 +71,14 @@ public class JavaFXGraphController {
     private final ArrayList<FxViewer> viewers = new ArrayList<>();
     private final Label label = new Label();
     private final ArrayList<Double> time = new ArrayList<>();
+    private RunnableSlider runnable = null;
 
     private final ChangeListener<? super Number> sliderListener = (obs, oldValue, newValue) -> {
-        label.setText(String.valueOf(this.time.get(newValue.intValue())));
-        changeGraphView(String.valueOf(this.time.get(newValue.intValue())));
+        Double value = this.time.get(newValue.intValue());
+        Platform.runLater(() -> {
+            label.setText(String.valueOf(value));
+            changeGraphView(String.valueOf(value));
+        });
     };
 
     public boolean getCsvRead() {
@@ -89,29 +99,21 @@ public class JavaFXGraphController {
         initialize();
     }
 
-    /**
-     * Slides the slider automatically
-     */
-    public void play(){
-        if(!slider.isDisabled()) {
-            double nValue = slider.getValue();
-            double nMaxValue = slider.getMax();
-            slider.setValue(nMaxValue);
-        }
-    }
-
     private void initialize() {
         this.graphController = SimpleGraphController.getInstance();
         this.nodeTableComponentController.injectGraphController(graphController);
         this.filtersComponentController.injectGraphController(mainController, this, chartController);
+        loadPlaySpaceBar();
     }
+
 
     /**
      * Open the explorer to choose a file
      *
      * @param description description of file to choose
      * @param extensions  extension of a file to choose
-     * @return            the file chosen
+     *
+     * @return the file chosen
      */
     private File open(String description, String extensions) {
         filtersComponentController.resetFilters();
@@ -183,7 +185,6 @@ public class JavaFXGraphController {
 
     /**
      * Reads a .csv file as a file with constants attributes
-     *
      */
     private void readConstantCSV(File file) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -195,7 +196,7 @@ public class JavaFXGraphController {
                 graphController.createNodesVector(line);
         }
         chartController.initConstantChart(file);
-        this.csvRead =true;
+        this.csvRead = true;
     }
 
     /**
@@ -346,7 +347,7 @@ public class JavaFXGraphController {
     /**
      * Shows the static graph
      *
-     * @param staticGraph  static Graph
+     * @param staticGraph static Graph
      */
     private void showStaticGraph(Graph staticGraph) {
         if (staticGraph.hasAttribute("ui.stylesheet"))
@@ -409,8 +410,43 @@ public class JavaFXGraphController {
         slider.setValue(time.get(0));
         slider.setMajorTickUnit(1);
         slider.setMinorTickCount(0);
+        toolTipSlider();
     }
 
+    /**
+     * Initialize tooltip for slider animation
+     */
+    private void toolTipSlider() {
+        Tooltip t = new Tooltip("Press spacebar to start/stop slider animation");
+        t.setShowDelay(Duration.seconds(0));
+        Tooltip.install(slider, t);
+    }
+
+    /**
+     * Loads listener on spaceBar pressed
+     */
+    private void loadPlaySpaceBar() {
+        runnable = new RunnableSlider(slider);
+        AtomicBoolean pressed = new AtomicBoolean(false);
+        Runnable run = () -> Platform.runLater(runnable);
+        mainController.getRoot().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                if (!pressed.get()) {
+                    runnable.restart();
+                    Thread thread = new Thread(run);
+                    thread.start();
+                    pressed.set(true);
+                } else {
+                    runnable.shutdown();
+                    pressed.set(false);
+                }
+            }
+        });
+    }
+
+    /**
+     * Listener for the slider. Changes view of graph with the selected time of slider
+     */
     private void addListenersToSlider() {
         slider.applyCss();
         slider.layout();
