@@ -145,10 +145,10 @@ public class JavaFXGraphController {
      * Opens explorer with only .csv files for pieceWise linear visualization
      */
     public void openCSVExplorer() {
-        chartController.reset();
         File file = open("CSV Files", "*.csv");
         if (file != null) {
             try {
+                chartController.reset();
                 readCSV(file);
                 if (graphVisualization.equals(GraphType.DYNAMIC))
                     chartController.createDataFromGraphs(graphList);
@@ -167,10 +167,10 @@ public class JavaFXGraphController {
      * Opens explorer with only .csv files for constant stepWise visualization
      */
     public void openConstantCsvExplorer() {
-        chartController.reset();
         File file = open("CSV Files", "*.csv");
         if (file != null) {
             try {
+                chartController.reset();
                 readConstantCSV(file);
             } catch (Exception e) {
                 DialogBuilder d = new DialogBuilder(mainController.getTheme());

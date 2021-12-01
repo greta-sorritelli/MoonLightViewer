@@ -18,7 +18,6 @@ import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Line;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -111,10 +110,19 @@ public class JavaFXChartController {
      *
      * @param lineChart lineChart which to add line
      */
-    private void loadVerticalLine(LineChartWithMarkers<Number, Number> lineChart) {
+    public void loadVerticalLine(LineChartWithMarkers<Number, Number> lineChart) {
         Data<Number, Number> verticalMarker = new Data<>(0, 0);
         lineChart.addVerticalValueMarker(verticalMarker);
         javaFXGraphController.slider.valueProperty().bindBidirectional(verticalMarker.XValueProperty());
+    }
+
+    /**
+     * Removes a vertical line to all lineCharts
+     */
+    public void removeVerticalLine(){
+        lineChart.removeVerticalValueMarker();
+        lineChartLog.removeVerticalValueMarker();
+        constantChart.removeVerticalValueMarker();
     }
 
     /**
@@ -252,6 +260,7 @@ public class JavaFXChartController {
         this.constantChart.getData().clear();
         this.list.getItems().clear();
         this.variables.getItems().clear();
+        this.removeVerticalLine();
         variables.setDisable(false);
     }
 
