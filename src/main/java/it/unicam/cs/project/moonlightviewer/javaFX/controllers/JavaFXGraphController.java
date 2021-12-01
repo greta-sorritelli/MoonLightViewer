@@ -73,8 +73,12 @@ public class JavaFXGraphController {
     private final ArrayList<Double> time = new ArrayList<>();
     private RunnableSlider runnable = null;
 
+    public ArrayList<Double> getTime() {
+        return time;
+    }
+
     private final ChangeListener<? super Number> sliderListener = (obs, oldValue, newValue) -> {
-        Double value = this.time.get(newValue.intValue());
+        Double value = nearest(time, newValue.doubleValue());
         Platform.runLater(() -> {
             label.setText(String.valueOf(value));
             changeGraphView(String.valueOf(value));
@@ -116,6 +120,8 @@ public class JavaFXGraphController {
      * @return the file chosen
      */
     private File open(String description, String extensions) {
+        if(runnable != null && slider != null)
+            runnable.shutdown();
         filtersComponentController.resetFilters();
         FileChooser fileChooser = new FileChooser();
         Stage stage = (Stage) mainController.getRoot().getScene().getWindow();
@@ -385,16 +391,31 @@ public class JavaFXGraphController {
         setSlider();
         slider.setLabelFormatter(new StringConverter<>() {
             @Override
-            public String toString(Double object) {
-                int index = object.intValue();
+            public String toString(Double n) {
+                int index = n.intValue();
                 return String.valueOf(time.get(index));
             }
+
             @Override
             public Double fromString(String string) {
                 return Double.parseDouble(string);
             }
         });
         addListenersToSlider();
+    }
+
+    public double nearest(ArrayList<Double> time, double index) {
+        if(!time.isEmpty()) {
+            double nearest = time.get(0);
+            double current = Double.MAX_VALUE;
+            for (Double d : time) {
+                if (Math.abs(d - index) <= current) {
+                    nearest = d;
+                    current = Math.abs(d - index);
+                }
+            }
+            return nearest;
+        } else return 0;
     }
 
     /**
@@ -406,7 +427,7 @@ public class JavaFXGraphController {
         for (TimeGraph t : graphList)
             time.add(t.getTime());
         slider.setMin(time.get(0));
-        slider.setMax(time.size() - 1);
+        slider.setMax(time.get(time.size() - 1));
         slider.setValue(time.get(0));
         slider.setMajorTickUnit(1);
         slider.setMinorTickCount(0);
@@ -417,7 +438,7 @@ public class JavaFXGraphController {
      * Initialize tooltip for slider animation
      */
     private void toolTipSlider() {
-        Tooltip t = new Tooltip("Press spacebar to start/stop slider animation");
+        Tooltip t = new Tooltip("Press space bar to start/stop slider animation");
         t.setShowDelay(Duration.seconds(0));
         Tooltip.install(slider, t);
     }

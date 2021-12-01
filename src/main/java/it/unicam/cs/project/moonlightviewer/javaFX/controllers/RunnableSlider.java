@@ -37,11 +37,14 @@ public class RunnableSlider implements Runnable {
             new Thread(() -> {
                 try {
                     while (!shutdown) {
-                        for (double i = x.get(); i <= slider.getMax(); i += slider.getMajorTickUnit()) {
+                        for (double i = x.get(); i <= slider.getMax(); i += 0) {
                             if(shutdown)
                                 break;
-                            slider.setValue(i);
+                            slider.adjustValue(i);
                             sleep(500);
+                            if((i < slider.getMax()) && ((i + slider.getMajorTickUnit()) > slider.getMax()))
+                                i = slider.getMax();
+                            else i += slider.getMajorTickUnit();
                         }
                         x.set(slider.getMin());
                     }

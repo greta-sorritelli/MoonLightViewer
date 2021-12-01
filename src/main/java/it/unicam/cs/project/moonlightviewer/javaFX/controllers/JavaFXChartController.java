@@ -8,6 +8,7 @@ import it.unicam.cs.project.moonlightviewer.javaModel.graph.TimeGraph;
 import it.unicam.cs.project.moonlightviewer.utility.dialogUtility.DialogBuilder;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -113,13 +114,19 @@ public class JavaFXChartController {
     public void loadVerticalLine(LineChartWithMarkers<Number, Number> lineChart) {
         Data<Number, Number> verticalMarker = new Data<>(0, 0);
         lineChart.addVerticalValueMarker(verticalMarker);
-        javaFXGraphController.slider.valueProperty().bindBidirectional(verticalMarker.XValueProperty());
+        ArrayList<Double> time = javaFXGraphController.getTime();
+        javaFXGraphController.slider.valueProperty().addListener((obs, oldValue, newValue) -> {
+            Double value = javaFXGraphController.nearest(time, newValue.doubleValue());
+            Platform.runLater(() -> {
+                verticalMarker.setXValue(value);
+            });
+        });
     }
 
     /**
      * Removes a vertical line to all lineCharts
      */
-    public void removeVerticalLine(){
+    public void removeVerticalLine() {
         lineChart.removeVerticalValueMarker();
         lineChartLog.removeVerticalValueMarker();
         constantChart.removeVerticalValueMarker();
