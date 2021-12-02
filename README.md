@@ -1,19 +1,18 @@
 <h1> MoonlightViewer</h1>
 <h2> Authors: Albanese Clarissa, Sorritelli Greta</h2>
 
-Progetto per la realizzazione di un	ambiente grafico per il supporto al monitoraggio di proprietà
-spazio-temporali di sistemi Cyber-fisici.
+Project for the realization of a graphic environment to support space-time properties monitoring
+of Cyber-physical systems.
 
-L’obiettivo del	progetto è quello di realizzare una interfaccia grafica per il tool MoonLight,
-per supportare l’utente nella comprensione dei dati dell’analisi effettuata.
+The goal of the project is to create a graphical interface for the MoonLight tool,
+to support the user in understanding the data of the analysis performed.
+
+It allows visualizing cyber-physical systems through dynamic and static graphs.
+It allows to view the data collected through graphs:
+- piecewise linear graph with linear axis
+- piecewise linear graph with logarithmic axis
+- stepwise constant graph
 
 
-Permette di visualizzare sistemi cyber-fisici tramite grafi dinamici e statici.
-Permette di visualizzare i dati raccolti tramite dei grafici:
-  - grafico piecewise linear con asse lineare
-  - grafico piecewise linear con asse logaritmico
-  - grafico stepwise constant 
-
-
- Creazione grafi tramite file .tra.
- Creazione grafici e posizionamento nodi grafi tramite file .csv.
+Graph creation using .tra files. <br>
+Chart creation and positioning of graph nodes using .csv files.

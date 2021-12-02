@@ -18,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SimpleGraphControllerTest {
 
-    GraphController graphController = SimpleGraphController.getInstance();
-    List<TimeGraph> timeGraphList = new ArrayList<>();
-    File fileStatic = new File((Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("static.tra"))).getFile());
-    File fileDynamic = new File((Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("dynamic.tra"))).getFile());
+    final GraphController graphController = SimpleGraphController.getInstance();
+    final List<TimeGraph> timeGraphList = new ArrayList<>();
+    final File fileStatic = new File((Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("static.tra"))).getFile());
+    final File fileDynamic = new File((Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("dynamic.tra"))).getFile());
 
 
     @Test
@@ -40,7 +40,7 @@ class SimpleGraphControllerTest {
         assertTrue(nodesWithVector.stream().allMatch(n -> n.hasAttribute("x")));
         assertTrue(nodesWithVector.stream().allMatch(n -> n.hasAttribute("y")));
         String vectorNode0 = graphController.getGraphList().get(0).getGraph().getNode(String.valueOf(0)).getAttribute("time" + 0.0).toString();
-        assertEquals("3, 17, 1, 0.8, 0",vectorNode0.replaceAll("\\[", "").replaceAll("\\]",""));
+        assertEquals("3, 17, 1, 0.8, 0",vectorNode0.replaceAll("\\[", "").replaceAll("]",""));
     }
 
     @Test

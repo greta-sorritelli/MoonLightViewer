@@ -19,13 +19,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class JsonThemeLoaderTest {
 
-    static ThemeLoader themeLoader = new JsonThemeLoader();
+    static final ThemeLoader themeLoader = new JsonThemeLoader();
     static ThemeLoader resetThemeLoader = new JsonThemeLoader();
-    static ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+    static final ClassLoader classLoader = ClassLoader.getSystemClassLoader();
     static String generalTheme;
     static String graphTheme;
-    static String path = System.getProperty("user.home") + File.separator + "MoonLightConfig" + File.separator + "theme.json";
-    static File file = new File(path);
+    static final String path = System.getProperty("user.home") + File.separator + "MoonLightConfig" + File.separator + "theme.json";
+    static final File file = new File(path);
 
     @Test
     @BeforeAll

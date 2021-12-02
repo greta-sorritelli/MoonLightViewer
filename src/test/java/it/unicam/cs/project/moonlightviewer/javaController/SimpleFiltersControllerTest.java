@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SimpleFiltersControllerTest {
 
-    FiltersController filtersController = SimpleFiltersController.getInstance();
+    final FiltersController filtersController = SimpleFiltersController.getInstance();
 
     @Test
     void validationFilterTest() {
