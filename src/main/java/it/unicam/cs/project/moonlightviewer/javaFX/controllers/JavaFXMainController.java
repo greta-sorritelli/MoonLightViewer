@@ -54,7 +54,6 @@ public class JavaFXMainController {
         loadTheme();
     }
 
-
     /**
      * Loads the theme
      */
@@ -65,7 +64,7 @@ public class JavaFXMainController {
         } catch (Exception e) {
             ClassLoader classLoader = ClassLoader.getSystemClassLoader();
             DialogBuilder d = new DialogBuilder(Objects.requireNonNull(classLoader.getResource("css/lightTheme.css")).toString());
-            d.warning(e.getMessage());
+            d.warning("Failed loading theme.");
         }
     }
 
@@ -122,7 +121,7 @@ public class JavaFXMainController {
             initializeThemes();
         } catch (Exception e) {
             DialogBuilder d = new DialogBuilder(Objects.requireNonNull(classLoader.getResource("css/lightTheme.css")).toString());
-            d.warning(e.getMessage());
+            d.warning("Failed loading theme.");
         }
     }
 
@@ -138,7 +137,7 @@ public class JavaFXMainController {
             initializeThemes();
         } catch (Exception e) {
             DialogBuilder d = new DialogBuilder(Objects.requireNonNull(classLoader.getResource("css/lightTheme.css")).toString());
-            d.warning("Failed saving theme.");
+            d.warning("Failed loading theme.");
         }
     }
 }

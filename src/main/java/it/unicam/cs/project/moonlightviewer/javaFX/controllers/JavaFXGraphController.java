@@ -163,7 +163,6 @@ public class JavaFXGraphController {
                     chartController.createDataFromGraphs(graphList);
             } catch (Exception e) {
                 DialogBuilder d = new DialogBuilder(mainController.getTheme());
-                e.printStackTrace();
                 d.error("Failed to load chart data.");
             }
         } else {
@@ -183,7 +182,6 @@ public class JavaFXGraphController {
                 readConstantCSV(file);
             } catch (Exception e) {
                 DialogBuilder d = new DialogBuilder(mainController.getTheme());
-                e.printStackTrace();
                 d.error("Failed to load chart data.");
             }
         } else {
@@ -211,7 +209,7 @@ public class JavaFXGraphController {
     /**
      * Reset all lists and info
      */
-    private void resetAll() {
+    public void resetAll() {
         viewers.clear();
         graphList.clear();
         time.clear();
@@ -246,7 +244,6 @@ public class JavaFXGraphController {
         else
             getDynamicAttributesFromCsv(br);
         this.csvRead = true;
-
     }
 
     /**
@@ -334,7 +331,6 @@ public class JavaFXGraphController {
             createGraph();
         } catch (Exception e) {
             DialogBuilder dialogBuilder = new DialogBuilder(mainController.getTheme());
-            e.printStackTrace();
             dialogBuilder.error("Failed to generate graph.");
         }
     }
@@ -406,7 +402,6 @@ public class JavaFXGraphController {
         });
         addListenersToSlider();
     }
-
 
     /**
      * Returns the nearest element of a double in an arraylist
