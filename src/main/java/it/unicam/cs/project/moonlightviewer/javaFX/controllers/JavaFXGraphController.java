@@ -74,10 +74,9 @@ public class JavaFXGraphController {
     private final ArrayList<Double> time = new ArrayList<>();
     private RunnableSlider runnable = null;
 
-    public ArrayList<Double> getTime() {
-        return time;
-    }
-
+    /**
+     * Listener for slider that updates the label of slider thumb and the graph visualized
+     */
     private final ChangeListener<? super Number> sliderListener = (obs, oldValue, newValue) -> {
         Double value = nearest(time, newValue.doubleValue());
         Platform.runLater(() -> {
@@ -85,6 +84,10 @@ public class JavaFXGraphController {
             changeGraphView(String.valueOf(value));
         });
     };
+
+    public ArrayList<Double> getTime() {
+        return time;
+    }
 
     public boolean getCsvRead() {
         return this.csvRead;
@@ -404,6 +407,13 @@ public class JavaFXGraphController {
         addListenersToSlider();
     }
 
+
+    /**
+     * Returns the nearest element of a double in an arraylist
+     * @param time arraylist of double
+     * @param index double to compare
+     * @return the nearest number in the arraylist
+     */
     public double nearest(ArrayList<Double> time, double index) {
         if(!time.isEmpty()) {
             double nearest = time.get(0);

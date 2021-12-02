@@ -5,15 +5,10 @@ import it.unicam.cs.project.moonlightviewer.utility.jsonUtility.JsonThemeLoader;
 import it.unicam.cs.project.moonlightviewer.utility.jsonUtility.ThemeLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 import java.util.Objects;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Main controller of the application. It has other controllers nested in it.

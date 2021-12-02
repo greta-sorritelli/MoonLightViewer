@@ -116,9 +116,7 @@ public class JavaFXChartController {
         ArrayList<Double> time = javaFXGraphController.getTime();
         javaFXGraphController.slider.valueProperty().addListener((obs, oldValue, newValue) -> {
             Double value = javaFXGraphController.nearest(time, newValue.doubleValue());
-            Platform.runLater(() -> {
-                verticalMarker.setXValue(value);
-            });
+            Platform.runLater(() -> verticalMarker.setXValue(value));
         });
     }
 
