@@ -1,14 +1,13 @@
 package it.unicam.cs.project.moonlightviewer.javaFX.controllers;
 
-import it.unicam.cs.project.moonlightviewer.javaFX.chartUtility.LineChartWithMarkers;
-import it.unicam.cs.project.moonlightviewer.javaFX.chartUtility.LogarithmicAxis;
+import it.unicam.cs.project.moonlightviewer.javaFX.fxUtility.LineChartWithMarkers;
+import it.unicam.cs.project.moonlightviewer.javaFX.fxUtility.LogarithmicAxis;
 import it.unicam.cs.project.moonlightviewer.javaModel.chart.ChartBuilder;
 import it.unicam.cs.project.moonlightviewer.javaModel.chart.SimpleChartBuilder;
 import it.unicam.cs.project.moonlightviewer.javaModel.graph.TimeGraph;
 import it.unicam.cs.project.moonlightviewer.utility.dialogUtility.DialogBuilder;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

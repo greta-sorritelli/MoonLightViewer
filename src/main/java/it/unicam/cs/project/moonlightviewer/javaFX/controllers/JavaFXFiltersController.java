@@ -91,10 +91,13 @@ public class JavaFXFiltersController {
      * @return   string of value
      */
     public String getValue(){
-        if(text.getText().matches("[0-9]+"))
-            return text.getText();
-        else
-            throw new IllegalArgumentException("Value must contains only numbers.");
+        String value = text.getText();
+        if(value.contains(","))
+            value = value.replace(",",".");
+        if (value.matches("[0-9.]*"))
+                return value;
+            else
+                throw new IllegalArgumentException("Value must contains only numbers.");
     }
 
     /**

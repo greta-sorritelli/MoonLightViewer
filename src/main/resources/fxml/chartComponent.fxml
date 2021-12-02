@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import it.unicam.cs.project.moonlightviewer.javaFX.chartUtility.LogarithmicAxis?>
-<?import it.unicam.cs.project.moonlightviewer.javaFX.chartUtility.LineChartWithMarkers?>
+<?import it.unicam.cs.project.moonlightviewer.javaFX.fxUtility.LogarithmicAxis?>
+<?import it.unicam.cs.project.moonlightviewer.javaFX.fxUtility.LineChartWithMarkers?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>

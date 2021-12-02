@@ -2,6 +2,7 @@ package it.unicam.cs.project.moonlightviewer.javaFX.controllers;
 
 import it.unicam.cs.project.moonlightviewer.javaController.GraphController;
 import it.unicam.cs.project.moonlightviewer.javaController.SimpleGraphController;
+import it.unicam.cs.project.moonlightviewer.javaFX.fxUtility.RunnableSlider;
 import it.unicam.cs.project.moonlightviewer.javaModel.graph.GraphType;
 import it.unicam.cs.project.moonlightviewer.javaModel.graph.TimeGraph;
 import it.unicam.cs.project.moonlightviewer.utility.dialogUtility.DialogBuilder;
@@ -109,7 +110,6 @@ public class JavaFXGraphController {
         this.filtersComponentController.injectGraphController(mainController, this, chartController);
         loadPlaySpaceBar();
     }
-
 
     /**
      * Open the explorer to choose a file

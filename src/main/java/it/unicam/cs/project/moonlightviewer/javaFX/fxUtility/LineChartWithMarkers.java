@@ -1,4 +1,4 @@
-package it.unicam.cs.project.moonlightviewer.javaFX.chartUtility;
+package it.unicam.cs.project.moonlightviewer.javaFX.fxUtility;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.NamedArg;
